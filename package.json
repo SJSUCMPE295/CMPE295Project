@@ -20,6 +20,7 @@
     "lint": "concurrently \"yarn-or-npm lint:js\" \"yarn-or-npm lint:css\"",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx src/",
     "lint:css": "stylelint src/**/*.css",
+    "lint:fix": "yarn-or-npm lint:js --fix",
     "lint:deps": "depcruise -c .dependency-cruiser.js src/",
     "plop": "plop",
     "start": "cross-env NODE_ENV=development TS_NODE_PROJECT=tsconfig.tooling.json ts-node scripts/start",

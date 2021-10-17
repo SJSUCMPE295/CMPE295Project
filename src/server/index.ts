@@ -12,7 +12,7 @@ import serverRenderer from './middleware/serverRenderer';
 import addStore from './middleware/addStore';
 import webhookVerification from './middleware/webhookVerification';
 import { i18nextXhr, refreshTranslations } from './middleware/i18n';
-
+import getHelpRouter from './routes/gethelp';
 require('dotenv').config();
 
 const app = express();
@@ -33,7 +33,9 @@ app.get('/locales/refresh', webhookVerification, refreshTranslations);
 
 // It's probably a good idea to serve these static assets with Nginx or Apache as well:
 app.get('/locales/:locale/:ns.json', i18nextXhr);
-
+/* Api routes*/
+app.use('/api/gethelp', getHelpRouter);
+/* End: Api routes*/
 app.use(addStore);
 
 const manifestPath = path.join(paths.clientBuild, paths.publicPath);
