@@ -14,6 +14,7 @@ import addStore from './middleware/addStore';
 import webhookVerification from './middleware/webhookVerification';
 import { i18nextXhr, refreshTranslations } from './middleware/i18n';
 import getHelpRouter from './routes/gethelp';
+import homeRouter from './routes/home';
 const mongoose = require('mongoose');
 require('dotenv').config({
     path: '../../.env.example',
@@ -39,6 +40,7 @@ app.get('/locales/refresh', webhookVerification, refreshTranslations);
 app.get('/locales/:locale/:ns.json', i18nextXhr);
 /* Api routes*/
 app.use('/api/gethelp', getHelpRouter);
+app.use('/api/home', homeRouter);
 /* End: Api routes*/
 app.use(addStore);
 
