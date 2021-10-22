@@ -5,6 +5,7 @@ const Resources = require('../models/resources');
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
 
+// API to post resource
 router.post('/resource', async (_req, res) => {
     const resourcedata = new Resources({
         UserId: _req.body.UserId,
@@ -30,6 +31,7 @@ router.post('/resource', async (_req, res) => {
     }
 });
 
+// API to post service
 router.post('/service', async (_req, res) => {
     const servicedata = new Services({
         UserId: _req.body.UserId,
@@ -42,6 +44,24 @@ router.post('/service', async (_req, res) => {
     });
     try {
         await servicedata.save((error, data) => {
+            if (error) {
+                console.log('error', error);
+                res.json(500).send(error);
+            } else {
+                console.log('data', data);
+                res.status(200).json(data);
+            }
+        });
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+//Api to update Service Availability
+router.post('/update', async (_req, res) => {
+    const id = _req.body.serviceId;
+    try {
+        Services.findByIdAndUpdate(id, { Availability: _req.body.Availability }, (error, data) => {
             if (error) {
                 console.log('error', error);
                 res.json(500).send(error);

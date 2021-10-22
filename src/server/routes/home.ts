@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Services = require('../models/services');
 const Resources = require('../models/resources');
+const homeController = require('../controllers/home');
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
 
+// router.get('/', homeController.getHome);
 router.get('/', async (_req, res) => {
     // res.send({test: 'Get Home'});
     // console.log(_req);
