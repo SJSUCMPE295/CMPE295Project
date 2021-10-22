@@ -5,6 +5,7 @@ import cors from 'cors';
 import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import bodyParser from 'body-parser';
+import mongoDB from 'utils/config';
 import paths from '../../config/paths';
 // import { configureStore } from '../shared/store';
 import errorHandler from './middleware/errorHandler';
@@ -13,6 +14,9 @@ import addStore from './middleware/addStore';
 import webhookVerification from './middleware/webhookVerification';
 import { i18nextXhr, refreshTranslations } from './middleware/i18n';
 import getHelpRouter from './routes/gethelp';
+import homeRouter from './routes/home';
+import giveHelpRouter from './routes/givehelp';
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
@@ -35,6 +39,8 @@ app.get('/locales/refresh', webhookVerification, refreshTranslations);
 app.get('/locales/:locale/:ns.json', i18nextXhr);
 /* Api routes*/
 app.use('/api/gethelp', getHelpRouter);
+app.use('/api/home', homeRouter);
+app.use('/api/givehelp', giveHelpRouter);
 /* End: Api routes*/
 app.use(addStore);
 
@@ -49,6 +55,24 @@ app.use(
 app.use(serverRenderer());
 
 app.use(errorHandler);
+const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+};
+
+mongoose.connect(
+    process.env.MONGO_URI ||
+        'mongodb+srv://wecare:wecare@wecare.l5tdm.mongodb.net/wecare?retryWrites=true&w=majority',
+    options,
+    (err, res) => {
+        if (err) {
+            console.log(err);
+            console.log('MongoDB Connection Failed');
+        } else {
+            console.log('MongoDB Connected');
+        }
+    }
+);
 
 app.listen(process.env.PORT || 8500, () => {
     console.log(
