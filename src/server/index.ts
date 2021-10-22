@@ -60,14 +60,19 @@ const options = {
     useUnifiedTopology: true,
 };
 
-mongoose.connect(process.env.MONGO_URI, options, (err, res) => {
-    if (err) {
-        console.log(err);
-        console.log('MongoDB Connection Failed');
-    } else {
-        console.log('MongoDB Connected');
+mongoose.connect(
+    process.env.MONGO_URI ||
+        'mongodb+srv://wecare:wecare@wecare.l5tdm.mongodb.net/wecare?retryWrites=true&w=majority',
+    options,
+    (err, res) => {
+        if (err) {
+            console.log(err);
+            console.log('MongoDB Connection Failed');
+        } else {
+            console.log('MongoDB Connected');
+        }
     }
-});
+);
 
 app.listen(process.env.PORT || 8500, () => {
     console.log(
