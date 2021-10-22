@@ -60,9 +60,7 @@ const options = {
     useUnifiedTopology: true,
 };
 
-const db =
-    'mongodb+srv://wecare:wecare@wecare.l5tdm.mongodb.net/wecare?retryWrites=true&w=majority';
-mongoose.connect(db, options, (err, res) => {
+mongoose.connect(process.env.MONGO_URI, options, (err, res) => {
     if (err) {
         console.log(err);
         console.log('MongoDB Connection Failed');

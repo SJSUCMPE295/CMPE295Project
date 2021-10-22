@@ -1,11 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Services = require('../models/services');
-const Resources = require('../models/resources');
-const homeController = require('../controllers/home');
+import { Router } from 'express';
+import Services from '../models/services';
+import Resources from '../models/resources';
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
-
+const router = Router();
 // router.get('/', homeController.getHome);
 router.get('/', async (_req, res) => {
     // res.send({test: 'Get Home'});
