@@ -13,31 +13,33 @@ router.get('/', async (_req, res) => {
         services: [{}],
     };
     try {
-        const resources = await Resources.find();
-        const services = await Services.find();
-        if (resources) {
-            response.resources = resources;
-        }
-        // } else {
-        //     console.log('error', error);
-        //     return res.json(500).send(error);
+        const resources = await Resources.find({}, (error, data) => {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                response.resources = data;
+                const services = Services.find({}, (error1, data1) => {
+                    if (error1) {
+                        res.status(400).send(error1);
+                    } else {
+                        response.services = data1;
+                        console.log(response);
+                        res.send(response);
+                    }
+                });
+            }
+        });
+        // const services = await Services.find();
+        // if (resources) {
+        //     response.resources = resources;
         // }
-        if (services) {
-            response.services = services;
-        }
 
-        console.log(response);
-        res.send(response);
-        // const user = await Users.findOne({ _id: _req.query.userId }, (error, data) => {
-        //     if (error) {
-        //         console.log('error', error);
-        //         return res.json(500).send(error);
-        //     } else {
-        //         console.log('data', data);
-        //         console.log('server');
-        //         return res.send(data);
-        //     }
-        // });
+        // if (services) {
+        //     response.services = services;
+        // }
+
+        // console.log(response);
+        // res.send(response);
     } catch (error) {
         return res.status(500).send(error);
     }

@@ -16,9 +16,7 @@ import { i18nextXhr, refreshTranslations } from './middleware/i18n';
 import getHelpRouter from './routes/gethelp';
 import homeRouter from './routes/home';
 const mongoose = require('mongoose');
-require('dotenv').config({
-    path: '../../.env.example',
-});
+require('dotenv').config();
 
 const app = express();
 // const app = express.default();
