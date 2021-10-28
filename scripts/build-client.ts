@@ -15,7 +15,7 @@ const build = async () => {
 
     const clientCompiler = webpackCompiler.compilers.find((compiler) => compiler.name === 'client');
     const clientPromise = compilerPromise('client', clientCompiler);
-
+    // @ts-ignore
     clientCompiler.watch({}, (error: any, stats: any) => {
         if (!error && !stats.hasErrors()) {
             console.log(stats.toString(clientConfig.stats));

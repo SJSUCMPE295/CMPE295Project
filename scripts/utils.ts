@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import openBrowserUtil from "react-dev-utils/openBrowser";
 
 export const logMessage = (message: any, level: string = 'info') => {
     const color =
@@ -35,16 +34,18 @@ export const openBrowser = (options: any = {}) => {
     console.log('openBrowser' + options.url);
     if (options.url) {
         const openBrowserUtil = require('react-dev-utils/openBrowser');
-        const route = options.url + options.route;
+        const route = 'http://localhost:8500/'; //options.url + options.route;
         if (openBrowserUtil(route)) {
             console.log('The browser tab has been opened : ' + route);
         }
     }
 };
-export default {
+const defaultExport = {
     clientOnly,
     compilerPromise,
     openBrowser,
     logMessage,
     sleep,
 };
+// @ts-ignore
+export default defaultExport;

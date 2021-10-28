@@ -42,13 +42,14 @@ const start = async () => {
     });
 
     app.use(
+        // @ts-ignore
         webpackDevMiddleware(clientCompiler, {
             publicPath: clientConfig.output.publicPath,
             stats: clientConfig.stats,
             watchOptions,
         })
     );
-
+    // @ts-ignore
     app.use(webpackHotMiddleware(clientCompiler));
 
     app.use('*', express.static(paths.clientBuild));
