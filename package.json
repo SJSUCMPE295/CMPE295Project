@@ -30,7 +30,14 @@
     "transpile": "yarn-or-npm babel -d build/transpiled ./src --extensions .es6,.js,.es,.jsx,.mjs,.ts,.tsx --ignore **/*.d.ts",
     "tsc": "tsc --noEmit"
   },
+  "exports": {
+    "./jsx-dev-runtime": "./jsx-dev-runtime.js",
+    "./jsx-runtime": "./jsx-runtime.js"
+  },
   "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.0.6",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
@@ -40,6 +47,7 @@
     "dotenv": "^8.6.0",
     "express": "^4.16.4",
     "express-manifest-helpers": "^0.6.0",
+    "formik": "^2.2.9",
     "glob": "^7.1.6",
     "history": "^4.10.1",
     "i18next": "^19.5.5",
@@ -47,8 +55,9 @@
     "immer": "^7.0.5",
     "mkdirp": "^1.0.4",
     "mongoose": "^6.0.11",
-    "react": "^16.13.1",
+    "react": "16.14.0",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
     "react-helmet-async": "^1.0.6",
     "react-i18next": "^11.4.0",
     "react-redux": "^7.2.0",
@@ -58,7 +67,8 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rimraf": "^3.0.2",
-    "serve-static": "^1.13.2"
+    "serve-static": "^1.13.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -89,7 +99,7 @@
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/mkdirp": "^1.0.0",
     "@types/nodemon": "^1.19.0",
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.14.20",
     "@types/react-dev-utils": "^9.0.4",
     "@types/react-dom": "^16.9.8",
     "@types/react-helmet-async": "^1.0.3",
