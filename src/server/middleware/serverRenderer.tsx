@@ -5,7 +5,6 @@ import { StaticRouter as Router } from 'react-router-dom';
 import { Store } from 'redux';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
-import IntlProvider from '../../shared/i18n/IntlProvider';
 import App from '../../shared/App';
 import Html from '../components/HTML';
 
@@ -17,11 +16,9 @@ const serverRenderer: any =
         const content = renderToString(
             <Provider store={res.locals.store}>
                 <Router location={req.url} context={routerContext}>
-                    <IntlProvider>
-                        <HelmetProvider context={helmetContext}>
-                            <App />
-                        </HelmetProvider>
-                    </IntlProvider>
+                    <HelmetProvider context={helmetContext}>
+                        <App />
+                    </HelmetProvider>
                 </Router>
             </Provider>
         );

@@ -24,10 +24,6 @@
             content: '📦';
         }
 
-        &.i18n:before {
-            content: '💬';
-        }
-
         &.rtl:before {
             content: '🐐';
         }

@@ -6,7 +6,6 @@ import { HelmetProvider } from 'react-helmet-async';
 
 import { configureStore } from '../shared/store';
 import App from '../shared/App';
-import IntlProvider from '../shared/i18n/IntlProvider';
 import createHistory from '../shared/store/history';
 
 const history = createHistory();
@@ -22,11 +21,9 @@ const store =
 hydrate(
     <Provider store={store}>
         <Router history={history}>
-            <IntlProvider>
-                <HelmetProvider>
-                    <App />
-                </HelmetProvider>
-            </IntlProvider>
+            <HelmetProvider>
+                <App />
+            </HelmetProvider>
         </Router>
     </Provider>,
     document.getElementById('app')
