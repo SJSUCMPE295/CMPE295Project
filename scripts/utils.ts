@@ -34,7 +34,7 @@ export const openBrowser = (options: any = {}) => {
     console.log('openBrowser' + options.url);
     if (options.url) {
         const openBrowserUtil = require('react-dev-utils/openBrowser');
-        const route = 'http://localhost:8500/'; //options.url + options.route;
+        const route = options.url; // options.route;
         if (openBrowserUtil(route)) {
             console.log('The browser tab has been opened : ' + route);
         }

@@ -12,37 +12,41 @@ import Html from '../components/HTML';
 const helmetContext = {};
 const routerContext = {};
 
-const serverRenderer: any = () => (
-    req: express.Request & { store: Store },
-    res: express.Response
-) => {
-    const content = renderToString(
-        <Provider store={res.locals.store}>
-            <Router location={req.url} context={routerContext}>
-                <IntlProvider>
-                    <HelmetProvider context={helmetContext}>
-                        <App />
-                    </HelmetProvider>
-                </IntlProvider>
-            </Router>
-        </Provider>
-    );
+const serverRenderer: any =
+    () => (req: express.Request & { store: Store }, res: express.Response) => {
+        const content = renderToString(
+            <Provider store={res.locals.store}>
+                <Router location={req.url} context={routerContext}>
+                    <IntlProvider>
+                        <HelmetProvider context={helmetContext}>
+                            <App />
+                        </HelmetProvider>
+                    </IntlProvider>
+                </Router>
+            </Provider>
+        );
 
-    const state = JSON.stringify(res.locals.store.getState());
+        const state = JSON.stringify(res.locals.store.getState());
 
-    return res.send(
-        '<!doctype html>' +
-            renderToString(
-                <Html
-                    css={[res.locals.assetPath('bundle.css'), res.locals.assetPath('vendor.css')]}
-                    helmetContext={helmetContext}
-                    scripts={[res.locals.assetPath('bundle.js'), res.locals.assetPath('vendor.js')]}
-                    state={state}
-                >
-                    {content}
-                </Html>
-            )
-    );
-};
+        return res.send(
+            '<!doctype html>' +
+                renderToString(
+                    <Html
+                        css={[
+                            res.locals.assetPath('bundle.css'),
+                            res.locals.assetPath('vendor.css'),
+                        ]}
+                        helmetContext={helmetContext}
+                        scripts={[
+                            res.locals.assetPath('bundle.js'),
+                            res.locals.assetPath('vendor.js'),
+                        ]}
+                        state={state}
+                    >
+                        {content}
+                    </Html>
+                )
+        );
+    };
 
 export default serverRenderer;

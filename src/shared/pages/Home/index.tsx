@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@material-ui/core';
 import Features from 'shared/components/Features';
 import { setLocale } from 'store/app/actions';
 import { Locale } from 'store/app/types';
@@ -17,6 +18,7 @@ const App: React.FC<any> = () => {
 
     return (
         <React.Fragment>
+            <Button>Contained</Button>
             <Features />
             <h2>{t('i18n-example')}</h2>
             <p>

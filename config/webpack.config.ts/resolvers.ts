@@ -30,6 +30,6 @@ export default {
         '@mui/styled-engine$': '@mui/styled-engine/legacy',
         '@mui/system$': '@mui/system/legacy',
         'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime'),
-        'react/jsx-runtime': require.resolve('react/jsx-runtime')
+        'react/jsx-runtime': require.resolve('react/jsx-runtime'),
     },
 };

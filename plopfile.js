@@ -17,14 +17,12 @@ module.exports = (plop) => {
             const actions = [
                 {
                     type: 'pretty-add',
-                    path:
-                        './src/shared/components/{{properCase componentName}}/{{properCase componentName}}.tsx',
+                    path: './src/shared/components/{{properCase componentName}}/{{properCase componentName}}.tsx',
                     templateFile: './config/plop/component/component.tsx.plop',
                 },
                 {
                     type: 'pretty-add',
-                    path:
-                        './src/shared/components/{{properCase componentName}}/{{properCase componentName}}.test.tsx',
+                    path: './src/shared/components/{{properCase componentName}}/{{properCase componentName}}.test.tsx',
                     templateFile: './config/plop/component/component.test.tsx.plop',
                 },
             ];
