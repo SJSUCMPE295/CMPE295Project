@@ -27,7 +27,6 @@ const App: React.FC<any> = () => {
                 link={[{ rel: 'icon', type: 'image/png', href: favicon }]}
             />
             <h1>
-                <ReactLogo className={css.reactLogo} /> React + Express – SSR Starter – TypeScript
                 Edition
             </h1>
             <Switch>

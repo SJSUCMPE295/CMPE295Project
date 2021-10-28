@@ -11,9 +11,20 @@ const isProd = process.env.NODE_ENV === 'production';
 const cssModuleOptions = isProd
     ? { localIdentName: '[hash:base64:8]' }
     : { getLocalIdent: getCSSModuleLocalIdent };
+const tsLoader = {
+    test: /\.(ts|tsx)$/,
+    use: [
+        {
+            loader: require.resolve('ts-loader'),
+            options: {
+                transpileOnly: true,
+            },
+        },
+    ],
 
+};
 const babelLoader = {
-    test: /\.(js|jsx|ts|tsx)$/,
+    test: /\.(js|jsx)$/,
     exclude: /node_modules/,
     loader: require.resolve('babel-loader'),
     options: {
@@ -166,6 +177,7 @@ const fileLoaderServer = {
 export const client = [
     {
         oneOf: [
+            tsLoader,
             babelLoader,
             cssModuleLoaderClient,
             cssLoaderClient,
@@ -178,6 +190,7 @@ export const client = [
 export const server = [
     {
         oneOf: [
+            tsLoader,
             babelLoader,
             cssModuleLoaderServer,
             cssLoaderServer,
