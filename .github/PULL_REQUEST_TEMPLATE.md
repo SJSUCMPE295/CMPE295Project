@@ -8,8 +8,8 @@
 
 ## Checklist
 
-*   [ ] Tests
-*   [ ] Stories
-*   [ ] Docs
+- [ ] Tests
+- [ ] Stories
+- [ ] Docs
 
 ## Remaining Todos

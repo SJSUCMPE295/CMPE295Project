@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Page {...defaultProps} /> should render element 1`] = `
+<div>
+  <h2>
+    features
+  </h2>
+  <ul>
+    <li>
+      React 16.x (latest)
+    </li>
+    <li>
+      Webpack 4
+    </li>
+    <li>
+      ESLint 6
+    </li>
+    <li>
+      Babel 7
+    </li>
+    <li>
+      TypeScript (using Babel 7)
+    </li>
+    <li>
+      Jest
+    </li>
+    <li>
+      React Testing Library
+    </li>
+    <li>
+      i18n-support
+    </li>
+    <li>
+      React Fast Refresh
+    </li>
+    <li>
+      React Router 5
+    </li>
+    <li>
+      Redux (+ Thunk)
+    </li>
+    <li>
+      Immer
+    </li>
+    <li>
+      Reselect
+    </li>
+    <li>
+      React Helmet
+    </li>
+    <li>
+      Express Webserver + Server Side Rendering
+    </li>
+    <li>
+      CSS Modules
+    </li>
+    <li>
+      PostCSS
+    </li>
+    <li>
+      Prettier (incl. precommit-hook via lint-staged + husky)
+    </li>
+  </ul>
+  <h2>
+    i18n-example
+  </h2>
+  <p>
+    <button
+      value="de_DE"
+    >
+      Deutsch
+    </button>
+    <button
+      value="en_US"
+    >
+      English
+    </button>
+  </p>
+</div>
+`;

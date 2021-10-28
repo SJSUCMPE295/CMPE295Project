@@ -30,7 +30,9 @@ app.use(paths.publicPath, express.static(path.join(paths.clientBuild, paths.publ
 
 app.use(cors());
 
+// @ts-ignore
 app.use(bodyParser.json());
+// @ts-ignore
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/locales/refresh', webhookVerification, refreshTranslations);

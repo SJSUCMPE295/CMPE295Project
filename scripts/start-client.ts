@@ -60,10 +60,12 @@ const start = async () => {
             console.log(
                 `[${new Date().toISOString()}]`,
                 chalk.blue(
-                    `App is running: ${process.env.HOST || 'http://localhost'}:${process.env.PORT ||
-                        8500}`
+                    `App is running: ${process.env.HOST || 'http://localhost'}:${
+                        process.env.PORT || 8500
+                    }`
                 )
             );
+            openBrowser();
         });
     } catch (error) {
         logMessage(error, 'error');
@@ -71,3 +73,13 @@ const start = async () => {
 };
 
 start();
+function openBrowser() {
+    // @ts-ignore TODO: process.env.PORT === 8500
+    if (true) {
+        const openBrowserUtil = require('react-dev-utils/openBrowser');
+        const route = 'http://localhost:8500';
+        if (openBrowserUtil(route)) {
+            console.log('The browser tab has been opened : ' + route);
+        }
+    }
+}

@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -14,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "baseUrl": "./src",
     "strictNullChecks": true,
     "noUnusedLocals": false,
@@ -23,5 +22,10 @@
       "*": ["shared/*", "client/*", "server/*", "*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "**/__tests__", // test will be compiled by jest & ts-jest during test run
+    "**/__mocks__",
+    "**/scripts"
+  ]
 }

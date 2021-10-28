@@ -60,6 +60,7 @@ const start = async () => {
     });
 
     app.use(
+        // @ts-ignore
         webpackDevMiddleware(clientCompiler, {
             publicPath: clientConfig.output.publicPath,
             stats: clientConfig.stats,
@@ -67,6 +68,7 @@ const start = async () => {
         })
     );
 
+    // @ts-ignore
     app.use(webpackHotMiddleware(clientCompiler));
 
     app.use('/static', express.static(paths.clientBuild));
