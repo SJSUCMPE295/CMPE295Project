@@ -5,7 +5,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import paths from '../config/paths';
 import getConfig from '../config/webpack.config.ts';
-import { logMessage, compilerPromise } from './utils';
+import { logMessage, compilerPromise, openBrowser } from './utils';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
@@ -101,6 +101,11 @@ const start = async () => {
     } catch (error) {
         logMessage(error, 'error');
     }
+    const port = 8500;
+    const host = DEVSERVER_HOST;
+    setTimeout(() => {
+        openBrowser({ port, host, url: `${host}:${port}` });
+    }, 3000);
 
     const script = nodemon({
         script: `${paths.serverBuild}/server.js`,

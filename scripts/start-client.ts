@@ -5,7 +5,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import getConfig from '../config/webpack.config.ts';
 import paths from '../config/paths';
-import { logMessage, compilerPromise, openBrowser } from './utils';
+import { logMessage, compilerPromise } from './utils';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
@@ -64,7 +64,6 @@ const start = async () => {
                 `[${new Date().toISOString()}]`,
                 chalk.blue(`App is running: ${host}:${port}`)
             );
-            openBrowser({ port, host, url: `${host}:${port}` });
         });
     } catch (error) {
         logMessage(error, 'error');

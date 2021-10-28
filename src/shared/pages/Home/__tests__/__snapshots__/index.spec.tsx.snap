@@ -28,9 +28,6 @@ exports[`<Page {...defaultProps} /> should render element 1`] = `
       React Testing Library
     </li>
     <li>
-      i18n-support
-    </li>
-    <li>
       React Fast Refresh
     </li>
     <li>
@@ -61,19 +58,17 @@ exports[`<Page {...defaultProps} /> should render element 1`] = `
       Prettier (incl. precommit-hook via lint-staged + husky)
     </li>
   </ul>
-  <h2>
-    i18n-example
-  </h2>
   <p>
     <button
-      value="de_DE"
-    >
-      Deutsch
-    </button>
-    <button
+      class="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+      tabindex="0"
+      type="button"
       value="en_US"
     >
       English
+      <span
+        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
     </button>
   </p>
 </div>

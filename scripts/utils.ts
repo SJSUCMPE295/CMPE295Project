@@ -31,8 +31,8 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 export const clientOnly = () => process.argv.includes('--client-only');
 
 export const openBrowser = (options: any = {}) => {
-    console.log('openBrowser' + options.url);
-    if (options.url) {
+    const env = process.env.NODE_ENV;
+    if ((options.url && env === 'development') || env === 'dev') {
         const openBrowserUtil = require('react-dev-utils/openBrowser');
         const route = options.url; // options.route;
         if (openBrowserUtil(route)) {

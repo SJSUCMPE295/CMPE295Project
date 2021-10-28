@@ -12,16 +12,21 @@ const cssModuleOptions = isProd
     ? { localIdentName: '[hash:base64:8]' }
     : { getLocalIdent: getCSSModuleLocalIdent };
 const tsLoader = {
-    test: /\.(ts|tsx)$/,
+    test: /\.(js|ts|tsx)$/,
     use: [
         {
-            loader: require.resolve('ts-loader'),
+            loader: require.resolve('swc-loader'),
             options: {
-                transpileOnly: true,
+                jsc: {
+                    parser: {
+                        syntax: 'typescript',
+                        tsx: true,
+                        decorators: true,
+                    },
+                },
             },
         },
     ],
-
 };
 const babelLoader = {
     test: /\.(js|jsx)$/,
@@ -178,7 +183,6 @@ export const client = [
     {
         oneOf: [
             tsLoader,
-            babelLoader,
             cssModuleLoaderClient,
             cssLoaderClient,
             urlLoaderClient,
@@ -191,7 +195,6 @@ export const server = [
     {
         oneOf: [
             tsLoader,
-            babelLoader,
             cssModuleLoaderServer,
             cssLoaderServer,
             urlLoaderServer,
