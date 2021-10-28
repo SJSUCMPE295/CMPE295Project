@@ -31,8 +31,8 @@ const App: React.FC<any> = () => {
             </h1>
             <Switch>
                 <Route exact path={routes.home} component={Home} />
-                <Route exact path={routes.page1} component={Page1} />
-                <Route exact path={routes.page2} component={Page2} />
+                <Route path={routes.page1} component={Page1} />
+                <Route path={routes.page2} component={Page2} />
                 <Route render={() => '404!'} />
             </Switch>
             <h2>hi</h2>
