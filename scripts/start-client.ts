@@ -5,7 +5,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import getConfig from '../config/webpack.config.ts';
 import paths from '../config/paths';
-import { logMessage, compilerPromise } from './utils';
+import { logMessage, compilerPromise, openBrowser } from './utils';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
@@ -57,15 +57,13 @@ const start = async () => {
         await clientPromise;
 
         app.listen(PORT, () => {
+            const port = process.env.PORT || 8500;
+            const host = process.env.HOST || 'http://localhost';
             console.log(
                 `[${new Date().toISOString()}]`,
-                chalk.blue(
-                    `App is running: ${process.env.HOST || 'http://localhost'}:${
-                        process.env.PORT || 8500
-                    }`
-                )
+                chalk.blue(`App is running: ${host}:${port}`)
             );
-            openBrowser();
+            openBrowser({ port, host, url: `${host}:${port}` });
         });
     } catch (error) {
         logMessage(error, 'error');
@@ -73,13 +71,3 @@ const start = async () => {
 };
 
 start();
-function openBrowser() {
-    // @ts-ignore TODO: process.env.PORT === 8500
-    if (true) {
-        const openBrowserUtil = require('react-dev-utils/openBrowser');
-        const route = 'http://localhost:8500';
-        if (openBrowserUtil(route)) {
-            console.log('The browser tab has been opened : ' + route);
-        }
-    }
-}
