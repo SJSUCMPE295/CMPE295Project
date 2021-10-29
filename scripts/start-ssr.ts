@@ -6,6 +6,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import paths from '../config/paths';
 import getConfig from '../config/webpack.config.ts';
 import { logMessage, compilerPromise, openBrowser } from './utils';
+import { cpStaticFiles } from "./cp-static-files";
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
@@ -98,6 +99,7 @@ const start = async () => {
     try {
         await serverPromise;
         await clientPromise;
+        await cpStaticFiles();
     } catch (error) {
         logMessage(error, 'error');
     }
