@@ -1,6 +1,4 @@
 {
   "hooks": {
-    "pre-commit": "lint-staged",
-    "post-merge": "install-deps-postmerge"
   }
 }

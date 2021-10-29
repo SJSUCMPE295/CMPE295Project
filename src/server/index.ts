@@ -12,7 +12,6 @@ import errorHandler from './middleware/errorHandler';
 import serverRenderer from './middleware/serverRenderer';
 import addStore from './middleware/addStore';
 import webhookVerification from './middleware/webhookVerification';
-import { i18nextXhr, refreshTranslations } from './middleware/i18n';
 import getHelpRouter from './routes/gethelp';
 import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
@@ -30,13 +29,11 @@ app.use(paths.publicPath, express.static(path.join(paths.clientBuild, paths.publ
 
 app.use(cors());
 
+// @ts-ignore
 app.use(bodyParser.json());
+// @ts-ignore
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/locales/refresh', webhookVerification, refreshTranslations);
-
-// It's probably a good idea to serve these static assets with Nginx or Apache as well:
-app.get('/locales/:locale/:ns.json', i18nextXhr);
 /* Api routes*/
 app.use('/api/gethelp', getHelpRouter);
 app.use('/api/home', homeRouter);
