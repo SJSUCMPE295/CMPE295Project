@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container, Grid, Pagination } from '@material-ui/core';
 import ProductListToolbar from '../components/product/ProductListToolbar';

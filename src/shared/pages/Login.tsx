@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
@@ -50,7 +51,7 @@ const Register = () => {
                             policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={() => {
-                            navigate('/app/dashboard', { replace: true });
+                            //navigate('/app/dashboard', { replace: true });
                         }}
                     >
                         {({

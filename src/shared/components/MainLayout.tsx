@@ -1,3 +1,4 @@
+import * as React from 'react';
 //import { Outlet } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import MainNavbar from './MainNavbar';
@@ -29,12 +30,12 @@ const MainLayoutContent = styled('div')({
     overflow: 'auto',
 });
 
-const MainLayout = () => (
+const MainLayout = ({ children, ...props }) => (
     <MainLayoutRoot>
         <MainNavbar />
         <MainLayoutWrapper>
             <MainLayoutContainer>
-                <MainLayoutContent>{'<Outlet />'}</MainLayoutContent>
+                <MainLayoutContent>{children || '<Outlet />'}</MainLayoutContent>
             </MainLayoutContainer>
         </MainLayoutWrapper>
     </MainLayoutRoot>

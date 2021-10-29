@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container, Grid } from '@material-ui/core';
 import Budget from '../components/dashboard/Budget';

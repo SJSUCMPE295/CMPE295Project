@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import * as React from 'react';
 import {
     Box,
     Button,
@@ -26,7 +26,7 @@ const states = [
 ];
 
 const AccountProfileDetails = (props) => {
-    const [values, setValues] = useState({
+    const [values, setValues] = React.useState({
         firstName: 'Katarina',
         lastName: 'Smith',
         email: 'demo@devias.io',

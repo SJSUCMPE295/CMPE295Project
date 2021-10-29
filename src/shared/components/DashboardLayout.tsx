@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 //import { Outlet } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
@@ -34,7 +35,7 @@ const DashboardLayoutContent = styled('div')({
     overflow: 'auto',
 });
 
-const DashboardLayout = () => {
+const DashboardLayout = ({ children, ...props }) => {
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
     return (
@@ -46,7 +47,7 @@ const DashboardLayout = () => {
             />
             <DashboardLayoutWrapper>
                 <DashboardLayoutContainer>
-                    <DashboardLayoutContent>{'<Outlet />'}</DashboardLayoutContent>
+                    <DashboardLayoutContent>{children || '<Outlet />'}</DashboardLayoutContent>
                 </DashboardLayoutContainer>
             </DashboardLayoutWrapper>
         </DashboardLayoutRoot>

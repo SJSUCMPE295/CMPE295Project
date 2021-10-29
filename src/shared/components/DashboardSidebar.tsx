@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import * as React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Divider, Drawer, Hidden, List, Typography } from '@material-ui/core';
@@ -66,7 +66,7 @@ const items = [
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const location = useLocation();
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }

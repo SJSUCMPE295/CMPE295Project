@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container } from '@material-ui/core';
 import CustomerListResults from '../components/customer/CustomerListResults';
