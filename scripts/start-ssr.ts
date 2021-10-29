@@ -6,7 +6,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import paths from '../config/paths';
 import getConfig from '../config/webpack.config.ts';
 import { logMessage, compilerPromise, openBrowser } from './utils';
-import { cpStaticFiles } from "./cp-static-files";
+import { cpStaticFiles } from './cp-static-files';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
