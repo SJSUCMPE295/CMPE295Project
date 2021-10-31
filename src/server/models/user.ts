@@ -14,12 +14,15 @@ const UserModel = new Schema(
         Profile: {
             Phonenumber: { type: Number, required: true },
             Profileactive: { type: Boolean, required: true },
+            ProfilePic: { type: String, required: false },
         },
         Address: [
             {
+                Location: { type: String, required: false },
                 City: { type: String, required: false },
                 State: { type: String, required: false },
                 Country: { type: String, required: false },
+                ZipCode: { type: Number, required: false },
             },
         ],
     },

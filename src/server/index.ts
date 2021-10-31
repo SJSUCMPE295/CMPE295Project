@@ -16,6 +16,7 @@ import { i18nextXhr, refreshTranslations } from './middleware/i18n';
 import getHelpRouter from './routes/gethelp';
 import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
+import signUpRouter from './routes/signUp';
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -41,6 +42,7 @@ app.get('/locales/:locale/:ns.json', i18nextXhr);
 app.use('/api/gethelp', getHelpRouter);
 app.use('/api/home', homeRouter);
 app.use('/api/givehelp', giveHelpRouter);
+app.use('/api/signup', signUpRouter);
 /* End: Api routes*/
 app.use(addStore);
 
