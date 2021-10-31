@@ -44,7 +44,7 @@ const AccountProfile = (props) => (
                     {`${user.city} ${user.country}`}
                 </Typography>
                 <Typography color="textSecondary" variant="body1">
-                    {`${moment().format('hh:mm A')} ${user.timezone}`}
+                    {`example of timezone bellow`}
                 </Typography>
             </Box>
         </CardContent>
@@ -56,5 +56,5 @@ const AccountProfile = (props) => (
         </CardActions>
     </Card>
 );
-
+//`${moment().format('hh:mm A')} ${user.timezone}`
 export default AccountProfile;
