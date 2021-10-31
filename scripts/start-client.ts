@@ -42,13 +42,14 @@ const start = async () => {
     });
 
     app.use(
+        // @ts-ignore
         webpackDevMiddleware(clientCompiler, {
             publicPath: clientConfig.output.publicPath,
             stats: clientConfig.stats,
             watchOptions,
         })
     );
-
+    // @ts-ignore
     app.use(webpackHotMiddleware(clientCompiler));
 
     app.use('*', express.static(paths.clientBuild));
@@ -57,12 +58,11 @@ const start = async () => {
         await clientPromise;
 
         app.listen(PORT, () => {
+            const port = process.env.PORT || 8500;
+            const host = process.env.HOST || 'http://localhost';
             console.log(
                 `[${new Date().toISOString()}]`,
-                chalk.blue(
-                    `App is running: ${process.env.HOST || 'http://localhost'}:${process.env.PORT ||
-                        8500}`
-                )
+                chalk.blue(`App is running: ${host}:${port}`)
             );
         });
     } catch (error) {

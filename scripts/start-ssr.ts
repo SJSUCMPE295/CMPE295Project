@@ -5,7 +5,8 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import paths from '../config/paths';
 import getConfig from '../config/webpack.config.ts';
-import { logMessage, compilerPromise } from './utils';
+import { logMessage, compilerPromise, openBrowser } from './utils';
+import { cpStaticFiles } from './cp-static-files';
 
 const webpackConfig = getConfig(process.env.NODE_ENV || 'development');
 
@@ -60,6 +61,7 @@ const start = async () => {
     });
 
     app.use(
+        // @ts-ignore
         webpackDevMiddleware(clientCompiler, {
             publicPath: clientConfig.output.publicPath,
             stats: clientConfig.stats,
@@ -67,6 +69,7 @@ const start = async () => {
         })
     );
 
+    // @ts-ignore
     app.use(webpackHotMiddleware(clientCompiler));
 
     app.use('/static', express.static(paths.clientBuild));
@@ -96,9 +99,15 @@ const start = async () => {
     try {
         await serverPromise;
         await clientPromise;
+        await cpStaticFiles();
     } catch (error) {
         logMessage(error, 'error');
     }
+    const port = 8500;
+    const host = DEVSERVER_HOST;
+    setTimeout(() => {
+        openBrowser({ port, host, url: `${host}:${port}` });
+    }, 3000);
 
     const script = nodemon({
         script: `${paths.serverBuild}/server.js`,

@@ -30,9 +30,22 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 
 export const clientOnly = () => process.argv.includes('--client-only');
 
-export default {
+export const openBrowser = (options: any = {}) => {
+    const env = process.env.NODE_ENV;
+    if ((options.url && env === 'development') || env === 'dev') {
+        const openBrowserUtil = require('react-dev-utils/openBrowser');
+        const route = options.url; // options.route;
+        if (openBrowserUtil(route)) {
+            console.log('The browser tab has been opened : ' + route);
+        }
+    }
+};
+const defaultExport = {
     clientOnly,
     compilerPromise,
+    openBrowser,
     logMessage,
     sleep,
 };
+// @ts-ignore
+export default defaultExport;

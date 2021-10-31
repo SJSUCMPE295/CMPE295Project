@@ -6,7 +6,6 @@ import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import { TypedCssModulesPlugin } from 'typed-css-modules-webpack-plugin';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import paths from '../paths';
 import { clientOnly } from '../../scripts/utils';
 
@@ -46,32 +45,12 @@ export const client = [
     new TypedCssModulesPlugin({
         globPattern: 'src/**/*.css',
     }),
-    isDev() &&
-        new ReactRefreshWebpackPlugin({
-            overlay: {
-                sockIntegration: 'whm',
-            },
-        }),
 ].filter(Boolean);
 
 export const server = [
     new webpack.DefinePlugin({
         __SERVER__: 'true',
         __BROWSER__: 'false',
-    }),
-    // We should make sure to have our locales in shared/i18n/locales ready at build time.
-    // They are then copied into the server build folder so they can be accessed via
-    // i18next-xhr-backend and our custom /locales/:locale/:namespace endpoint.
-    new CopyPlugin({
-        patterns: [
-            {
-                from: paths.locales,
-                to: path.join(paths.serverBuild, 'locales'),
-                globOptions: {
-                    ignore: ['*.missing.json'],
-                },
-            },
-        ],
     }),
 ];
 
