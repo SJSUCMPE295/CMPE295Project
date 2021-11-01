@@ -66,15 +66,15 @@ const Login = () => {
                                 </Box>
                                 <Grid container spacing={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
                                     <Grid item xs={12} md={6} >
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={handleSubmit}
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
                                     </Grid>
                                 </Grid>
                                 <Box
