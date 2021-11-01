@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useHistory} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Formik } from 'formik';
-import { Box, Container, Typography, Grid, Button, TextField, Link } from '@mui/material';
+import { Box, Container, Typography, Grid, Button, TextField, Link } from '@material-ui/core';
 import * as Yup from 'yup';
 
 const Login = () => {
-    const navigate = useNavigate();
+    const history = useHistory();
     return (
         <>
             <Helmet>
@@ -35,7 +35,7 @@ const Login = () => {
                             password: Yup.string().max(255).required('Password is required'),
                         })}
                         onSubmit={() => {
-                            navigate('/app/dashboard', { replace: true });
+                            history.push('/app/dashboard', { replace: true });
                         }}
                     />
                     {({
