@@ -11,9 +11,25 @@ const isProd = process.env.NODE_ENV === 'production';
 const cssModuleOptions = isProd
     ? { localIdentName: '[hash:base64:8]' }
     : { getLocalIdent: getCSSModuleLocalIdent };
-
+const tsLoader = {
+    test: /\.(js|ts|tsx)$/,
+    use: [
+        {
+            loader: require.resolve('swc-loader'),
+            options: {
+                jsc: {
+                    parser: {
+                        syntax: 'typescript',
+                        tsx: true,
+                        decorators: true,
+                    },
+                },
+            },
+        },
+    ],
+};
 const babelLoader = {
-    test: /\.(js|jsx|ts|tsx)$/,
+    test: /\.(js|jsx)$/,
     exclude: /node_modules/,
     loader: require.resolve('babel-loader'),
     options: {
@@ -166,7 +182,7 @@ const fileLoaderServer = {
 export const client = [
     {
         oneOf: [
-            babelLoader,
+            tsLoader,
             cssModuleLoaderClient,
             cssLoaderClient,
             urlLoaderClient,
@@ -178,7 +194,7 @@ export const client = [
 export const server = [
     {
         oneOf: [
-            babelLoader,
+            tsLoader,
             cssModuleLoaderServer,
             cssLoaderServer,
             urlLoaderServer,

@@ -11,7 +11,7 @@ export default {
         /* When working with linked modules which have their own node_modules we must make sure
         to always load the same React version in all components. So we define an alias here and
         resolve it to node_modules/* to avoid potential issues */
-        'react': require.resolve('react'),
+        // 'react': require.resolve('react'),
         'react-dom': require.resolve('react-dom'),
         'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime.js'),
         'react/jsx-runtime': getDependencyPath('react/jsx-runtime'),
@@ -27,5 +27,13 @@ export default {
         'react-router-dom': getDependencyPath('react-router-dom'),
         'react-i18next': getDependencyPath('react-i18next'),
         'i18next': getDependencyPath('i18next'),
+        // '@mui/core$': '@mui/core/legacy',
+        // '@mui/material$': '@mui/material/legacy',
+        // '@mui/styled-engine$': '@mui/styled-engine/legacy',
+        // '@mui/system$': '@mui/system/legacy',
+        // 'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime'),
+        // 'react/jsx-runtime': require.resolve('react/jsx-runtime'),
+        // 'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
+        // 'react/jsx-runtime': 'react/jsx-runtime.js',
     },
 };

@@ -1,4 +1,5 @@
 # Wecare
+
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -18,6 +19,7 @@
 ## Features
 
 - General Setup
+
   - 🔥 Babel 7
   - 📦 Webpack 4
   - 🔥 ESLint 7 (with a set of custom rules which may be mostly identical to AirBnB with some personal flavor added)
