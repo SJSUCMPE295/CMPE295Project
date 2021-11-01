@@ -3,26 +3,26 @@ const Schema = mongoose.Schema;
 
 const UserModel = new Schema(
     {
-        Username: { type: String, required: true },
-        Password: { type: String, required: true },
-        Firstname: { type: String, required: true },
-        Lastname: { type: String, required: true },
-        UserMetaData: {
-            Gender: { type: String, required: false },
+        userName: { type: String, required: true },
+        password: { type: String, required: true },
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
+        userMetaData: {
+            gender: { type: String, required: false },
             isDoctor: { type: Boolean, required: true },
         },
-        Profile: {
-            Phonenumber: { type: Number, required: true },
-            Profileactive: { type: Boolean, required: true },
-            ProfilePic: { type: String, required: false },
+        profile: {
+            phoneNumber: { type: Number, required: true },
+            profileActive: { type: Boolean, required: true },
+            profilePic: { type: String, required: false },
         },
-        Address: [
+        address: [
             {
-                Location: { type: String, required: false },
-                City: { type: String, required: false },
-                State: { type: String, required: false },
-                Country: { type: String, required: false },
-                ZipCode: { type: Number, required: false },
+                location: { type: String, required: false },
+                city: { type: String, required: false },
+                state: { type: String, required: false },
+                country: { type: String, required: false },
+                zipCode: { type: Number, required: false },
             },
         ],
     },
@@ -34,4 +34,3 @@ const UserModel = new Schema(
 
 export const userModel = mongoose.model('user', UserModel);
 export default userModel;
-  
