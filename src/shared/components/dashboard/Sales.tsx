@@ -24,10 +24,10 @@ const Sales = (props) => {
                 barThickness: 12,
                 borderRadius: 4,
                 categoryPercentage: 0.5,
-                data: [18, 5, 19, 27, 29, 19, 20],
-                label: 'This year',
-                maxBarThickness: 10,
-            },
+                data: [50, 10, 39, 27, 29, 19, 20],
+                label: 'Quantity available',
+                maxBarThickness: 13,
+            }/*,
             {
                 backgroundColor: colors.grey[200],
                 barPercentage: 0.5,
@@ -37,9 +37,9 @@ const Sales = (props) => {
                 data: [11, 20, 12, 29, 30, 25, 13],
                 label: 'Last year',
                 maxBarThickness: 10,
-            },
+            },*/
         ],
-        labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug'],
+        labels: ['Mask', 'Oxygen Cyllinder', 'Sanitizer', 'Bed', 'Pulse Oximeter', 'Infrared Thermometer'],
     };
 
     const options = {
@@ -98,10 +98,10 @@ const Sales = (props) => {
             <CardHeader
                 action={
                     <Button endIcon={<ArrowDropDownIcon />} size="small" variant="text">
-                        Last 7 days
+                        Medical
                     </Button>
                 }
-                title="Latest Sales"
+                title="Available Resources"
             />
             <Divider />
             <CardContent>
