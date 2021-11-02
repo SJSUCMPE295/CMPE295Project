@@ -17,10 +17,10 @@ const TasksProgress = (props) => (
             <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
                 <Grid item>
                     <Typography color="textSecondary" gutterBottom variant="h6">
-                        TASKS PROGRESS
+                        RESOURCES
                     </Typography>
                     <Typography color="textPrimary" variant="h3">
-                        75.5%
+                        4,000
                     </Typography>
                 </Grid>
                 <Grid item>
@@ -35,9 +35,9 @@ const TasksProgress = (props) => (
                     </Avatar>
                 </Grid>
             </Grid>
-            <Box sx={{ pt: 3 }}>
+           {/*  <Box sx={{ pt: 3 }}>
                 <LinearProgress value={75.5} variant="determinate" />
-            </Box>
+            </Box>*/} 
         </CardContent>
     </Card>
 );

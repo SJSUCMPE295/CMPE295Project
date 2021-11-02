@@ -13,6 +13,8 @@ import {
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIcon from '@material-ui/icons/Phone';
 import TabletIcon from '@material-ui/icons/Tablet';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const TrafficByDevice = (props) => {
     const theme = useTheme();
@@ -20,14 +22,14 @@ const TrafficByDevice = (props) => {
     const data = {
         datasets: [
             {
-                data: [63, 15, 22],
-                backgroundColor: [colors.indigo[500], colors.red[600], colors.orange[600]],
+                data: [89, 11],
+                backgroundColor: [colors.indigo[500], colors.orange[600]],
                 borderWidth: 8,
                 borderColor: colors.common.white,
                 hoverBorderColor: colors.common.white,
             },
         ],
-        labels: ['Desktop', 'Tablet', 'Mobile'],
+        labels: ['Vaccinated', 'Unvaccinated'],
     };
 
     const options = {
@@ -54,28 +56,28 @@ const TrafficByDevice = (props) => {
 
     const devices = [
         {
-            title: 'Desktop',
-            value: 63,
-            icon: LaptopMacIcon,
+            title: 'Vaccinated',
+            value: 89,
+            icon: VerifiedUserIcon,
             color: colors.indigo[500],
         },
         {
-            title: 'Tablet',
-            value: 15,
-            icon: TabletIcon,
+            title: 'Unvaccinated',
+            value: 11,
+            icon: WarningIcon,
             color: colors.red[600],
-        },
+        },/*
         {
             title: 'Mobile',
             value: 23,
             icon: PhoneIcon,
             color: colors.orange[600],
-        },
+        },*/
     ];
 
     return (
         <Card {...props}>
-            <CardHeader title="Traffic by Device" />
+            <CardHeader title="Covid-19 Vaccination Status" />
             <Divider />
             <CardContent>
                 <Box
