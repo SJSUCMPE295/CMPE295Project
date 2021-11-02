@@ -10,7 +10,7 @@ const Login = () => {
     return (
         <>
             <Helmet>
-                <title>Login</title>
+                <title>WeCare - Login</title>
             </Helmet>
             <Box
                 sx={{
