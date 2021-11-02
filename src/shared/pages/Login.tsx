@@ -1,33 +1,38 @@
 import * as React from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@material-ui/core';
-import FacebookIcon from '../icons/Facebook';
+import { Box, Button, Container, Grid, Link, TextField, Typography, Paper } from '@material-ui/core';
 import GoogleIcon from '../icons/Google';
 
+
 const Login = () => {
-    const navigate = useLocation();
+    const history = useHistory();
 
     return (
         <>
             <Helmet>
-                <title>Login | Material Kit</title>
+                <title>Login</title>
             </Helmet>
+
             <Box
                 sx={{
-                    backgroundColor: 'background.default',
+                    backgroundColor: '#ffffff',
                     display: 'flex',
                     flexDirection: 'column',
                     height: '100%',
                     justifyContent: 'center',
                 }}
             >
-                <Container maxWidth="sm">
+                
+                <Container maxWidth="sm" style={{marginTop:"150px"}}>
+                {/* <Paper elevation={0}>
+                    <img src={image} height="100" style={{marginLeft:"400"}}/>
+                </Paper> */}
                     <Formik
                         initialValues={{
-                            email: 'demo@devias.io',
+                            email: 'abc@example.com',
                             password: 'Password123',
                         }}
                         validationSchema={Yup.object().shape({
@@ -38,7 +43,7 @@ const Login = () => {
                             password: Yup.string().max(255).required('Password is required'),
                         })}
                         onSubmit={() => {
-                            navigate('/app/dashboard', { replace: true });
+                            history.push('/app/dashboard', { replace: true });
                         }}
                     >
                         {({
@@ -51,37 +56,25 @@ const Login = () => {
                             values,
                         }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box sx={{ mb: 3 }}>
+                                <Box sx={{ mb: 3 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
                                     <Typography color="textSecondary" gutterBottom variant="body2">
-                                        Sign in on the internal platform
+                                        Sign in on the WeCare platform using Social
                                     </Typography>
                                 </Box>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12} md={6}>
-                                        <Button
-                                            color="primary"
-                                            fullWidth
-                                            startIcon={<FacebookIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Facebook
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
+                                <Grid container spacing={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center" >
+                                    <Grid item xs={12} md={6} >
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={handleSubmit}
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
                                     </Grid>
                                 </Grid>
                                 <Box

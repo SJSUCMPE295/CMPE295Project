@@ -13,6 +13,8 @@ export default {
         resolve it to node_modules/* to avoid potential issues */
         // 'react': require.resolve('react'),
         'react-dom': require.resolve('react-dom'),
+        'react/jsx-dev-runtime': require.resolve('react/jsx-dev-runtime.js'),
+        'react/jsx-runtime': getDependencyPath('react/jsx-runtime'),
         // TODO: This artificially blows up the bundle size (255 kb -> 297 kb). Investigate why.
         // Looks like webpack then uses commonjs modules instead of treeshaken esm.
         // 'react-router-dom': require.resolve('react-router-dom'),
