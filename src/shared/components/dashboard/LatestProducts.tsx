@@ -19,39 +19,33 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 const products = [
     {
         id: uuid(),
-        name: 'Dropbox',
-        imageUrl: '/static/images/products/product_1.png',
+        name: 'COVID Vaccine for Younger Kids Already Being Packed, Shipped',
+        imageUrl: '/static/images/products/USNews_icon.png',
         updatedAt: moment().subtract(2, 'hours'),
     },
     {
         id: uuid(),
-        name: 'Medium Corporation',
-        imageUrl: '/static/images/products/product_2.png',
+        name: 'Bay Area Health Officers Issue Criteria for Lifting COVID-19 Indoor Masking Requirements',
+        imageUrl: '/static/images/products/santa_clara_county_news.png',
         updatedAt: moment().subtract(2, 'hours'),
     },
     {
         id: uuid(),
-        name: 'Slack',
-        imageUrl: '/static/images/products/product_3.png',
+        name: 'COVID-19 Pfizer Booster Shots Now Available for Eligible Individuals in Santa Clara County',
+        imageUrl: '/static/images/products/santa_clara_county_news.png',
         updatedAt: moment().subtract(3, 'hours'),
     },
     {
         id: uuid(),
-        name: 'Lyft',
-        imageUrl: '/static/images/products/product_4.png',
+        name: 'Flu vs. the Common Cold',
+        imageUrl: '/static/images/products/USNews_icon.png',
         updatedAt: moment().subtract(5, 'hours'),
-    },
-    {
-        id: uuid(),
-        name: 'GitHub',
-        imageUrl: '/static/images/products/product_5.png',
-        updatedAt: moment().subtract(9, 'hours'),
     },
 ];
 
 const LatestProducts = (props) => (
     <Card {...props}>
-        <CardHeader subtitle={`${products.length} in total`} title="Latest Products" />
+        <CardHeader subtitle={`${products.length} in total`} title="Health News" />
         <Divider />
         <List>
             {products.map((product, i) => (

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import MoneyIcon from '@material-ui/icons/Money';
-import { red } from '@material-ui/core/colors';
+import { red,green } from '@material-ui/core/colors';
 
 const Budget = (props) => (
     <Card sx={{ height: '100%' }} {...props}>
@@ -10,10 +10,10 @@ const Budget = (props) => (
             <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
                 <Grid item>
                     <Typography color="textSecondary" gutterBottom variant="h6">
-                        BUDGET
+                        TOTAL TRANSACTIONS
                     </Typography>
                     <Typography color="textPrimary" variant="h3">
-                        $24,000
+                        24,000
                     </Typography>
                 </Grid>
                 <Grid item>
@@ -35,10 +35,10 @@ const Budget = (props) => (
                     alignItems: 'center',
                 }}
             >
-                <ArrowDownwardIcon sx={{ color: red[900] }} />
+                <ArrowUpwardIcon sx={{ color: green[900] }} />
                 <Typography
                     sx={{
-                        color: red[900],
+                        color: green[900],
                         mr: 1,
                     }}
                     variant="body2"

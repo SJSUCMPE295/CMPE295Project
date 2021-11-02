@@ -56,5 +56,5 @@ const AccountProfile = (props) => (
         </CardActions>
     </Card>
 );
-
+//`${moment().format('hh:mm A')} ${user.timezone}`
 export default AccountProfile;
