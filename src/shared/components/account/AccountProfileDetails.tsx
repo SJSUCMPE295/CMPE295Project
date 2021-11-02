@@ -27,9 +27,9 @@ const states = [
 
 const AccountProfileDetails = (props) => {
     const [values, setValues] = React.useState({
-        firstName: 'Katarina',
-        lastName: 'Smith',
-        email: 'demo@devias.io',
+        firstName: 'FirstName',
+        lastName: 'LastName',
+        email: 'abc@example.com',
         phone: '',
         state: 'Alabama',
         country: 'USA',
@@ -45,7 +45,7 @@ const AccountProfileDetails = (props) => {
     return (
         <form autoComplete="off" noValidate {...props}>
             <Card>
-                <CardHeader subheader="The information can be edited" title="Profile" />
+                <CardHeader subheader="The information can be edited" title="User Profile" />
                 <Divider />
                 <CardContent>
                     <Grid container spacing={3}>

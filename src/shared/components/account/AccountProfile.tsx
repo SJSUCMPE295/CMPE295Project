@@ -12,12 +12,12 @@ import {
 } from '@material-ui/core';
 
 const user = {
-    avatar: '/static/images/avatars/avatar_1.png',
+    avatar: '/static/images/products/product_5.png',
     city: 'Los Angeles',
     country: 'USA',
-    jobTitle: 'Senior Developer',
-    name: 'Katarina Smith',
-    timezone: 'GTM-7',
+    // jobTitle: 'Senior Developer',
+    name: 'User Name',
+    // timezone: 'GTM-7',
 };
 
 const AccountProfile = (props) => (
@@ -37,15 +37,15 @@ const AccountProfile = (props) => (
                         width: 100,
                     }}
                 />
-                <Typography color="textPrimary" gutterBottom variant="h3">
+                <Typography color="textPrimary" gutterBottom variant="h4">
                     {user.name}
                 </Typography>
                 <Typography color="textSecondary" variant="body1">
                     {`${user.city} ${user.country}`}
                 </Typography>
-                <Typography color="textSecondary" variant="body1">
+                {/* <Typography color="textSecondary" variant="body1">
                     {`${moment().format('hh:mm A')} ${user.timezone}`}
-                </Typography>
+                </Typography> */}
             </Box>
         </CardContent>
         <Divider />

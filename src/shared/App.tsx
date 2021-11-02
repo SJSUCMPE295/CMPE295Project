@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
-import Account from 'pages/Account';
+import Account from 'pages/Account/Account';
 import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
@@ -9,7 +9,6 @@ import Settings from 'pages/Settings';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import NotFound from 'pages/NotFound';
-import css from './App.module.css';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
