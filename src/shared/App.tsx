@@ -5,7 +5,7 @@ import Account from 'pages/Account/Account';
 import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
-import Settings from 'pages/Settings';
+import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import NotFound from 'pages/NotFound';
