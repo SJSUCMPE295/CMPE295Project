@@ -10,13 +10,16 @@ import {
     ShoppingBag as ShoppingBagIcon,
     User as UserIcon,
     UserPlus as UserPlusIcon,
+    Package as PackageIcon,
     Users as UsersIcon,
+    Gift as GiftIcon,
+    PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
 
 const user = {
-    avatar: '/static/images/avatars/avatar_1.png',
-    jobTitle: 'Senior Developer',
+    avatar: '/static/images/avatars/avatar_2.png',
+    jobTitle: 'San Jose,CA',
     name: 'Katarina Smith',
 };
 
@@ -28,13 +31,18 @@ const items = [
     },
     {
         href: '/app/customers',
-        icon: UsersIcon,
-        title: 'Customers',
+        icon: PackageIcon,
+        title: 'Get Help',
     },
     {
         href: '/app/products',
         icon: ShoppingBagIcon,
-        title: 'Products',
+        title: 'Give Help',
+    },
+    {
+        href: '/app/products',
+        icon: PlusCircleIcon,
+        title: 'Medical Assistance',
     },
     {
         href: '/app/account',
@@ -46,6 +54,7 @@ const items = [
         icon: SettingsIcon,
         title: 'Settings',
     },
+    /*
     {
         href: '/login',
         icon: LockIcon,
@@ -60,7 +69,7 @@ const items = [
         href: '/404',
         icon: AlertCircleIcon,
         title: 'Error',
-    },
+    },*/
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
@@ -127,10 +136,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                 }}
             >
                 <Typography align="center" gutterBottom variant="h4">
-                    Need more?
+                    Are you a Doctor?
                 </Typography>
                 <Typography align="center" variant="body2">
-                    Upgrade to PRO version and access 20 more screens
+                    Please help us in assisting non-urgent medical needs
                 </Typography>
                 <Box
                     sx={{
@@ -145,7 +154,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                         href="https://react-material-kit.devias.io"
                         variant="contained"
                     >
-                        See PRO version
+                        Register as Doctor
                     </Button>
                 </Box>
             </Box>

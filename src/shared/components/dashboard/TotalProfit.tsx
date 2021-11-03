@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Avatar, Card, CardContent, Grid, Typography } from '@material-ui/core';
 import { indigo } from '@material-ui/core/colors';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import AutoAwesomeIcon from '@material-ui/icons/AutoAwesomeMosaic';
 
 const TotalProfit = (props) => (
     <Card {...props}>
@@ -9,10 +10,10 @@ const TotalProfit = (props) => (
             <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
                 <Grid item>
                     <Typography color="textSecondary" gutterBottom variant="h6">
-                        TOTAL PROFIT
+                        SERVICES
                     </Typography>
                     <Typography color="textPrimary" variant="h3">
-                        $23,200
+                        1,200
                     </Typography>
                 </Grid>
                 <Grid item>
@@ -23,7 +24,7 @@ const TotalProfit = (props) => (
                             width: 56,
                         }}
                     >
-                        <AttachMoneyIcon />
+                        <AutoAwesomeIcon />
                     </Avatar>
                 </Grid>
             </Grid>

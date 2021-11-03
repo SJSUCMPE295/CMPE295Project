@@ -9,7 +9,6 @@ import Settings from 'pages/Settings';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import NotFound from 'pages/NotFound';
-import css from './App.module.css';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';

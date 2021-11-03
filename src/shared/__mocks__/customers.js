@@ -37,7 +37,7 @@ export default [
             city: 'Atlanta',
             street: '4894  Lakeland Park Drive',
         },
-        avatarUrl: '/static/images/avatars/avatar_2.png',
+        avatarUrl: '/static/images/avatars/avatar_1.png',
         createdAt: 1555016400000,
         email: 'alexa.richardson@devias.io',
         name: 'Alexa Richardson',
