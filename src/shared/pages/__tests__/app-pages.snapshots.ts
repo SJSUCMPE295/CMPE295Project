@@ -5,7 +5,7 @@ describe('Visual Regression Tests', () => {
         browser = await puppeteer.launch({
             headless: true,
             ignoreHTTPSErrors: true,
-            args: [`--window-size=1920,1080`],
+            args: ['--window-size=1920,1080'],
             defaultViewport: {
                 width: 1920,
                 height: 1080,
