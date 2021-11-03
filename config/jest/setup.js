@@ -12,3 +12,7 @@ process.on('unhandledRejection', (err) => {
 
 // Ensure environment variables are read.
 require('../env');
+
+const { toMatchImageSnapshot } = require('jest-image-snapshot');
+
+expect.extend({ toMatchImageSnapshot });

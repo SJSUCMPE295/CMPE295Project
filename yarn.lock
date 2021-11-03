@@ -10824,7 +10824,7 @@ jest-haste-map@^26.6.2:
   optionalDependencies:
     fsevents "^2.1.2"
 
-jest-image-snapshot@^4.3.0:
+jest-image-snapshot@^4.3.0, jest-image-snapshot@^4.5.1:
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/jest-image-snapshot/-/jest-image-snapshot-4.5.1.tgz#79fe0419c7729eb1be6c873365307a7b60f5cda0"
   integrity sha512-0YkgupgkkCx0wIZkxvqs/oNiUT0X0d2WTpUhaAp+Dy6CpqBUZMRTIZo4KR1f+dqmx6WXrLCvecjnHLIsLkI+gQ==
