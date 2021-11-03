@@ -12,16 +12,16 @@ import {
     Typography,
 } from '@material-ui/core';
 
-const SettingsNotifications = (props) => (
+const SettingsProfileStatus = (props) => (
     <form {...props}>
         <Card>
-            <CardHeader subheader="Manage the notifications" title="Notifications" />
+            <CardHeader subheader="Deactivate Profile" title="Profile Status" />
             <Divider />
             <CardContent>
                 <Grid container spacing={6} wrap="wrap">
                     <Grid
                         item
-                        md={4}
+                        md={12}
                         sm={6}
                         sx={{
                             display: 'flex',
@@ -29,14 +29,14 @@ const SettingsNotifications = (props) => (
                         }}
                         xs={12}
                     >
-                        <Typography color="textPrimary" gutterBottom variant="h6">
+                        {/* <Typography color="textPrimary" gutterBottom variant="h6">
                             Notifications
-                        </Typography>
+                        </Typography> */}
                         <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Email"
+                            control={<Checkbox color="primary" />}
+                            label="Deactivate your profile - This will delete your profile permanently"
                         />
-                        <FormControlLabel
+                        {/* <FormControlLabel
                             control={<Checkbox color="primary" defaultChecked />}
                             label="Push Notifications"
                         />
@@ -44,9 +44,9 @@ const SettingsNotifications = (props) => (
                         <FormControlLabel
                             control={<Checkbox color="primary" defaultChecked />}
                             label="Phone calls"
-                        />
+                        /> */}
                     </Grid>
-                    <Grid
+                    {/* <Grid
                         item
                         md={4}
                         sm={6}
@@ -68,7 +68,7 @@ const SettingsNotifications = (props) => (
                             control={<Checkbox color="primary" defaultChecked />}
                             label="Phone calls"
                         />
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </CardContent>
             <Divider />
@@ -87,4 +87,4 @@ const SettingsNotifications = (props) => (
     </form>
 );
 
-export default SettingsNotifications;
+export default SettingsProfileStatus;
