@@ -27,8 +27,8 @@ const states = [
 
 const AccountProfileDetails = (props) => {
     const [values, setValues] = React.useState({
-        firstName: 'FirstName',
-        lastName: 'LastName',
+        firstName: 'Katrina',
+        lastName: 'Smith',
         email: 'abc@example.com',
         phone: '',
         state: 'Alabama',
