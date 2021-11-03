@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -12,33 +12,34 @@ import {
     Link,
     TextField,
     Typography,
+    Grid
 } from '@material-ui/core';
+import GoogleIcon from '../../icons/Google';
 
-const Register = () => {
-    const navigate = useLocation();
+const RegisterFirstPage = () => {
+    const history = useHistory();
 
     return (
         <>
             <Helmet>
-                <title>Register | Material Kit</title>
+                <title>WeCare - Register</title>
             </Helmet>
             <Box
                 sx={{
-                    backgroundColor: 'background.default',
+                    backgroundColor: '#ffffff',
                     display: 'flex',
                     flexDirection: 'column',
                     height: '100%',
                     justifyContent: 'center',
                 }}
             >
-                <Container maxWidth="sm">
+                <Container maxWidth="sm" style={{marginTop:"150px"}}>
                     <Formik
                         initialValues={{
                             email: '',
                             firstName: '',
                             lastName: '',
                             password: '',
-                            policy: false,
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
@@ -48,10 +49,9 @@ const Register = () => {
                             firstName: Yup.string().max(255).required('First name is required'),
                             lastName: Yup.string().max(255).required('Last name is required'),
                             password: Yup.string().max(255).required('password is required'),
-                            policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={() => {
-                            //navigate('/app/dashboard', { replace: true });
+                            history.push('/register2', { replace: true });
                         }}
                     >
                         {({
@@ -64,7 +64,7 @@ const Register = () => {
                             values,
                         }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box sx={{ mb: 3 }}>
+                                <Box sx={{ mb: 3 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
                                     <Typography color="textPrimary" variant="h2">
                                         Create new account
                                     </Typography>
@@ -129,7 +129,7 @@ const Register = () => {
                                         ml: -1,
                                     }}
                                 >
-                                    <Checkbox
+                                    {/* <Checkbox
                                         checked={values.policy}
                                         name="policy"
                                         onChange={handleChange}
@@ -145,11 +145,11 @@ const Register = () => {
                                         >
                                             Terms and Conditions
                                         </Link>
-                                    </Typography>
+                                    </Typography> */}
                                 </Box>
-                                {Boolean(touched.policy && errors.policy) && (
+                                {/* {Boolean(touched.policy && errors.policy) && (
                                     <FormHelperText error>{errors.policy}</FormHelperText>
-                                )}
+                                )} */}
                                 <Box sx={{ py: 2 }}>
                                     <Button
                                         color="primary"
@@ -159,7 +159,7 @@ const Register = () => {
                                         type="submit"
                                         variant="contained"
                                     >
-                                        Sign up now
+                                        Next
                                     </Button>
                                 </Box>
                                 <Typography color="textSecondary" variant="body1">
@@ -173,13 +173,37 @@ const Register = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
+                                <Box
+                                sx={{
+                                    pb: 1,
+                                    pt: 3,
+                                }}
+                            >
+                                <Typography align="center" color="textSecondary" variant="body1">
+                                    or signup with social platform
+                                </Typography>
+                            </Box>
+                            <Grid container spacing={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                <Grid item xs={12} md={6}>
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={handleSubmit}
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
+                                </Grid>
+                            </Grid>
                             </form>
                         )}
                     </Formik>
+                    
                 </Container>
             </Box>
         </>
     );
 };
 
-export default Register;
+export default RegisterFirstPage;

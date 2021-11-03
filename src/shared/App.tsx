@@ -7,7 +7,8 @@ import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
 import Settings from 'pages/Settings';
 import Login from 'pages/Login';
-import Register from 'pages/Register';
+import Register1 from 'pages/Register/RegisterFirstPage';
+import Register2 from 'pages/Register/RegisterSecondPage';
 import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
@@ -36,9 +37,14 @@ const App: React.FC<any> = () => {
                                 <Login />
                             </MainLayout>
                         </Route>
-                        <Route path={'/register'}>
+                        <Route path={'/register1'}>
                             <MainLayout>
-                                <Register />
+                                <Register1 />
+                            </MainLayout>
+                        </Route>
+                        <Route path={'/register2'}>
+                            <MainLayout>
+                                <Register2 />
                             </MainLayout>
                         </Route>
                         <Route exact path="/">
