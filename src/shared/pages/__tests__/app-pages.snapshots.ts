@@ -1,4 +1,14 @@
 import puppeteer from 'puppeteer';
+const routes = [
+    '/app/account',
+    '/app/customers',
+    '/app/dashboard',
+    '/app/products',
+    '/login',
+    '/register1',
+    '/register2',
+    '/404',
+];
 describe('Visual Regression Tests', () => {
     let browser;
     beforeEach(async () => {
@@ -12,9 +22,9 @@ describe('Visual Regression Tests', () => {
             },
         });
     });
-    it('renders correctly', async () => {
+    test.each(routes)('renders page for route %s', async (route) => {
         const page = await browser.newPage();
-        await page.goto('http://localhost:8500/app/dashboard');
+        await page.goto('http://localhost:8500' + route);
         const image = await page.screenshot();
         expect(image).toMatchImageSnapshot();
     });

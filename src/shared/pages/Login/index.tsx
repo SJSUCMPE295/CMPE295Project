@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link as RouterLink, useHistory} from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Formik } from 'formik';
 import { Box, Container, Typography, Grid, Button, TextField, Link } from '@material-ui/core';
