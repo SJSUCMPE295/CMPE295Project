@@ -66,13 +66,13 @@ const TrafficByDevice = (props) => {
             value: 11,
             icon: WarningIcon,
             color: colors.red[600],
-        },/*
+        } /*
         {
             title: 'Mobile',
             value: 23,
             icon: PhoneIcon,
             color: colors.orange[600],
-        },*/
+        },*/,
     ];
 
     return (

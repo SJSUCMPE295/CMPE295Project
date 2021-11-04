@@ -12,7 +12,7 @@ import {
     Link,
     TextField,
     Typography,
-    Grid
+    Grid,
 } from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 
@@ -33,7 +33,7 @@ const RegisterFirstPage = () => {
                     justifyContent: 'center',
                 }}
             >
-                <Container maxWidth="sm" style={{marginTop:"150px"}}>
+                <Container maxWidth="sm" style={{ marginTop: '150px' }}>
                     <Formik
                         initialValues={{
                             email: '',
@@ -64,7 +64,13 @@ const RegisterFirstPage = () => {
                             values,
                         }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box sx={{ mb: 3 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                <Box
+                                    sx={{ mb: 3 }}
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
                                     <Typography color="textPrimary" variant="h2">
                                         Create new account
                                     </Typography>
@@ -174,32 +180,42 @@ const RegisterFirstPage = () => {
                                     </Link>
                                 </Typography>
                                 <Box
-                                sx={{
-                                    pb: 1,
-                                    pt: 3,
-                                }}
-                            >
-                                <Typography align="center" color="textSecondary" variant="body1">
-                                    or signup with social platform
-                                </Typography>
-                            </Box>
-                            <Grid container spacing={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                                <Grid item xs={12} md={6}>
-                                    <Button
-                                        fullWidth
-                                        startIcon={<GoogleIcon />}
-                                        onClick={handleSubmit}
-                                        size="large"
-                                        variant="contained"
+                                    sx={{
+                                        pb: 1,
+                                        pt: 3,
+                                    }}
+                                >
+                                    <Typography
+                                        align="center"
+                                        color="textSecondary"
+                                        variant="body1"
                                     >
-                                        Login with Google
-                                    </Button>
+                                        or signup with social platform
+                                    </Typography>
+                                </Box>
+                                <Grid
+                                    container
+                                    spacing={3}
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={12} md={6}>
+                                        <Button
+                                            fullWidth
+                                            startIcon={<GoogleIcon />}
+                                            onClick={handleSubmit}
+                                            size="large"
+                                            variant="contained"
+                                        >
+                                            Login with Google
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
                             </form>
                         )}
                     </Formik>
-                    
                 </Container>
             </Box>
         </>

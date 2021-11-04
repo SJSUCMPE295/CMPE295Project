@@ -35,9 +35,9 @@ const TasksProgress = (props) => (
                     </Avatar>
                 </Grid>
             </Grid>
-           {/*  <Box sx={{ pt: 3 }}>
+            {/*  <Box sx={{ pt: 3 }}>
                 <LinearProgress value={75.5} variant="determinate" />
-            </Box>*/} 
+            </Box>*/}
         </CardContent>
     </Card>
 );

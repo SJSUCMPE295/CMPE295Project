@@ -17,7 +17,7 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select
+    Select,
 } from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 
@@ -39,7 +39,7 @@ const RegisterSecondPage = () => {
                     justifyContent: 'center',
                 }}
             >
-                <Container maxWidth="sm" style={{marginTop:"150px"}}>
+                <Container maxWidth="sm" style={{ marginTop: '150px' }}>
                     <Formik
                         initialValues={{
                             address1: '',
@@ -47,8 +47,8 @@ const RegisterSecondPage = () => {
                             city: '',
                             state: '',
                             zipcode: '',
-                            phonenumber:'',
-                            policy: false
+                            phonenumber: '',
+                            policy: false,
                         }}
                         validationSchema={Yup.object().shape({
                             address1: Yup.string().max(255).required('Address1 is required'),
@@ -69,53 +69,68 @@ const RegisterSecondPage = () => {
                             handleSubmit,
                             isSubmitting,
                             touched,
-                            values
+                            values,
                         }) => (
                             <form onSubmit={handleSubmit}>
-                                <Box sx={{ mb: 3 }} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                <Box
+                                    sx={{ mb: 3 }}
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
                                     <Typography color="textPrimary" variant="h2">
                                         Create new account
                                     </Typography>
                                 </Box>
-                                <div style={{marginLeft:"50px"}}>
-                                <FormControlLabel
-                                    label="I am a Doctor"
-                                    control={<Checkbox checked={checked} onChange={()=>{setChecked(!checked)}} />}
-                                />
+                                <div style={{ marginLeft: '50px' }}>
+                                    <FormControlLabel
+                                        label="I am a Doctor"
+                                        control={
+                                            <Checkbox
+                                                checked={checked}
+                                                onChange={() => {
+                                                    setChecked(!checked);
+                                                }}
+                                            />
+                                        }
+                                    />
                                 </div>
-                                    {checked ? (
-                                        <div style={{display:"flex", justifyContent:"space-around"}} >
-                                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                                        <InputLabel id="demo-simple-select-standard-label">Speciality</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
-                                            value={speciality}
-                                            onChange={handleChange}
-                                            label="Speciality"
+                                {checked ? (
+                                    <div
+                                        style={{ display: 'flex', justifyContent: 'space-around' }}
+                                    >
+                                        <FormControl
+                                            variant="standard"
+                                            sx={{ m: 1, minWidth: 120 }}
                                         >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Neurologists</MenuItem>
-                                        <MenuItem value={20}>Psychiatrists</MenuItem>
-                                        <MenuItem value={30}>Family physicians</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <Button
-                                        variant="text"
-                                        component="label"
-                                        size="small"
-                                        >
-                                        Upload Doctor's License
-                                        <input
-                                            type="file"
-                                            hidden
-                                        />
-                                    </Button>
+                                            <InputLabel id="demo-simple-select-standard-label">
+                                                Speciality
+                                            </InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-standard-label"
+                                                id="demo-simple-select-standard"
+                                                value={speciality}
+                                                onChange={handleChange}
+                                                label="Speciality"
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Neurologists</MenuItem>
+                                                <MenuItem value={20}>Psychiatrists</MenuItem>
+                                                <MenuItem value={30}>Family physicians</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <Button variant="text" component="label" size="small">
+                                            Upload Doctor's License
+                                            <input type="file" hidden />
+                                        </Button>
                                     </div>
-                                    ):("")}  
-                                <div style={{display:"flex", justifyContent:"space-around"}}>                            
+                                ) : (
+                                    ''
+                                )}
+                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                                     <TextField
                                         error={Boolean(touched.address1 && errors.address1)}
                                         helperText={touched.address1 && errors.address1}
@@ -126,7 +141,7 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.address1}
                                         variant="outlined"
-                                    />  
+                                    />
                                     <TextField
                                         error={Boolean(touched.address2 && errors.address2)}
                                         helperText={touched.address2 && errors.address2}
@@ -138,8 +153,8 @@ const RegisterSecondPage = () => {
                                         value={values.address2}
                                         variant="outlined"
                                     />
-                                </div> 
-                                <div style={{display:"flex", justifyContent:"space-around"}}>    
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                                     <TextField
                                         error={Boolean(touched.city && errors.city)}
                                         helperText={touched.city && errors.city}
@@ -163,7 +178,7 @@ const RegisterSecondPage = () => {
                                         variant="outlined"
                                     />
                                 </div>
-                                <div style={{display:"flex", justifyContent:"space-around"}}>   
+                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                                     <TextField
                                         error={Boolean(touched.zipcode && errors.zipcode)}
                                         helperText={touched.state && errors.state}
@@ -215,23 +230,23 @@ const RegisterSecondPage = () => {
                                 {Boolean(touched.policy && errors.policy) && (
                                     <FormHelperText error>{errors.policy}</FormHelperText>
                                 )}
-                                <Box sx={{ py: 2,
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    ml: 5, }}
-                                    >
+                                <Box sx={{ py: 2, alignItems: 'center', display: 'flex', ml: 5 }}>
                                     <Button
                                         color="primary"
                                         disabled={isSubmitting}
                                         size="large"
                                         type="submit"
                                         variant="contained"
-                                        style={{width:"475px"}}
+                                        style={{ width: '475px' }}
                                     >
                                         Create
                                     </Button>
                                 </Box>
-                                <Typography color="textSecondary" variant="body1" style={{marginLeft:"40px"}}>
+                                <Typography
+                                    color="textSecondary"
+                                    variant="body1"
+                                    style={{ marginLeft: '40px' }}
+                                >
                                     Have an account?{' '}
                                     <Link
                                         component={RouterLink}
@@ -243,32 +258,42 @@ const RegisterSecondPage = () => {
                                     </Link>
                                 </Typography>
                                 <Box
-                                sx={{
-                                    pb: 1,
-                                    pt: 3,
-                                }}
-                            >
-                                <Typography align="center" color="textSecondary" variant="body1">
-                                    or signup with social platform
-                                </Typography>
-                            </Box>
-                            <Grid container spacing={3} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-                                <Grid item xs={12} md={6}>
-                                    <Button
-                                        fullWidth
-                                        startIcon={<GoogleIcon />}
-                                        onClick={handleSubmit}
-                                        size="large"
-                                        variant="contained"
+                                    sx={{
+                                        pb: 1,
+                                        pt: 3,
+                                    }}
+                                >
+                                    <Typography
+                                        align="center"
+                                        color="textSecondary"
+                                        variant="body1"
                                     >
-                                        Login with Google
-                                    </Button>
+                                        or signup with social platform
+                                    </Typography>
+                                </Box>
+                                <Grid
+                                    container
+                                    spacing={3}
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Grid item xs={12} md={6}>
+                                        <Button
+                                            fullWidth
+                                            startIcon={<GoogleIcon />}
+                                            onClick={handleSubmit}
+                                            size="large"
+                                            variant="contained"
+                                        >
+                                            Login with Google
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
                             </form>
                         )}
                     </Formik>
-                    
                 </Container>
             </Box>
         </>
