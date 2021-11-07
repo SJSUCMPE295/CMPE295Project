@@ -3,14 +3,14 @@ const Schema3 = mongoose3.Schema;
 
 const DoctorModel = new Schema3(
     {
-        UserId: { type: Object, required: true },
-        Speciality: { type: String, required: true },
-        License: { type: String, required: true },
-        Qualification: { type: String, required: true },
-        Experience: { type: String, required: true },
-        Gender: { type: String, required: false },
-        Availability: { type: Date, required: true },
-        Description: { type: String, required: false },
+        userId: { type: Object, required: true },
+        speciality: { type: String, required: true },
+        license: { type: String, required: true },
+        qualification: { type: String, required: true },
+        experience: { type: String, required: true },
+        gender: { type: String, required: false },
+        availability: { type: Date, required: true },
+        description: { type: String, required: false },
     },
     { collection: 'Doctor' },
     {
@@ -18,5 +18,5 @@ const DoctorModel = new Schema3(
     }
 );
 
-const doctorModel = mongoose.model('doctor', DoctorModel);
-module.exports = doctorModel;
+const doctorModel = mongoose3.model('doctor', DoctorModel);
+export default doctorModel;
