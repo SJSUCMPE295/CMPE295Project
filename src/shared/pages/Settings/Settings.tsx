@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container } from '@material-ui/core';
-import SettingsNotifications from '../../components/settings/SettingsProfileStatus';
+import SettingsProfileStatus from '../../components/settings/SettingsProfileStatus';
+import SettingsDoctor from '../../components/settings/SettingsDoctor';
 import SettingsPassword from '../../components/settings/SettingsPassword';
 
 const SettingsView = () => (
@@ -17,10 +18,11 @@ const SettingsView = () => (
             }}
         >
             <Container maxWidth="lg">
-                <SettingsNotifications />
                 <Box sx={{ pt: 3 }}>
                     <SettingsPassword />
                 </Box>
+                <SettingsDoctor />
+                <SettingsProfileStatus />
             </Container>
         </Box>
     </>
