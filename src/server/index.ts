@@ -17,6 +17,7 @@ import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
 import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
+
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -42,6 +43,7 @@ app.use('/api/home', homeRouter);
 app.use('/api/givehelp', giveHelpRouter);
 app.use('/api/signup', signUpRouter);
 app.use('/api/login', loginRouter);
+
 /* End: Api routes*/
 app.use(addStore);
 
