@@ -4,10 +4,12 @@ import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Box, Button, Container, Grid, Link, TextField, Typography, Paper } from '@material-ui/core';
-import GoogleIcon from '../icons/Google';
+import GoogleIcon from '../../icons/Google';
+import { useAuth } from 'contexts/AuthContext';
 
 
 const Login = () => {
+    const currentUser = useAuth();
     const history = useHistory();
 
     return (
@@ -15,7 +17,7 @@ const Login = () => {
             <Helmet>
                 <title>WeCare - Login</title>
             </Helmet>
-
+            
             <Box
                 sx={{
                     backgroundColor: '#ffffff',

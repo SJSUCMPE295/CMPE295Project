@@ -6,15 +6,17 @@ import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
 import Settings from 'pages/Settings';
-import Login from 'pages/Login';
+import Login from 'pages/Login/Login';
 import Register from 'pages/Register';
 import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
+import AuthContextProvider from 'contexts/AuthContext';
 
 const App: React.FC<any> = () => {
     return (
+        <AuthContextProvider>
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <div>
@@ -50,6 +52,7 @@ const App: React.FC<any> = () => {
                 </div>
             </ThemeProvider>
         </StyledEngineProvider>
+        </AuthContextProvider>
     );
 };
 
