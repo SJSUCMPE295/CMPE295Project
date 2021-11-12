@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container, Grid } from '@material-ui/core';
-import AccountProfile from '../components/account/AccountProfile';
-import AccountProfileDetails from '../components/account/AccountProfileDetails';
+import AccountProfile from '../../components/account/AccountProfile';
+import AccountProfileDetails from '../../components/account/AccountProfileDetails';
 
 const Account = () => (
     <>
         <Helmet>
-            <title>Account | Material Kit</title>
+            <title>WeCare | User Profile</title>
         </Helmet>
         <Box
             sx={{

@@ -11,9 +11,7 @@ const Transaction_Logger = new Schema(
         Quantity: { type: Number, required: true },
         Type: { type: String, required: true },
     },
-    { collection: 'Transaction_Logger' ,
-        versionKey: false
-    }
+    { collection: 'Transaction_Logger', versionKey: false }
 );
 
 const transaction_loggerModel = mongoose.model('transaction_logger', Transaction_Logger);

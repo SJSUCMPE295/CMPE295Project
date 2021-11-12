@@ -27,7 +27,7 @@ const Sales = (props) => {
                 data: [50, 10, 39, 27, 29, 19, 20],
                 label: 'Quantity available',
                 maxBarThickness: 13,
-            }/*,
+            } /*,
             {
                 backgroundColor: colors.grey[200],
                 barPercentage: 0.5,
@@ -37,9 +37,16 @@ const Sales = (props) => {
                 data: [11, 20, 12, 29, 30, 25, 13],
                 label: 'Last year',
                 maxBarThickness: 10,
-            },*/
+            },*/,
         ],
-        labels: ['Mask', 'Oxygen Cyllinder', 'Sanitizer', 'Bed', 'Pulse Oximeter', 'Infrared Thermometer'],
+        labels: [
+            'Mask',
+            'Oxygen Cyllinder',
+            'Sanitizer',
+            'Bed',
+            'Pulse Oximeter',
+            'Infrared Thermometer',
+        ],
     };
 
     const options = {

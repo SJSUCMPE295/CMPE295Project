@@ -9,18 +9,19 @@ import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
 import useMounted  from '../hooks/useMounted';
 
-const Login = () => {
+const ForgotPassword = () => {
     const history = useHistory();
     const location = useLocation();
-    const [alert, setAlert] = useState(false);
-    const [error, setError] = useState('');
-    const {login, signinWithGoogle} = useAuth();
+    const [errorAlert, setErrorAlert] = useState(false);
+    const [successAlert, setSuccessAlert] = useState(false);
+    const [message, setMessage] = useState('');
+    const { forgotPassword } = useAuth();
     const mounted = useMounted();
 
     return (
         <>
             <Helmet>
-                <title>WeCare - Login</title>
+                <title>WeCare - ForgotPassword</title>
             </Helmet>
             
             <Box
@@ -36,44 +37,40 @@ const Login = () => {
                     {/* <Paper elevation={0}>
                     <img src={image} height="100" style={{marginLeft:"400"}}/>
                 </Paper> */}
+                    {errorAlert ?  
                     <div style={{marginTop:"50px", marginBottom:"50px"}}>
-                        {alert ?  
-                            <Alert severity="error">{error}</Alert>
-                        : <></> }
+                            <Alert severity="error">{message}</Alert>
                     </div>
+                    : <></> }
+                    {successAlert ? 
+                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                            <Alert severity="success">{message}</Alert>
+                    </div>
+                    : <></> }
                     <Formik
                         initialValues={{
                             email: '',
-                            password: '',
-                            isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
                                 .email('Must be a valid email')
                                 .max(255)
                                 .required('Email is required'),
-                            password: Yup.string().max(255).required('Password is required'),
                         })}
                         onSubmit={(values) => {
-                            console.log(values);
-                            values.isSubmitting = true;
-                            setAlert(false);
-                            login(values.email, values.password)
+                            forgotPassword(values.email)
                                 .then((response) => {
                                     console.log(response);
-                                    history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+                                    setSuccessAlert(true);
+                                    setErrorAlert(false);
+                                    setMessage("Email has been sent to reset the password");
                                 })
-                                .catch((error) => {
-                                    //console.log(error.message);
-                                    setAlert(true);
-                                    console.log(error);
-                                    setError(error.message);
-                                   
+                                .catch(error => {
+                                    console.log(error)
+                                    setErrorAlert(true);
+                                    setSuccessAlert(false);
+                                    setMessage(error.message);
                                 })
-                                .finally(() => {
-                                    mounted.current && (values.isSubmitting = false);
-                                })
-                            // history.push('/app/dashboard', { replace: true });
                         }}
                     >
                         {({
@@ -94,11 +91,11 @@ const Login = () => {
                                     justifyContent="center"
                                 >
                                     <Typography color="textPrimary" variant="h2">
-                                        Sign in
+                                        Forgot Password
                                     </Typography>
-                                    <Typography color="textSecondary" gutterBottom variant="body2" style={{marginTop:"5px"}}>
+                                    {/* <Typography color="textSecondary" gutterBottom variant="body2" style={{marginTop:"5px"}}>
                                         Sign in on the WeCare platform using Social
-                                    </Typography>
+                                    </Typography> */}
                                 </Box>
                                 {/* <Grid
                                     container
@@ -109,7 +106,7 @@ const Login = () => {
                                     justifyContent="center"
                                 > */}
                                     {/* <Grid item xs={12} md={6}> */}
-                                    <Box >
+                                    {/* <Box >
                                         <Button
                                             fullWidth
                                             startIcon={<GoogleIcon />}
@@ -127,10 +124,10 @@ const Login = () => {
                                         >
                                             Login with Google
                                         </Button>
-                                    </Box>
+                                    </Box> */}
                                     {/* </Grid>
                                 </Grid> */}
-                                <Box
+                                {/* <Box
                                     sx={{
                                         pb: 1,
                                         pt: 3,
@@ -143,7 +140,7 @@ const Login = () => {
                                     >
                                         or login with email address
                                     </Typography>
-                                </Box>
+                                </Box> */}
                                 <TextField
                                     error={Boolean(touched.email && errors.email)}
                                     fullWidth
@@ -157,7 +154,7 @@ const Login = () => {
                                     value={values.email}
                                     variant="outlined"
                                 />
-                                <TextField
+                                {/* <TextField
                                     error={Boolean(touched.password && errors.password)}
                                     fullWidth
                                     helperText={touched.password && errors.password}
@@ -169,42 +166,43 @@ const Login = () => {
                                     type="password"
                                     value={values.password}
                                     variant="outlined"
-                                />
+                                /> */}
                                 <Box sx={{ py: 2 }}>
                                     <Button
                                         color="primary"
-                                        disabled={values.isSubmitting}
+                                        disabled={isSubmitting}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                     >
-                                        Sign in now
+                                        Submit
                                     </Button>
                                 </Box>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <Typography color="textSecondary" variant="body1">
-                                        <Link
-                                            component={RouterLink}
-                                            to="/forgot-password"
-                                            variant="h6"
-                                            underline="hover"
-                                        >
-                                        Forgot Password?
-                                        </Link>
+                                <Box
+                                    sx={{
+                                        pb: 1,
+                                        pt: 3,
+                                    }}
+                                >
+                                    <Typography
+                                        align="center"
+                                        color="textSecondary"
+                                        variant="body2"
+                                    >
+                                        OR
                                     </Typography>
-                                    <Typography color="textSecondary" variant="body1">
-                                        Don&apos;t have an account?{' '}
-                                        <Link
-                                            component={RouterLink}
-                                            to="/register1"
-                                            variant="h6"
-                                            underline="hover"
-                                        >
-                                            Sign up
-                                        </Link>
-                                    </Typography>
-                                </div>
+                                </Box>
+                                <Typography color="textSecondary" variant="body1" alignItems="center">
+                                    <Link
+                                        component={RouterLink}
+                                        to="/login"
+                                        variant="h5"
+                                        underline="hover"
+                                    >
+                                        Login
+                                    </Link>
+                                </Typography>
                             </form>
                         )}
                     </Formik>
@@ -214,4 +212,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ForgotPassword;

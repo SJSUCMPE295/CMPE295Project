@@ -1,18 +1,22 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
-import Account from 'pages/Account';
+import Account from 'pages/Account/Account';
 import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
-import Settings from 'pages/Settings';
+import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
-import Register from 'pages/Register';
+import Register1 from 'pages/Register/RegisterFirstPage';
+import Register2 from 'pages/Register/RegisterSecondPage';
+import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
+import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
 import AuthContextProvider from 'contexts/AuthContext';
+import { useAuth } from 'contexts/AuthContext';
 
 const App: React.FC<any> = () => {
     return (
@@ -24,23 +28,38 @@ const App: React.FC<any> = () => {
                         <Route path={'/app'}>
                             <DashboardLayout>
                                 <Switch>
-                                    <Route path={'/app/account'} component={Account} />
+                                    <ProtectedRoute path={'/app/account'} component={Account} />
                                     <Route path={'/app/customers'} component={CustomerList} />
-                                    <Route path={'/app/dashboard'} component={Dashboard} />
+                                    <ProtectedRoute path={'/app/dashboard'} component={Dashboard} />
                                     <Route path={'/app/products'} component={ProductList} />
-                                    <Route path={'/app/settings'} component={Settings} />
+                                    <ProtectedRoute path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>
                         </Route>
 
-                        <Route path={'/login'}>
+                        <ProtectedRoute path={'/login'}>
                             <MainLayout>
                                 <Login />
                             </MainLayout>
-                        </Route>
-                        <Route path={'/register'}>
+                        </ProtectedRoute>
+                        <ProtectedRoute path={'/register1'}>
                             <MainLayout>
-                                <Register />
+                                <Register1 />
+                            </MainLayout>
+                        </ProtectedRoute>
+                        <ProtectedRoute path={'/register2'}>
+                            <MainLayout>
+                                <Register2 />
+                            </MainLayout>
+                        </ProtectedRoute>
+                        <Route path={'/forgot-password'}>
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        </Route>
+                        <Route path={'/reset-password'}>
+                            <MainLayout>
+                                <ResetPassword />
                             </MainLayout>
                         </Route>
                         <Route exact path="/">
@@ -55,5 +74,20 @@ const App: React.FC<any> = () => {
         </AuthContextProvider>
     );
 };
+
+function ProtectedRoute(props) {
+    const {currentUser} = useAuth();
+    const location = useLocation();
+    const { path } = props;
+    if(path == '/login' || path == '/register1' || path == '/register2') {
+        return currentUser ? (<Redirect to={location.state?.from ?? '/app/dashboard'} />) :
+           ( <Route {...props}/>)
+        }
+
+    return currentUser ? <Route {...props} /> : <Redirect to={{
+        pathname: '/login',
+        state: {from: path}
+    }} />
+}
 
 export default App;

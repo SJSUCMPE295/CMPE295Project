@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import MoneyIcon from '@material-ui/icons/Money';
-import { red,green } from '@material-ui/core/colors';
+import { red, green } from '@material-ui/core/colors';
 
 const Budget = (props) => (
     <Card sx={{ height: '100%' }} {...props}>

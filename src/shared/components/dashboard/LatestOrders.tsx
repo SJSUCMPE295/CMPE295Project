@@ -49,7 +49,7 @@ const orders = [
         },
         createdAt: 1633328235000,
         status: '95336',
-    }, 
+    },
     {
         id: uuid(),
         ref: 'Car Pool',
