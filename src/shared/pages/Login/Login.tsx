@@ -8,15 +8,27 @@ import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
 import useMounted  from '../hooks/useMounted';
+import { useDispatch } from 'react-redux';
+import {loginAction} from '../../store/constants/action-types';
 
 const Login = () => {
     const history = useHistory();
     const location = useLocation();
+    const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
     const {login, signinWithGoogle} = useAuth();
     const mounted = useMounted();
 
+    const handleSubmit = (email) => {
+        dispatch({type:loginAction, email});
+        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+    }
+
+    const handleSubmitWithGoogle = (email) => {
+        dispatch({type:loginAction, email});
+        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+    }
     return (
         <>
             <Helmet>
@@ -61,7 +73,7 @@ const Login = () => {
                             login(values.email, values.password)
                                 .then((response) => {
                                     console.log(response);
-                                    history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+                                    handleSubmit(values.email);
                                 })
                                 .catch((error) => {
                                     //console.log(error.message);
@@ -115,8 +127,9 @@ const Login = () => {
                                             startIcon={<GoogleIcon />}
                                             onClick={() => 
                                                 signinWithGoogle()
-                                                .then(user => {
+                                                .then((user:any) => {
                                                     console.log(user);
+                                                    handleSubmitWithGoogle(user.user.email);
                                                     history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch(error =>  {console.log(error)})

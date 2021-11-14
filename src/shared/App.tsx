@@ -28,30 +28,30 @@ const App: React.FC<any> = () => {
                         <Route path={'/app'}>
                             <DashboardLayout>
                                 <Switch>
-                                    <ProtectedRoute path={'/app/account'} component={Account} />
+                                    <Route path={'/app/account'} component={Account} />
                                     <Route path={'/app/customers'} component={CustomerList} />
-                                    <ProtectedRoute path={'/app/dashboard'} component={Dashboard} />
+                                    <Route path={'/app/dashboard'} component={Dashboard} />
                                     <Route path={'/app/products'} component={ProductList} />
-                                    <ProtectedRoute path={'/app/settings'} component={Settings} />
+                                    <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>
                         </Route>
 
-                        <ProtectedRoute path={'/login'}>
+                        <Route path={'/login'}>
                             <MainLayout>
                                 <Login />
                             </MainLayout>
-                        </ProtectedRoute>
-                        <ProtectedRoute path={'/register1'}>
+                        </Route>
+                        <Route path={'/register1'}>
                             <MainLayout>
                                 <Register1 />
                             </MainLayout>
-                        </ProtectedRoute>
-                        <ProtectedRoute path={'/register2'}>
+                        </Route>
+                        <Route path={'/register2'}>
                             <MainLayout>
                                 <Register2 />
                             </MainLayout>
-                        </ProtectedRoute>
+                        </Route>
                         <Route path={'/forgot-password'}>
                             <MainLayout>
                                 <ForgotPassword />
@@ -79,7 +79,10 @@ function ProtectedRoute(props) {
     const {currentUser} = useAuth();
     const location = useLocation();
     const { path } = props;
-    if(path == '/login' || path == '/register1' || path == '/register2') {
+    console.log('currentuse',currentUser);
+    console.log('path', path);
+    console.log('props', props);
+    if(path == '/login' || path == '/register1' ) {
         return currentUser ? (<Redirect to={location.state?.from ?? '/app/dashboard'} />) :
            ( <Route {...props}/>)
         }

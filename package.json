@@ -198,7 +198,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.2.1",
     "postcss-normalize": "^9.0.0",
-    "prettier": "^2.0.5",
+    "prettier": "2.4.1",
     "promise": "^8.1.0",
     "puppeteer": "^4.0.1",
     "react-dev-utils": "^11.0.4",

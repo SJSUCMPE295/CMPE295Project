@@ -15,20 +15,34 @@ import {
     Typography,
     Grid,
     Snackbar,
+    Divider,
     Alert
 } from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from '../../contexts/AuthContext';
 import useMounted from '../hooks/useMounted';
+import { useDispatch } from 'react-redux';
+import {saveUserName} from '../../store/constants/action-types';
 
 const RegisterFirstPage = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
-    // const [isSubmitting, setIsSubmitting] = useState(initalState);
     
     const {register, signinWithGoogle} = useAuth();
     const mounted = useMounted();
+
+    const handleSubmit = (email, firstName, lastName) => {
+        dispatch({type:saveUserName, firstName, lastName, email});
+        history.push('/register2', { replace: true });
+    }
+
+    const handleSubmitWithGoogle = (email, firstName, lastName) => {
+        dispatch({type:saveUserName, firstName, lastName, email});
+        history.push('/register2', { replace: true });
+    }
+
 
     return (
         <>
@@ -74,7 +88,7 @@ const RegisterFirstPage = () => {
                             register(values.email, values.password)
                                 .then((response) => {
                                     console.log(response);
-                                    history.push('/register2', { replace: true });
+                                    handleSubmit(values.email, values.firstName, values.lastName);
                                 })
                                 .catch((error) => {
                                     //console.log(error.message);
@@ -212,7 +226,16 @@ const RegisterFirstPage = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
-                                <Box
+                                <Divider>
+                                              <Typography
+                                        align="center"
+                                        color="textSecondary"
+                                        variant="body1"
+                                    >
+                                        or signup with social platform
+                                    </Typography>
+                                </Divider>
+                                {/* <Box
                                     sx={{
                                         pb: 1,
                                         pt: 3,
@@ -225,8 +248,8 @@ const RegisterFirstPage = () => {
                                     >
                                         or signup with social platform
                                     </Typography>
-                                </Box>
-                                <Grid
+                                </Box> */}
+                                {/* <Grid
                                     container
                                     spacing={3}
                                     display="flex"
@@ -234,15 +257,22 @@ const RegisterFirstPage = () => {
                                     alignItems="center"
                                     justifyContent="center"
                                 >
-                                    <Grid item xs={12} md={6}>
+                                    <Grid item xs={12} md={6}> */}
+                                    <Box
+                                    sx={{
+                                        pb: 1,
+                                        pt: 3,
+                                    }}
+                                    >
                                         <Button
                                             fullWidth
                                             startIcon={<GoogleIcon />}
                                             onClick={() => 
                                                 signinWithGoogle()
-                                                .then(user => {
-                                                    console.log(user);
-                                                    history.push('/register2');
+                                                .then((user:any) => {
+                                                    // console.log(user._tokenResponse.lastName);
+                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.firstName, user._tokenResponse.lastName);
+                                                    // history.push('/register2');
                                                 })
                                                 .catch(error =>  {console.log(error)})
                                                 }
@@ -251,8 +281,9 @@ const RegisterFirstPage = () => {
                                         >
                                             Login with Google
                                         </Button>
-                                    </Grid>
-                                </Grid>
+                                    </Box>
+                                    {/* </Grid>
+                                </Grid> */}
                             </form>
                         )}
                     </Formik>
