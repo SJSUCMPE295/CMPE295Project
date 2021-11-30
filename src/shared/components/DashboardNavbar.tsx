@@ -9,16 +9,16 @@ import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     const [notifications] = React.useState([]);
-
+    const UserId="617f2fb40583ba49a0091425"//'';
     return (
         <AppBar elevation={0} {...rest}>
             <Toolbar>
-                {/*<RouterLink to="/">*/}
+                <RouterLink to="/">
                 <Logo />
-                {/*</RouterLink>*/}
+                </RouterLink>
                 <Box sx={{ flexGrow: 1 }} />
-                <Hidden xlDown>
-                    <IconButton color="inherit" size="large">
+                {UserId!='' ? <Hidden xlDown>
+                     <IconButton color="inherit" size="large">
                         <Badge badgeContent={notifications.length} color="primary" variant="dot">
                             <NotificationsIcon />
                         </Badge>
@@ -26,7 +26,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
                     <IconButton color="inherit" size="large">
                         <InputIcon />
                     </IconButton>
-                </Hidden>
+                </Hidden> : null}
                 <Hidden lgUp>
                     <IconButton color="inherit" onClick={onMobileNavOpen} size="large">
                         <MenuIcon />

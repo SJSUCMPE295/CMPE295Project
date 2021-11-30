@@ -16,26 +16,75 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
-
 const user = {
+    UserId:"617f2fb40583ba49a0091425",
     avatar: '/static/images/avatars/avatar_2.png',
     jobTitle: 'San Jose,CA',
     name: 'Katarina Smith',
 };
+let items=[{}];
+if(user.UserId!='')
+{
+     items = [
 
-const items = [
+        
+        {
+            href: '/app/dashboard',
+            icon: BarChartIcon,
+            title: 'Dashboard',
+        },
+        {
+            href: '/app/gethelp',
+            icon: PackageIcon,
+            title: 'Get Help',
+        },
+        {
+            href: '/app/givehelp',
+            icon: ShoppingBagIcon,
+            title: 'Give Help',
+        },
+        {
+            href: '/app/products',
+            icon: PlusCircleIcon,
+            title: 'Medical Assistance',
+        },
+        {
+            href: '/app/account',
+            icon: UserIcon,
+            title: 'Account',
+        },
+        {
+            href: '/app/settings',
+            icon: SettingsIcon,
+            title: 'Settings',
+        },
+    ];
+}
+else{
+ items = [
+
+    {
+        href: '/login',
+        icon: LockIcon,
+        title: 'Login',
+    },
+    {
+        href: '/register1',
+        icon: UserPlusIcon,
+        title: 'Register',
+    },
     {
         href: '/app/dashboard',
         icon: BarChartIcon,
         title: 'Dashboard',
     },
     {
-        href: '/app/customers',
+        href: '/app/gethelp',
         icon: PackageIcon,
         title: 'Get Help',
     },
     {
-        href: '/app/products',
+        href: '/app/givehelp',
         icon: ShoppingBagIcon,
         title: 'Give Help',
     },
@@ -55,22 +104,13 @@ const items = [
         title: 'Settings',
     },
     /*
-    {
-        href: '/login',
-        icon: LockIcon,
-        title: 'Login',
-    },
-    {
-        href: '/register1',
-        icon: UserPlusIcon,
-        title: 'Register',
-    },
+    
     {
         href: '/404',
         icon: AlertCircleIcon,
         title: 'Error',
     },*/
-];
+];}
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const location = useLocation();
@@ -89,6 +129,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                 height: '100%',
             }}
         >
+            {user.UserId!='' ?
             <Box
                 sx={{
                     alignItems: 'center',
@@ -113,7 +154,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                 <Typography color="textSecondary" variant="body2">
                     {user.jobTitle}
                 </Typography>
-            </Box>
+            </Box> :null}
             <Divider />
             <Box sx={{ p: 2 }}>
                 <List>
@@ -139,7 +180,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     Are you a Doctor?
                 </Typography>
                 <Typography align="center" variant="body2">
-                    Please help us in assisting non-urgent medical needs
+                    Help us in assisting non-urgent medical needs
                 </Typography>
                 <Box
                     sx={{

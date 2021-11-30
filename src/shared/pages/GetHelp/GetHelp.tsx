@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container } from '@material-ui/core';
-import CustomerListResults from '../components/customer/CustomerListResults';
-import CustomerListToolbar from '../components/customer/CustomerListToolbar';
-import customers from '../__mocks__/customers';
+import GetHelpToolbar from '../../components/gethelp/GetHelpToolbar';
+import GetHelpResults from '../../components/gethelp/GetHelpResults';
+import resources from '../../__mocks__/resources';
 
-const CustomerList = () => (
+const GetHelp = () => (
     <>
         <Helmet>
-            <title>Customers | Material Kit</title>
+            <title>GetHelp | WeCare</title>
         </Helmet>
         <Box
             sx={{
@@ -18,13 +18,13 @@ const CustomerList = () => (
             }}
         >
             <Container maxWidth={false}>
-                <CustomerListToolbar />
+                <GetHelpToolbar />
                 <Box sx={{ pt: 3 }}>
-                    <CustomerListResults customers={customers} />
+                    <GetHelpResults resources={resources} />
                 </Box>
             </Container>
         </Box>
     </>
 );
 
-export default CustomerList;
+export default GetHelp;

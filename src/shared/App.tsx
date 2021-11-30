@@ -2,9 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 import Account from 'pages/Account/Account';
-import CustomerList from 'pages/CustomerList';
-import Dashboard from 'pages/Dashboard';
-import ProductList from 'pages/ProductList';
+import Dashboard from 'pages/Dashboard/Dashboard';
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login';
 import Register1 from 'pages/Register/RegisterFirstPage';
@@ -13,7 +11,8 @@ import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
-
+import GetHelp from 'pages/GetHelp/GetHelp';
+import GiveHelp from 'pages/GiveHelp/GiveHelp';
 const App: React.FC<any> = () => {
     return (
         <StyledEngineProvider injectFirst>
@@ -24,9 +23,9 @@ const App: React.FC<any> = () => {
                             <DashboardLayout>
                                 <Switch>
                                     <Route path={'/app/account'} component={Account} />
-                                    <Route path={'/app/customers'} component={CustomerList} />
+                                    <Route path={'/app/gethelp'} component={GetHelp} />
                                     <Route path={'/app/dashboard'} component={Dashboard} />
-                                    <Route path={'/app/products'} component={ProductList} />
+                                    <Route path={'/app/givehelp'} component={GiveHelp} />
                                     <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>
