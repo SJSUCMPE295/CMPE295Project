@@ -1,20 +1,19 @@
 import { Router } from 'express';
-import { serviceModel } from '../models/services';
-import { resourceModel } from '../models/resources';
+import serviceModel from '../models/services';
+import resourceModel from '../models/resources';
+import { json } from 'stream/consumers';
 const router = Router();
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
 // API to post resource
 router.post('/resource', async (req, res) => {
-    const {
-        UserId = 'test',
-        Resource_Name = 'test',
-        Category = 'test',
-        Description = 'test',
-        Phone_Number = 1,
-        AddressId = 'test',
-        SKU = 1,
-    } = req.body;
+    const UserId=req.body.UserId;
+    const Resource_Name=req.body.Resource_Name;
+    const Category=req.body.Category;
+    const Description=req.body.Description;
+    const Phone_Number=req.body.Phone_Number;
+    const AddressId=req.body.AddressId;
+    const SKU=req.body.SKU;
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,
@@ -41,15 +40,21 @@ router.post('/resource', async (req, res) => {
 
 // API to post service
 router.post('/service', async (req, res) => {
-    //    const {UserId='test', Resource_Name='test', Category='test', Description='test', Phone_Number=1, AddressId='test', SKU=1}  = req.body
+    const UserId=req.body.UserId;
+    const Service_Name=req.body.Service_Name;
+    const Category=req.body.Category;
+    const Description=req.body.Description;
+    const Phone_Number=req.body.Phone_Number;
+    const AddressId=req.body.AddressId;
+    const Availability=req.body.Availability;
     const servicedata = new serviceModel({
-        UserId: req.body.UserId,
-        Service_Name: req.body.Service_Name,
-        Category: req.body.Category,
-        Description: req.body.Description,
-        Phone_Number: req.body.Phone_Number,
-        AddressId: req.body.AddressId,
-        Availability: req.body.Availability,
+        UserId,
+        Service_Name,
+        Category,
+        Description,
+        Phone_Number,
+        AddressId,
+        Availability,
     });
     try {
         await servicedata.save((error, data) => {
@@ -68,11 +73,11 @@ router.post('/service', async (req, res) => {
 
 //Api to update Service Availability
 router.post('/update', async (_req, res) => {
-    const id = _req.body.serviceId;
+    const id = _req.query._id;
     try {
         serviceModel.findByIdAndUpdate(
             id,
-            { Availability: _req.body.Availability },
+            {$set:{ Availability: _req.body.Availability }},
             (error, data) => {
                 if (error) {
                     console.log('error', error);
