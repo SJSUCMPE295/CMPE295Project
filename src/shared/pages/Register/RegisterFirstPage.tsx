@@ -60,7 +60,7 @@ const RegisterFirstPage = () => {
             >   
             
                 <Container maxWidth="sm" style={{ marginTop: '50px' }}>
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                    <div style={{marginTop:"20px", marginBottom:"50px"}}>
                         {alert ?  
                             <Alert severity="error">{error}</Alert>
                         : <></> }
