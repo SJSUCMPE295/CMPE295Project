@@ -10,48 +10,47 @@ import {
     SvgIcon,
     Divider,
     FormControlLabel,
-    FormGroup
+    FormGroup,
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 
-
-
 const ProductListToolbar = (props) => (
     <Box {...props}>
-        <Box 
+        <Box
             sx={{
                 display: 'flex',
                 justifyContent: 'flex-start',
-                width:500,
-                height:700,
-                p: 1
-                }}
-        >
-        <form {...props}>
-            <Card 
-                sx={{
-                //display: 'flex',
+                width: 500,
                 height: 700,
-                width:900,
-                justifyContent:'center',
-                //justifyContent: 'flex-start'
-                }}
-            >
-                    <CardHeader 
+                p: 1,
+            }}
+        >
+            <form {...props}>
+                <Card
+                    sx={{
+                        //display: 'flex',
+                        height: 700,
+                        width: 900,
+                        justifyContent: 'center',
+                        //justifyContent: 'flex-start'
+                    }}
+                >
+                    <CardHeader
                         sx={{
                             display: 'flex',
                             justifyContent: 'flex-start',
                         }}
-                        subheader="update the resource/service details you would like to provide" title="Give Help"
+                        subheader="update the resource/service details you would like to provide"
+                        title="Give Help"
                     />
                     <Divider />
                     <CardContent>
-                        <Box 
-                        sx={{
+                        <Box
+                            sx={{
                                 display: 'flex',
-                                justifyContent: 'flex-start',       
-                        }}
+                                justifyContent: 'flex-start',
+                            }}
                         >
                             <TextField
                                 required
@@ -95,7 +94,10 @@ const ProductListToolbar = (props) => (
                         </Box>
                         <Box sx={{ pt: 2 }}>
                             <FormGroup>
-                                <FormControlLabel control={<Checkbox/>} label="Use my profile address" />
+                                <FormControlLabel
+                                    control={<Checkbox />}
+                                    label="Use my profile address"
+                                />
                             </FormGroup>
                         </Box>
                         <Box sx={{ pt: 2 }}>

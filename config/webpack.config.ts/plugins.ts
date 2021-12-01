@@ -23,8 +23,8 @@ export const shared = [
         chunkFilename: isDev() ? '[id].css' : '[id].[contenthash].css',
     }),
     new webpack.ProvidePlugin({
-        "React": "react",
-     }),
+        React: 'react',
+    }),
     new CaseSensitivePathsPlugin(),
 ];
 

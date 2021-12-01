@@ -4,10 +4,20 @@ import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Box, Button, Container, Grid, Link, TextField, Typography, Alert, Divider } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Link,
+    TextField,
+    Typography,
+    Alert,
+    Divider,
+} from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
-import useMounted  from '../hooks/useMounted';
+import useMounted from '../hooks/useMounted';
 
 const ForgotPassword = () => {
     const history = useHistory();
@@ -23,7 +33,7 @@ const ForgotPassword = () => {
             <Helmet>
                 <title>WeCare - ForgotPassword</title>
             </Helmet>
-            
+
             <Box
                 sx={{
                     backgroundColor: '#ffffff',
@@ -34,16 +44,20 @@ const ForgotPassword = () => {
                 }}
             >
                 <Container maxWidth="sm" style={{ marginTop: '70px' }}>
-                    {errorAlert ?  
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                    {errorAlert ? (
+                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                             <Alert severity="error">{message}</Alert>
-                    </div>
-                    : <></> }
-                    {successAlert ? 
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {successAlert ? (
+                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                             <Alert severity="success">{message}</Alert>
-                    </div>
-                    : <></> }
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     <Formik
                         initialValues={{
                             email: '',
@@ -60,14 +74,14 @@ const ForgotPassword = () => {
                                     console.log(response);
                                     setSuccessAlert(true);
                                     setErrorAlert(false);
-                                    setMessage("Email has been sent to reset the password");
+                                    setMessage('Email has been sent to reset the password');
                                 })
-                                .catch(error => {
-                                    console.log(error)
+                                .catch((error) => {
+                                    console.log(error);
                                     setErrorAlert(true);
                                     setSuccessAlert(false);
                                     setMessage(error.message);
-                                })
+                                });
                         }}
                     >
                         {({
@@ -90,7 +104,7 @@ const ForgotPassword = () => {
                                     <Typography color="textPrimary" variant="h2">
                                         Forgot Password
                                     </Typography>
-                                </Box>   
+                                </Box>
                                 <TextField
                                     error={Boolean(touched.email && errors.email)}
                                     fullWidth
@@ -117,7 +131,7 @@ const ForgotPassword = () => {
                                     </Button>
                                 </Box>
                                 <Divider>
-                                              <Typography
+                                    <Typography
                                         align="center"
                                         color="textSecondary"
                                         variant="body2"
@@ -125,8 +139,12 @@ const ForgotPassword = () => {
                                         OR
                                     </Typography>
                                 </Divider>
-                                <div style={{ marginLeft:"260px", marginTop:"10px" }}>
-                                    <Typography color="textSecondary" variant="body1" alignItems="center">
+                                <div style={{ marginLeft: '260px', marginTop: '10px' }}>
+                                    <Typography
+                                        color="textSecondary"
+                                        variant="body1"
+                                        alignItems="center"
+                                    >
                                         <Link
                                             component={RouterLink}
                                             to="/login"

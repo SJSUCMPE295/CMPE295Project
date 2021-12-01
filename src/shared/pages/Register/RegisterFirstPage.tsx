@@ -16,33 +16,32 @@ import {
     Grid,
     Snackbar,
     Divider,
-    Alert
+    Alert,
 } from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from '../../contexts/AuthContext';
 import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import {saveUserName} from '../../store/constants/action-types';
+import { saveUserName } from '../../store/constants/action-types';
 
 const RegisterFirstPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
-    
-    const {register, signinWithGoogle} = useAuth();
+
+    const { register, signinWithGoogle } = useAuth();
     const mounted = useMounted();
 
     const handleSubmit = (email, firstName, lastName) => {
-        dispatch({type:saveUserName, firstName, lastName, email});
+        dispatch({ type: saveUserName, firstName, lastName, email });
         history.push('/register2', { replace: true });
-    }
+    };
 
     const handleSubmitWithGoogle = (email, firstName, lastName) => {
-        dispatch({type:saveUserName, firstName, lastName, email});
+        dispatch({ type: saveUserName, firstName, lastName, email });
         history.push('/register2', { replace: true });
-    }
-
+    };
 
     return (
         <>
@@ -57,13 +56,10 @@ const RegisterFirstPage = () => {
                     height: '100%',
                     justifyContent: 'center',
                 }}
-            >   
-            
+            >
                 <Container maxWidth="sm" style={{ marginTop: '50px' }}>
-                    <div style={{marginTop:"20px", marginBottom:"50px"}}>
-                        {alert ?  
-                            <Alert severity="error">{error}</Alert>
-                        : <></> }
+                    <div style={{ marginTop: '20px', marginBottom: '50px' }}>
+                        {alert ? <Alert severity="error">{error}</Alert> : <></>}
                     </div>
                     <Formik
                         initialValues={{
@@ -71,7 +67,7 @@ const RegisterFirstPage = () => {
                             firstName: '',
                             lastName: '',
                             password: '',
-                            isSubmitting: false
+                            isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
@@ -94,22 +90,14 @@ const RegisterFirstPage = () => {
                                     //console.log(error.message);
                                     setAlert(true);
                                     setError(error.message);
-                                   
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
-                                })
+                                });
                             //history.push('/register2', { replace: true });
                         }}
                     >
-                        {({
-                            errors,
-                            handleBlur,
-                            handleChange,
-                            handleSubmit,
-                            touched,
-                            values,
-                        }) => (
+                        {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
                             <form onSubmit={handleSubmit}>
                                 <Box
                                     sx={{ mb: 3 }}
@@ -227,7 +215,7 @@ const RegisterFirstPage = () => {
                                     </Link>
                                 </Typography>
                                 <Divider>
-                                              <Typography
+                                    <Typography
                                         align="center"
                                         color="textSecondary"
                                         variant="body1"
@@ -258,31 +246,37 @@ const RegisterFirstPage = () => {
                                     justifyContent="center"
                                 >
                                     <Grid item xs={12} md={6}> */}
-                                    <Box
+                                <Box
                                     sx={{
                                         pb: 1,
                                         pt: 3,
                                     }}
-                                    >
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={() => 
-                                                signinWithGoogle()
-                                                .then((user:any) => {
+                                >
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={() =>
+                                            signinWithGoogle()
+                                                .then((user: any) => {
                                                     // console.log(user._tokenResponse.lastName);
-                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.firstName, user._tokenResponse.lastName);
+                                                    handleSubmitWithGoogle(
+                                                        user.user.email,
+                                                        user._tokenResponse.firstName,
+                                                        user._tokenResponse.lastName
+                                                    );
                                                     // history.push('/register2');
                                                 })
-                                                .catch(error =>  {console.log(error)})
-                                                }
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Box>
-                                    {/* </Grid>
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                })
+                                        }
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
+                                </Box>
+                                {/* </Grid>
                                 </Grid> */}
                             </form>
                         )}

@@ -7,7 +7,7 @@ const createRootReducer = () =>
     combineReducers({
         app,
         userProfileReducer,
-        loginReducer
+        loginReducer,
     });
 
 export default createRootReducer;

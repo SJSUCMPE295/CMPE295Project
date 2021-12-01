@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { userModel } from '../models/user';
 const router = Router();
 const Mongoose = require('mongoose');
-import  doctorModel from '../models/doctor';
+import doctorModel from '../models/doctor';
 
 ///API for signup
 router.post('/user', async (req, res) => {
@@ -42,35 +42,34 @@ router.post('/user', async (req, res) => {
         address,
     });
     try {
-        console.log("data",userdata);
+        console.log('data', userdata);
         await userdata.save((error, data) => {
             if (error) {
-                console.log("System Error",error);
+                console.log('System Error', error);
                 return res.json(500).send('System Error');
-            }
-            else {
-                console.log("success")
+            } else {
+                console.log('success');
                 return res.json(200).send('User data captured successfully!');
             }
         });
     } catch (err) {
-        console.log("Exception Error",err);
+        console.log('Exception Error', err);
         res.json({ message: err });
     }
 });
 
 //API for doctor signup
-router.post('/doctor', async(req,res)=>{
+router.post('/doctor', async (req, res) => {
     //userId:req.query.user_id
     const {
-        userId="618843d8e3e166eb4f2d41e2",
-        speciality="Child Specialist",
+        userId = '618843d8e3e166eb4f2d41e2',
+        speciality = 'Child Specialist',
         license = '11009067DOC',
         qualification = 'MBBS',
         experience = '4 YRS 6 months',
         gender = 'Male',
-       availability = 12/9/2021,
-        description='',
+        availability = 12 / 9 / 2021,
+        description = '',
     } = req.body;
     console.log('create', req);
     const docdata = new doctorModel({
@@ -84,21 +83,19 @@ router.post('/doctor', async(req,res)=>{
         description,
     });
     try {
-        console.log("data",docdata);
+        console.log('data', docdata);
         await docdata.save((error, data) => {
             if (error) {
-                console.log("System Error",error);
+                console.log('System Error', error);
                 return res.json(500).send('System Error');
-            }
-            else {
-                console.log("success")
+            } else {
+                console.log('success');
                 return res.json(200).send('Doctor data captured successfully!');
             }
-
         });
     } catch (err) {
-        console.log("Exception Error",err);
+        console.log('Exception Error', err);
         res.json({ message: err });
     }
-}) 
+});
 export default router;

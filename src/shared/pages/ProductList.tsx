@@ -46,7 +46,6 @@ export default ProductList;
 // import { Box, Card } from '@material-ui/core';
 // import TextField from '@mui/material/TextField';
 
-
 // export default function ProductList() {
 //   return (
 //     <Box
@@ -211,5 +210,3 @@ export default ProductList;
 //     </Box>
 //   );
 // }
-
-

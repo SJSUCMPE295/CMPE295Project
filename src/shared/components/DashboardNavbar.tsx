@@ -8,21 +8,21 @@ import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
 import { useAuth } from 'contexts/AuthContext';
 import { useDispatch } from 'react-redux';
-import {logoutAction, resetState} from '../store/constants/action-types';
+import { logoutAction, resetState } from '../store/constants/action-types';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
-    const {logout} = useAuth();
+    const { logout } = useAuth();
     const dispatch = useDispatch();
     const history = useHistory();
     const [notifications] = React.useState([]);
 
     const signout = () => {
         logout().then((data) => {
-          dispatch({ type: logoutAction });
-          dispatch({ type: resetState });
+            dispatch({ type: logoutAction });
+            dispatch({ type: resetState });
         });
         history.push('/login');
-    }
+    };
 
     return (
         <AppBar elevation={0} {...rest}>

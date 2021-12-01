@@ -4,10 +4,19 @@ import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Link,
+    TextField,
+    Typography,
+    Alert,
+} from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
-import useMounted  from '../hooks/useMounted';
+import useMounted from '../hooks/useMounted';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -26,7 +35,7 @@ const ResetPassword = () => {
             <Helmet>
                 <title>WeCare - ResetPassword</title>
             </Helmet>
-            
+
             <Box
                 sx={{
                     backgroundColor: '#ffffff',
@@ -40,16 +49,20 @@ const ResetPassword = () => {
                     {/* <Paper elevation={0}>
                     <img src={image} height="100" style={{marginLeft:"400"}}/>
                 </Paper> */}
-                    {errorAlert ?  
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                    {errorAlert ? (
+                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                             <Alert severity="error">{message}</Alert>
-                    </div>
-                    : <></> }
-                    {successAlert ? 
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    {successAlert ? (
+                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                             <Alert severity="success">{message}</Alert>
-                    </div>
-                    : <></> }
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     <Formik
                         initialValues={{
                             password: '',
@@ -63,15 +76,15 @@ const ResetPassword = () => {
                                     console.log(response);
                                     setSuccessAlert(true);
                                     setErrorAlert(false);
-                                    setMessage("Password Changed Sucessfully");
+                                    setMessage('Password Changed Sucessfully');
                                     history.push('/login', { replace: true });
                                 })
-                                .catch(error => {
-                                    console.log(error)
+                                .catch((error) => {
+                                    console.log(error);
                                     setErrorAlert(true);
                                     setSuccessAlert(false);
                                     setMessage(error.message);
-                                })
+                                });
                         }}
                     >
                         {({
