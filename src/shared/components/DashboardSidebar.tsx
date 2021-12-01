@@ -163,7 +163,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
     return (
         <>
-            <Hidden lgUp>
+            <Hidden mdUp>
                 <Drawer
                     anchor="left"
                     onClose={onMobileClose}
@@ -178,7 +178,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     {content}
                 </Drawer>
             </Hidden>
-            <Hidden xlDown>
+            <Hidden mdDown>
                 <Drawer
                     anchor="left"
                     open

@@ -1,21 +1,26 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 import Account from 'pages/Account/Account';
 import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
 import ProductList from 'pages/ProductList';
 import Settings from 'pages/Settings/Settings';
-import Login from 'pages/Login';
+import Login from 'pages/Login/Login';
 import Register1 from 'pages/Register/RegisterFirstPage';
 import Register2 from 'pages/Register/RegisterSecondPage';
+import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
+import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
+import AuthContextProvider from 'contexts/AuthContext';
+import { useAuth } from 'contexts/AuthContext';
 
 const App: React.FC<any> = () => {
     return (
+        <AuthContextProvider>
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <div>
@@ -47,6 +52,16 @@ const App: React.FC<any> = () => {
                                 <Register2 />
                             </MainLayout>
                         </Route>
+                        <Route path={'/forgot-password'}>
+                            <MainLayout>
+                                <ForgotPassword />
+                            </MainLayout>
+                        </Route>
+                        <Route path={'/reset-password'}>
+                            <MainLayout>
+                                <ResetPassword />
+                            </MainLayout>
+                        </Route>
                         <Route exact path="/">
                             <Redirect to="/app/dashboard" />
                         </Route>
@@ -56,7 +71,26 @@ const App: React.FC<any> = () => {
                 </div>
             </ThemeProvider>
         </StyledEngineProvider>
+        </AuthContextProvider>
     );
 };
+
+function ProtectedRoute(props) {
+    const {currentUser} = useAuth();
+    const location = useLocation();
+    const { path } = props;
+    console.log('currentuse',currentUser);
+    console.log('path', path);
+    console.log('props', props);
+    if(path == '/login' || path == '/register1' ) {
+        return currentUser ? (<Redirect to={location.state?.from ?? '/app/dashboard'} />) :
+           ( <Route {...props}/>)
+        }
+
+    return currentUser ? <Route {...props} /> : <Redirect to={{
+        pathname: '/login',
+        state: {from: path}
+    }} />
+}
 
 export default App;

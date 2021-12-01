@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
@@ -13,11 +14,35 @@ import {
     TextField,
     Typography,
     Grid,
+    Snackbar,
+    Divider,
+    Alert
 } from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
+import { useAuth } from '../../contexts/AuthContext';
+import useMounted from '../hooks/useMounted';
+import { useDispatch } from 'react-redux';
+import {saveUserName} from '../../store/constants/action-types';
 
 const RegisterFirstPage = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
+    const [alert, setAlert] = useState(false);
+    const [error, setError] = useState('');
+    
+    const {register, signinWithGoogle} = useAuth();
+    const mounted = useMounted();
+
+    const handleSubmit = (email, firstName, lastName) => {
+        dispatch({type:saveUserName, firstName, lastName, email});
+        history.push('/register2', { replace: true });
+    }
+
+    const handleSubmitWithGoogle = (email, firstName, lastName) => {
+        dispatch({type:saveUserName, firstName, lastName, email});
+        history.push('/register2', { replace: true });
+    }
+
 
     return (
         <>
@@ -32,14 +57,21 @@ const RegisterFirstPage = () => {
                     height: '100%',
                     justifyContent: 'center',
                 }}
-            >
-                <Container maxWidth="sm" style={{ marginTop: '150px' }}>
+            >   
+            
+                <Container maxWidth="sm" style={{ marginTop: '50px' }}>
+                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
+                        {alert ?  
+                            <Alert severity="error">{error}</Alert>
+                        : <></> }
+                    </div>
                     <Formik
                         initialValues={{
                             email: '',
                             firstName: '',
                             lastName: '',
                             password: '',
+                            isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
@@ -50,8 +82,24 @@ const RegisterFirstPage = () => {
                             lastName: Yup.string().max(255).required('Last name is required'),
                             password: Yup.string().max(255).required('password is required'),
                         })}
-                        onSubmit={() => {
-                            history.push('/register2', { replace: true });
+                        onSubmit={(values) => {
+                            console.log(values);
+                            values.isSubmitting = true;
+                            register(values.email, values.password)
+                                .then((response) => {
+                                    console.log(response);
+                                    handleSubmit(values.email, values.firstName, values.lastName);
+                                })
+                                .catch((error) => {
+                                    //console.log(error.message);
+                                    setAlert(true);
+                                    setError(error.message);
+                                   
+                                })
+                                .finally(() => {
+                                    mounted.current && (values.isSubmitting = false);
+                                })
+                            //history.push('/register2', { replace: true });
                         }}
                     >
                         {({
@@ -59,7 +107,6 @@ const RegisterFirstPage = () => {
                             handleBlur,
                             handleChange,
                             handleSubmit,
-                            isSubmitting,
                             touched,
                             values,
                         }) => (
@@ -159,7 +206,7 @@ const RegisterFirstPage = () => {
                                 <Box sx={{ py: 2 }}>
                                     <Button
                                         color="primary"
-                                        disabled={isSubmitting}
+                                        disabled={values.isSubmitting}
                                         fullWidth
                                         size="large"
                                         type="submit"
@@ -179,7 +226,16 @@ const RegisterFirstPage = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
-                                <Box
+                                <Divider>
+                                              <Typography
+                                        align="center"
+                                        color="textSecondary"
+                                        variant="body1"
+                                    >
+                                        or signup with social platform
+                                    </Typography>
+                                </Divider>
+                                {/* <Box
                                     sx={{
                                         pb: 1,
                                         pt: 3,
@@ -192,8 +248,8 @@ const RegisterFirstPage = () => {
                                     >
                                         or signup with social platform
                                     </Typography>
-                                </Box>
-                                <Grid
+                                </Box> */}
+                                {/* <Grid
                                     container
                                     spacing={3}
                                     display="flex"
@@ -201,18 +257,33 @@ const RegisterFirstPage = () => {
                                     alignItems="center"
                                     justifyContent="center"
                                 >
-                                    <Grid item xs={12} md={6}>
+                                    <Grid item xs={12} md={6}> */}
+                                    <Box
+                                    sx={{
+                                        pb: 1,
+                                        pt: 3,
+                                    }}
+                                    >
                                         <Button
                                             fullWidth
                                             startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
+                                            onClick={() => 
+                                                signinWithGoogle()
+                                                .then((user:any) => {
+                                                    // console.log(user._tokenResponse.lastName);
+                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.firstName, user._tokenResponse.lastName);
+                                                    // history.push('/register2');
+                                                })
+                                                .catch(error =>  {console.log(error)})
+                                                }
                                             size="large"
                                             variant="contained"
                                         >
                                             Login with Google
                                         </Button>
-                                    </Grid>
-                                </Grid>
+                                    </Box>
+                                    {/* </Grid>
+                                </Grid> */}
                             </form>
                         )}
                     </Formik>
