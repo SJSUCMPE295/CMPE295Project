@@ -17,6 +17,7 @@ import NotFound from 'pages/NotFound';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
+import GiveHelpScreen from './pages/GiveHelp/AddService';
 
 const App: React.FC<any> = () => {
     return (
@@ -34,7 +35,7 @@ const App: React.FC<any> = () => {
                                         path={'/app/medicalAssistance'}
                                         component={MedicalAssistance}
                                     />
-                                    <Route path={'/app/givehelp'} component={Account} />
+                                    <Route path={'/app/givehelp'} component={GiveHelpScreen} />
                                     <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>
