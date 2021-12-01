@@ -18,4 +18,5 @@ const Service = new Schema2(
 );
 
 const serviceModel = mongoose2.model('service', Service);
-module.exports = serviceModel;
+//module.exports = serviceModel;
+export default serviceModel;

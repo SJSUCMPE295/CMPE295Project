@@ -32,9 +32,6 @@
     "transpile": "yarn-or-npm babel -d build/transpiled ./src --extensions .es6,.js,.es,.jsx,.mjs,.ts,.tsx --ignore **/*.d.ts",
     "tsc": "tsc --noEmit"
   },
-  "resolutions": {
-    "caniuse-lite": "^1.0.30001055"
-  },
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
