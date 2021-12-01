@@ -72,7 +72,7 @@ const items = [
     },*/
 ];
 
-const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+export const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const location = useLocation();
 
     React.useEffect(() => {
@@ -198,12 +198,14 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     );
 };
 
-DashboardSidebar.propTypes = {
-    onMobileClose: PropTypes.func,
-    openMobile: PropTypes.bool,
-};
+// DashboardSidebar.propTypes = {
+//     onMobileClose: PropTypes.func,
+//     openMobile: PropTypes.bool,
+// };
+//
+// DashboardSidebar.defaultProps = {
+//     onMobileClose: () => {},
+//     openMobile: false,
+// };
 
-DashboardSidebar.defaultProps = {
-    onMobileClose: () => {},
-    openMobile: false,
-};
+export default DashboardSidebar;

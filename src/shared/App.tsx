@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
+// import CustomerList from 'pages/CustomerList';
+// import Dashboard from 'pages/Dashboard';
 import Account from 'pages/Account/Account';
-import CustomerList from 'pages/CustomerList';
-import Dashboard from 'pages/Dashboard';
 import MedicalAssistance from 'pages/MedicalAssistance';
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
@@ -28,8 +28,8 @@ const App: React.FC<any> = () => {
                             <DashboardLayout>
                                 <Switch>
                                     <Route path={'/app/account'} component={Account} />
-                                    <Route path={'/app/customers'} component={CustomerList} />
-                                    <Route path={'/app/dashboard'} component={Dashboard} />
+                                    <Route path={'/app/customers'} component={Account} />
+                                    <Route path={'/app/dashboard'} component={Account} />
                                     <Route
                                         path={'/app/medicalAssistance'}
                                         component={MedicalAssistance}

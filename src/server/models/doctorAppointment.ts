@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Doctor_Appointment = new Schema(
+const DoctorAppointment = new Schema(
     {
         UserId: { type: Object, required: true },
         DoctorId: { type: Object, required: true },
@@ -11,5 +11,5 @@ const Doctor_Appointment = new Schema(
     { collection: 'Doctor_Appointment', versionKey: false }
 );
 
-const doctor_appointmentModel = mongoose.model('doctor_appointment', Doctor_Appointment);
-module.exports = doctor_appointmentModel;
+export const doctorAppointmentModel = mongoose.model('doctor_appointment', DoctorAppointment);
+export default doctorAppointmentModel;

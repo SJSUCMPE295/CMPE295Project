@@ -2,8 +2,8 @@ import { Router } from 'express';
 import Services from '../models/services';
 import Resources from '../models/resources';
 import Users from '../models/user';
-import Transactions from '../models/transaction_logger';
-import Doctor_Appointment from '../models/doctor_appointment';
+import Transactions from '../models/transactionLogger';
+import DoctorAppointment from '../models/doctorAppointment';
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
 const router = Router();
@@ -45,7 +45,7 @@ router.get('/', async (_req, res) => {
                 }
             );
 
-            const userappointment = await Doctor_Appointment.find({ UserId: user });
+            const userappointment = await DoctorAppointment.find({ UserId: user });
             //console.log(userappointment);
             response.userappointments = userappointment;
         }
