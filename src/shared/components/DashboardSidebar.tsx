@@ -35,12 +35,12 @@ const items = [
         title: 'Get Help',
     },
     {
-        href: '/app/products',
+        href: '/app/givehelp',
         icon: ShoppingBagIcon,
         title: 'Give Help',
     },
     {
-        href: '/app/products',
+        href: '/app/medicalAssistance',
         icon: PlusCircleIcon,
         title: 'Medical Assistance',
     },
@@ -163,7 +163,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
     return (
         <>
-            <Hidden lgUp>
+            <Hidden mdUp>
                 <Drawer
                     anchor="left"
                     onClose={onMobileClose}
@@ -178,7 +178,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     {content}
                 </Drawer>
             </Hidden>
-            <Hidden xlDown>
+            <Hidden mdDown>
                 <Drawer
                     anchor="left"
                     open

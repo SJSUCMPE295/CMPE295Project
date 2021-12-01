@@ -9,6 +9,7 @@ import {
     Grid,
     TextField,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
 
 const states = [
     {
@@ -25,10 +26,10 @@ const states = [
     },
 ];
 
-const AccountProfileDetails = (props) => {
+const AccountProfileDetails = ({ user, ...props }) => {
     const [values, setValues] = React.useState({
-        firstName: 'Katrina',
-        lastName: 'Smith',
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: 'abc@example.com',
         phone: '',
         state: 'Alabama',
@@ -143,4 +144,14 @@ const AccountProfileDetails = (props) => {
     );
 };
 
-export default AccountProfileDetails;
+const mapStateToProps = ({ user }) => ({
+    user,
+});
+
+const mapDispatchToProps = {};
+
+const ConnectedAccountProfileDetails = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AccountProfileDetails);
+export default ConnectedAccountProfileDetails;

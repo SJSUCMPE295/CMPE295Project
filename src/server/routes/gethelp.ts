@@ -1,12 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const Services = require('../models/services');
-const Resources = require('../models/resources');
-const Category = require('../models/category');
-const Transaction_Logger = require('../models/transaction_logger');
-const User = require('../models/user');
-const { Client } = require('@googlemaps/google-maps-services-js');
-var ObjectId = require('mongodb').ObjectID;
+import { Router } from 'express';
+import { Client } from '@googlemaps/google-maps-services-js';
+import Services from '../models/services';
+import Resources from '../models/resources';
+import Category from '../models/category';
+import TransactionLogger from '../models/transactionLogger';
+import User from '../models/user';
+const router = Router();
 
 //update resource/service availability and transaction _logger
 router.post('/', async (_req, res) => {
@@ -51,8 +50,8 @@ router.post('/', async (_req, res) => {
     var category = await Category.findOne({ Name: category_name });
     category_id = category._id;
     var currentDate = new Date();
-    const transaction = new Transaction_Logger({
-        UserId: userid,
+    const transaction = new TransactionLogger({
+        userId: userid,
         ResourceId: resource_Id,
         ServiceId: service_Id,
         Date: currentDate,
@@ -106,7 +105,7 @@ router.get('/', async (_req, res) => {
             {
                 $lookup: {
                     from: 'User',
-                    localField: 'UserId',
+                    localField: 'userId',
                     foreignField: '_id',
                     as: 'addresses',
                 },
@@ -128,7 +127,7 @@ router.get('/', async (_req, res) => {
                 $project: {
                     _id: 1,
                     Resource_Name: 1,
-                    UserId: 1,
+                    userId: 1,
                     Category: 1,
                     Phone_number: 1,
                     Description: 1,
@@ -160,7 +159,7 @@ router.get('/', async (_req, res) => {
             {
                 $lookup: {
                     from: 'User',
-                    localField: 'UserId',
+                    localField: 'userId',
                     foreignField: '_id',
                     as: 'addresses',
                 },
@@ -179,7 +178,7 @@ router.get('/', async (_req, res) => {
                 $project: {
                     _id: 1,
                     Service_Name: 1,
-                    UserId: 1,
+                    userId: 1,
                     Category: 1,
                     Phone_Number: 1,
                     Description: 1,
@@ -218,7 +217,7 @@ router.get('/', async (_req, res) => {
         })
         .then((r) => {
             for (var k = 0; k < destinations.length; k++) {
-                destArray[destinations[k]] = calculatemiles(
+                destArray[destinations[k]] = calculateMiles(
                     r.data.rows[0].elements[0].distance.text
                 ); //+","+r.data.rows[0].elements[0].duration.text;
             }
@@ -248,12 +247,10 @@ router.get('/', async (_req, res) => {
 
         res.send(response);
     }
-
-    function calculatemiles(kilomet) {
-        const milesfactor = 0.621371;
-        var val = parseInt(kilomet.slice(0, -3).replace(',', ''));
-        return (val * milesfactor).toFixed(2);
-    }
 });
-
+const calculateMiles = (kilometer) => {
+    const milesFactor = 0.621371;
+    const val = parseInt(kilometer.slice(0, -3).replace(',', ''));
+    return (val * milesFactor).toFixed(2);
+};
 export default router;

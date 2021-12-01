@@ -1,9 +1,9 @@
 const mongoose1 = require('mongoose');
 const Schema1 = mongoose1.Schema;
 
-const Resource = new Schema1(
+export const Resource = new Schema1(
     {
-        UserId: { type: Object, required: true },
+        userId: { type: Object, required: true },
         Resource_Name: { type: String, required: true },
         Category: { type: String, required: true },
         AddressId: { type: String, required: true },
@@ -17,5 +17,5 @@ const Resource = new Schema1(
     }
 );
 
-const resourceModel = mongoose1.model('resource', Resource);
-module.exports = resourceModel;
+export const resourceModel = mongoose1.model('resource', Resource);
+export default resourceModel;
