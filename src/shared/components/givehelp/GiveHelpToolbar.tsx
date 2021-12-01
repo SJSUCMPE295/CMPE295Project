@@ -7,7 +7,9 @@ import {
     CardHeader,
     Divider,
     Grid,
-    TextField,Checkbox,FormControlLabel
+    TextField,
+    Checkbox,
+    FormControlLabel,
 } from '@material-ui/core';
 import { CheckBox } from '@material-ui/icons';
 
@@ -46,11 +48,15 @@ const AccountProfileDetails = (props) => {
     return (
         <form autoComplete="off" noValidate {...props}>
             <Card>
-                <CardHeader subheader="          update the resource/service details you would like to provide" titleTypographyProps={{variant:'h2' }} title="Give Help" />
+                <CardHeader
+                    subheader="          update the resource/service details you would like to provide"
+                    titleTypographyProps={{ variant: 'h2' }}
+                    title="Give Help"
+                />
                 <Divider />
                 <CardContent>
                     <Grid container spacing={3}>
-                    <Grid item md={6} xs={12}>
+                        <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
                                 helperText="Is it a Resource/Service Type?"
@@ -106,9 +112,12 @@ const AccountProfileDetails = (props) => {
                                 variant="outlined"
                             />
                         </Grid>
-                        
+
                         <Grid item md={12} xs={12}>
-                        <FormControlLabel control={<Checkbox  />} label="Use my profile address" />
+                            <FormControlLabel
+                                control={<Checkbox />}
+                                label="Use my profile address"
+                            />
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField

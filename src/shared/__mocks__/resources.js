@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 export default [
-    { 
+    {
         id: uuid(),
         address: {
             country: 'USA',
@@ -14,7 +14,7 @@ export default [
         email: 'Medical',
         name: 'Mask',
         phone: '10',
-        
+
         distance: '15',
     },
     {
@@ -30,7 +30,7 @@ export default [
         email: 'Medical',
         name: 'Beds',
         phone: '9',
-        
+
         distance: '20',
     },
     {
@@ -61,10 +61,10 @@ export default [
         email: 'Medical',
         name: 'Sanitizer',
         phone: '8',
-        
+
         distance: '35',
     },
-    
+
     {
         id: uuid(),
         address: {
@@ -78,7 +78,7 @@ export default [
         email: 'Travel',
         name: 'Car Pool',
         phone: 'Yes',
-        
+
         distance: '40',
     },
     {
@@ -94,7 +94,7 @@ export default [
         email: 'Housing',
         name: 'Accomodation',
         phone: 'Yes',
-        
+
         distance: '43',
-    }
+    },
 ];

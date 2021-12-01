@@ -115,7 +115,6 @@ const GetHelpResults = ({ resources, ...rest }) => {
                                                 display: 'flex',
                                             }}
                                         >
-                                            
                                             <Typography color="textPrimary" variant="body1">
                                                 {customer.name}
                                             </Typography>

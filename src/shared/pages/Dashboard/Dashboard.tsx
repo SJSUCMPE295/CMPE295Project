@@ -16,9 +16,7 @@ const Dashboard = () => (
             }}
         >
             <Container maxWidth={false}>
-                
-                    <Statistics />
-              
+                <Statistics />
             </Container>
         </Box>
     </>
