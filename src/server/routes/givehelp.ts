@@ -3,6 +3,7 @@ import serviceModel from '../models/services';
 import resourceModel from '../models/resources';
 import { json } from 'stream/consumers';
 const router = Router();
+
 // const auth = require('../middleware/auth');
 // const fetchController = require('../controller/fetch');
 // API to post resource
@@ -15,7 +16,7 @@ router.post('/resource', async (req, res) => {
     const AddressId = req.body.AddressId;
     const SKU = req.body.SKU;
     const resourcedata = new resourceModel({
-        UserId,
+        userId: UserId,
         Resource_Name,
         Category,
         Description,

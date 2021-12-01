@@ -1,8 +1,8 @@
-'use strict';
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
+import Users from '../models/user';
+
 const router = Router();
-const Users = require('../models/user');
-const jwt = require('jsonwebtoken');
 
 //API for login
 router.post('/', async (req, res) => {
@@ -21,8 +21,8 @@ router.post('/', async (req, res) => {
                 const token = jwt.sign(payload, {
                     expiresIn: 90000, //seconds
                 });
-                let jwt_token = 'JWT' + token;
-                res.status(200).end(jwt_token);
+                const jwtToken = 'JWT' + token;
+                res.status(200).end(jwtToken);
             } else {
                 res.status(401).end('Wrong password');
             }

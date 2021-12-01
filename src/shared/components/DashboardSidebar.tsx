@@ -40,7 +40,7 @@ const items = [
         title: 'Give Help',
     },
     {
-        href: '/app/products',
+        href: '/app/medicalAssistance',
         icon: PlusCircleIcon,
         title: 'Medical Assistance',
     },

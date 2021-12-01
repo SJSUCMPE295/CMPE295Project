@@ -4,26 +4,44 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '
 
 const SettingsPassword = (props) => {
     const [values, setValues] = useState({
+        oldpassword: '',
         password: '',
         confirm: '',
     });
 
-    const handleChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
+    const handleChange = ({ target }) => {
+        target &&
+            setValues({
+                ...values,
+                [target.name]: target.value,
+            });
     };
-
+    const handleSubmit = () => {
+        console.log(values);
+    };
     return (
-        <form {...props}>
-            <Card>
-                <CardHeader subheader="Update password" title="Password" />
+        <form onSubmit={handleSubmit} className="mb-2">
+            <Card
+                sx={{
+                    mb: 2,
+                }}
+            >
+                <CardHeader title="Change Password" />
                 <Divider />
                 <CardContent>
                     <TextField
                         fullWidth
-                        label="Password"
+                        label="Old Password"
+                        margin="normal"
+                        name="oldpassword"
+                        onChange={handleChange}
+                        type="password"
+                        value={values.oldpassword}
+                        variant="outlined"
+                    />
+                    <TextField
+                        fullWidth
+                        label="New Password"
                         margin="normal"
                         name="password"
                         onChange={handleChange}
@@ -33,7 +51,7 @@ const SettingsPassword = (props) => {
                     />
                     <TextField
                         fullWidth
-                        label="Confirm password"
+                        label="Confirm New password"
                         margin="normal"
                         name="confirm"
                         onChange={handleChange}

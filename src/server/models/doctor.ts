@@ -1,7 +1,7 @@
 const mongoose3 = require('mongoose');
 const Schema3 = mongoose3.Schema;
 
-const DoctorModel = new Schema3(
+export const DoctorModel = new Schema3(
     {
         userId: { type: Object, required: true },
         speciality: { type: String, required: true },
@@ -18,5 +18,5 @@ const DoctorModel = new Schema3(
     }
 );
 
-const doctorModel = mongoose3.model('doctor', DoctorModel);
+export const doctorModel = mongoose3.model('doctor', DoctorModel);
 export default doctorModel;

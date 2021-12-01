@@ -1,8 +1,8 @@
 import { Router } from 'express';
+import Mongoose from 'mongoose';
 import { userModel } from '../models/user';
-const router = Router();
-const Mongoose = require('mongoose');
 import doctorModel from '../models/doctor';
+const router = Router();
 
 ///API for signup
 router.post('/user', async (req, res) => {
@@ -32,7 +32,7 @@ router.post('/user', async (req, res) => {
     } = req.body;
     console.log('create', req);
     const userdata = new userModel({
-        _UserId: new Mongoose.Types.ObjectId(),
+        _userId: new Mongoose.Types.ObjectId(),
         userName,
         password,
         firstName,

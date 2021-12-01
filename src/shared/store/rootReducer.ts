@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
-import app from './app/reducer';
+import user from './user/reducer';
+//import app from './app/reducer';
 import userProfileReducer from './userProfileReducer';
 import loginReducer from './loginReducer';
 
 const createRootReducer = () =>
     combineReducers({
-        app,
+        user,
+        //app,
         userProfileReducer,
         loginReducer,
     });
