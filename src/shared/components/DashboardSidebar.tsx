@@ -16,97 +16,61 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
+
 const user = {
-    UserId: '617f2fb40583ba49a0091425',
     avatar: '/static/images/avatars/avatar_2.png',
     jobTitle: 'San Jose,CA',
     name: 'Katarina Smith',
 };
-let items = [{}];
-if (user.UserId != '') {
-    items = [
-        {
-            href: '/app/dashboard',
-            icon: BarChartIcon,
-            title: 'Dashboard',
-        },
-        {
-            href: '/app/gethelp',
-            icon: PackageIcon,
-            title: 'Get Help',
-        },
-        {
-            href: '/app/givehelp',
-            icon: ShoppingBagIcon,
-            title: 'Give Help',
-        },
-        {
-            href: '/app/products',
-            icon: PlusCircleIcon,
-            title: 'Medical Assistance',
-        },
-        {
-            href: '/app/account',
-            icon: UserIcon,
-            title: 'Account',
-        },
-        {
-            href: '/app/settings',
-            icon: SettingsIcon,
-            title: 'Settings',
-        },
-    ];
-} else {
-    items = [
-        {
-            href: '/login',
-            icon: LockIcon,
-            title: 'Login',
-        },
-        {
-            href: '/register1',
-            icon: UserPlusIcon,
-            title: 'Register',
-        },
-        {
-            href: '/app/dashboard',
-            icon: BarChartIcon,
-            title: 'Dashboard',
-        },
-        {
-            href: '/app/gethelp',
-            icon: PackageIcon,
-            title: 'Get Help',
-        },
-        {
-            href: '/app/givehelp',
-            icon: ShoppingBagIcon,
-            title: 'Give Help',
-        },
-        {
-            href: '/app/products',
-            icon: PlusCircleIcon,
-            title: 'Medical Assistance',
-        },
-        {
-            href: '/app/account',
-            icon: UserIcon,
-            title: 'Account',
-        },
-        {
-            href: '/app/settings',
-            icon: SettingsIcon,
-            title: 'Settings',
-        },
-        /*
-    
+
+const items = [
+    {
+        href: '/app/dashboard',
+        icon: BarChartIcon,
+        title: 'Dashboard',
+    },
+    {
+        href: '/app/customers',
+        icon: PackageIcon,
+        title: 'Get Help',
+    },
+    {
+        href: '/app/givehelp',
+        icon: ShoppingBagIcon,
+        title: 'Give Help',
+    },
+    {
+        href: '/app/medicalAssistance',
+        icon: PlusCircleIcon,
+        title: 'Medical Assistance',
+    },
+    {
+        href: '/app/account',
+        icon: UserIcon,
+        title: 'Account',
+    },
+    {
+        href: '/app/settings',
+        icon: SettingsIcon,
+        title: 'Settings',
+    },
+    /*
+    {
+        href: '/login',
+        icon: LockIcon,
+        title: 'Login',
+    },
+    {
+        href: '/register1',
+        icon: UserPlusIcon,
+        title: 'Register',
+    },
     {
         href: '/404',
         icon: AlertCircleIcon,
         title: 'Error',
     },*/
-    ];
-}
+];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     const location = useLocation();
@@ -125,33 +89,31 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                 height: '100%',
             }}
         >
-            {user.UserId != '' ? (
-                <Box
+            <Box
+                sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    p: 2,
+                }}
+            >
+                <Avatar
+                    component={RouterLink}
+                    src={user.avatar}
                     sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        p: 2,
+                        cursor: 'pointer',
+                        width: 64,
+                        height: 64,
                     }}
-                >
-                    <Avatar
-                        component={RouterLink}
-                        src={user.avatar}
-                        sx={{
-                            cursor: 'pointer',
-                            width: 64,
-                            height: 64,
-                        }}
-                        to="/app/account"
-                    />
-                    <Typography color="textPrimary" variant="h5">
-                        {user.name}
-                    </Typography>
-                    <Typography color="textSecondary" variant="body2">
-                        {user.jobTitle}
-                    </Typography>
-                </Box>
-            ) : null}
+                    to="/app/account"
+                />
+                <Typography color="textPrimary" variant="h5">
+                    {user.name}
+                </Typography>
+                <Typography color="textSecondary" variant="body2">
+                    {user.jobTitle}
+                </Typography>
+            </Box>
             <Divider />
             <Box sx={{ p: 2 }}>
                 <List>
@@ -177,7 +139,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     Are you a Doctor?
                 </Typography>
                 <Typography align="center" variant="body2">
-                    Help us in assisting non-urgent medical needs
+                    Please help us in assisting non-urgent medical needs
                 </Typography>
                 <Box
                     sx={{
@@ -201,7 +163,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
 
     return (
         <>
-            <Hidden lgUp>
+            <Hidden mdUp>
                 <Drawer
                     anchor="left"
                     onClose={onMobileClose}
@@ -216,7 +178,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
                     {content}
                 </Drawer>
             </Hidden>
-            <Hidden xlDown>
+            <Hidden mdDown>
                 <Drawer
                     anchor="left"
                     open
@@ -245,5 +207,3 @@ DashboardSidebar.defaultProps = {
     onMobileClose: () => {},
     openMobile: false,
 };
-
-export default DashboardSidebar;
