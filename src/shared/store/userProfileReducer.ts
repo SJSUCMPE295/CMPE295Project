@@ -23,6 +23,7 @@ const userProfileReducer = (state = defaultState, action) => {
                 state: action.state,
                 zipCode: action.zipCode,
                 phoneNumber: action.phoneNumber,
+                gender: action.gender,
                 //   return Object.assign(state, action.payload);
             };
         }
