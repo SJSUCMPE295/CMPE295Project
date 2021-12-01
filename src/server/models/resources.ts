@@ -18,4 +18,5 @@ const Resource = new Schema1(
 );
 
 const resourceModel = mongoose1.model('resource', Resource);
-module.exports = resourceModel;
+//module.exports = resourceModel;
+export default resourceModel;
