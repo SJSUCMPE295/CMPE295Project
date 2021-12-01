@@ -35,7 +35,7 @@ const items = [
         title: 'Get Help',
     },
     {
-        href: '/app/products',
+        href: '/app/givehelp',
         icon: ShoppingBagIcon,
         title: 'Give Help',
     },
