@@ -5,22 +5,22 @@ import { AppBar, Badge, Box, Hidden, IconButton, Toolbar } from '@material-ui/co
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
-import Logo from './Logo';
-import { useAuth } from 'contexts/AuthContext';
+//import { useAuth } from 'contexts/AuthContext';
 import { useDispatch } from 'react-redux';
 import { logoutAction, resetState } from '../store/constants/action-types';
+import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
-    const { logout } = useAuth();
+    //    const { logout } = useAuth();
     const dispatch = useDispatch();
     const history = useHistory();
     const [notifications] = React.useState([]);
 
     const signout = () => {
-        logout().then((data) => {
-            dispatch({ type: logoutAction });
-            dispatch({ type: resetState });
-        });
+        // logout().then((data) => {
+        //     dispatch({ type: logoutAction });
+        //     dispatch({ type: resetState });
+        // });
         history.push('/login');
     };
 
@@ -51,8 +51,8 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     );
 };
 
-DashboardNavbar.propTypes = {
-    onMobileNavOpen: PropTypes.func,
-};
+// DashboardNavbar.propTypes = {
+//     onMobileNavOpen: PropTypes.func,
+// };
 
 export default DashboardNavbar;
