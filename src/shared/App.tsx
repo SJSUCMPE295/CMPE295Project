@@ -26,7 +26,7 @@ const App: React.FC<any> = () => {
                                     <Route path={'/app/account'} component={Account} />
                                     <Route path={'/app/customers'} component={CustomerList} />
                                     <Route path={'/app/dashboard'} component={Dashboard} />
-                                    <Route path={'/app/products'} component={ProductList} />
+                                    <Route path={'/app/givehelp'} component={ProductList} />
                                     <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>
