@@ -4,7 +4,6 @@ import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 import Account from 'pages/Account/Account';
 import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard';
-import ProductList from 'pages/ProductList';
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
 import Register1 from 'pages/Register/RegisterFirstPage';
@@ -17,6 +16,8 @@ import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
 import AuthContextProvider from 'contexts/AuthContext';
 import { useAuth } from 'contexts/AuthContext';
+import AddService from './pages/GiveHelp/AddService';
+import GiveHelpLandingPage from './pages/GiveHelp/LandingPage';
 
 const App: React.FC<any> = () => {
     return (
@@ -31,7 +32,8 @@ const App: React.FC<any> = () => {
                                     <Route path={'/app/account'} component={Account} />
                                     <Route path={'/app/customers'} component={CustomerList} />
                                     <Route path={'/app/dashboard'} component={Dashboard} />
-                                    <Route path={'/app/givehelp'} component={ProductList} />
+                                    <Route path={'/app/givehelp'} component={GiveHelpLandingPage} />
+                                    <Route path={'/app/givehelp/addservice'} component={AddService} />
                                     <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
                             </DashboardLayout>

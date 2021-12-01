@@ -6,8 +6,6 @@ import {
     CardContent,
     CardHeader,
     TextField,
-    InputAdornment,
-    SvgIcon,
     Divider,
     FormControlLabel,
     FormGroup
@@ -17,7 +15,7 @@ import Typography from '@mui/material/Typography';
 
 
 
-const ProductListToolbar = (props) => (
+const AddServiceCard = (props) => (
     <Box {...props}>
         <Box 
             sx={{
@@ -31,11 +29,9 @@ const ProductListToolbar = (props) => (
         <form {...props}>
             <Card 
                 sx={{
-                //display: 'flex',
                 height: 700,
                 width:900,
                 justifyContent:'center',
-                //justifyContent: 'flex-start'
                 }}
             >
                     <CardHeader 
@@ -155,4 +151,4 @@ const ProductListToolbar = (props) => (
     </Box>
 );
 
-export default ProductListToolbar;
+export default AddServiceCard;
