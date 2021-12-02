@@ -14,8 +14,8 @@ const LandingPageCard = (props) => (
         >
             <Card 
                 sx={{
-                height: 400,
-                width:900,
+                height: 500,
+                width:1000,
                 justifyContent:'center',
                 }}
             ></Card>
