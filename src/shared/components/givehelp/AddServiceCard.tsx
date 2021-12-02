@@ -60,7 +60,7 @@ const AddServiceCard = (props) => (
                 p: 1
                 }}
         >
-        <form {...props}>
+        <form autoComplete="off" noValidate {...props}>
             <Card 
                 sx={{
                 height: 700,
@@ -97,6 +97,7 @@ const AddServiceCard = (props) => (
                                 onChange={handleChange}
                                 variant="outlined"
                                 sx={{ m: 1, width: '50ch' }}
+                                helperText="Car pool, Accomodation etc. "
                                 value=""
                             />
                         </Box>
@@ -209,7 +210,7 @@ const AddServiceCard = (props) => (
                                 p: 1,
                             }}
                         >
-                            <Button color="primary" variant="contained">
+                            <Button type="submit" color="primary" variant="contained">
                                 Save details
                             </Button>
                         </Box>
