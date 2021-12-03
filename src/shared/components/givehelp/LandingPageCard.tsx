@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Box, Card, CardContent, CardHeader, Divider, Button } from '@material-ui/core';
+import Stack from '@mui/material/Stack';
 
 const LandingPageCard = (props) => (
     <Box {...props}>
@@ -12,7 +13,7 @@ const LandingPageCard = (props) => (
         >
             <Card 
                 sx={{
-                height: 400,
+                height: 300,
                 maxWidth:900
                 }}
             >
@@ -47,7 +48,7 @@ const LandingPageCard = (props) => (
                         sx={{
                                 display: 'flex',
                                 justifyContent: 'flex-start',
-                                pt:4       
+                                pt:6       
                         }}
                     >
                         <Button 
