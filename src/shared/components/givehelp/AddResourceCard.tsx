@@ -49,7 +49,7 @@ const handleChange = (event) => {
 };
 
 
-const AddServiceCard = (props) => (
+const AddResourceCard = (props) => (
     <Box {...props}>
         <Box 
             sx={{
@@ -88,12 +88,12 @@ const AddServiceCard = (props) => (
                                 label="Type"
                                 variant="filled"
                                 sx={{ m: 1, width: '50ch' }}
-                                value="Service"
+                                value="Resource"
                             />
                             <TextField
                                 required
                                 id="outlined-required"
-                                label="Service Name"
+                                label="Resource Name"
                                 onChange={handleChange}
                                 variant="outlined"
                                 sx={{ m: 1, width: '50ch' }}
@@ -113,7 +113,7 @@ const AddServiceCard = (props) => (
                             <TextField
                                 required
                                 id="outlined-required"
-                                label="Availability"
+                                label="Quantity"
                                 onChange={handleChange}
                                 variant="outlined"
                                 sx={{ m: 1, width: '50ch' }}
@@ -220,4 +220,4 @@ const AddServiceCard = (props) => (
     </Box>
 );
 
-export default AddServiceCard;
+export default AddResourceCard;
