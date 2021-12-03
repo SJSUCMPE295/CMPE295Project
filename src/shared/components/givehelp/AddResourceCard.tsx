@@ -60,7 +60,7 @@ const AddResourceCard = (props) => (
                 p: 1
                 }}
         >
-        <form {...props}>
+        <form autoComplete="off" noValidate {...props}>
             <Card 
                 sx={{
                 height: 700,
@@ -98,6 +98,7 @@ const AddResourceCard = (props) => (
                                 variant="outlined"
                                 sx={{ m: 1, width: '50ch' }}
                                 value=""
+                                helperText="Mask, Oxygen Cylinder, Sanitizer etc."
                             />
                         </Box>
                         <Box>

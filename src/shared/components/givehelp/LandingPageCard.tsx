@@ -1,24 +1,70 @@
 import * as React from 'react';
-import { Box, Card } from '@material-ui/core';
+import { Box, Card, CardContent, CardHeader, Divider, Button } from '@material-ui/core';
+import Stack from '@mui/material/Stack';
 
 const LandingPageCard = (props) => (
     <Box {...props}>
         <Box 
             sx={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                width:500,
+                width:900,
                 height:700,
                 p: 1
                 }}
         >
             <Card 
                 sx={{
-                height: 500,
-                width:1000,
-                justifyContent:'center',
+                height: 300,
+                maxWidth:900
                 }}
-            ></Card>
+            >
+               <CardHeader 
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                        }}
+                        titleTypographyProps={{ variant: 'h2' }} subheader="select from below type resource/service to enter details" title="Select type"
+                />
+                <Divider />
+                <CardContent>
+                    <Box 
+                        sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-start',       
+                        }}
+                    >
+                        <Button 
+                            type="submit" 
+                            color="primary" 
+                            variant="contained"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                window.location.href='givehelp/addresource';
+                                }}
+                        >
+                            Add a Resource
+                        </Button> 
+                    </Box>
+                    <Box 
+                        sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                pt:6       
+                        }}
+                    >
+                        <Button 
+                            type="submit" 
+                            color="primary" 
+                            variant="contained"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                window.location.href='givehelp/addservice';
+                                }}
+                        >
+                            Add a Service
+                        </Button> 
+                    </Box>
+                </CardContent>
+            </Card>
         </Box>
     </Box>
 );
