@@ -17,11 +17,13 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
+import userProfileReducer from '../store/userProfileReducer';
 const user = {
     avatar: '/static/images/avatars/avatar_2.png',
     jobTitle: 'San Jose,CA',
     name: 'Katarina Smith',
 };
+
 
 const items = [
     {
@@ -30,7 +32,7 @@ const items = [
         title: 'Dashboard',
     },
     {
-        href: '/app/customers',
+        href: '/app/gethelp',
         icon: PackageIcon,
         title: 'Get Help',
     },

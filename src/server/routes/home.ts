@@ -23,7 +23,7 @@ router.get('/', async (_req, res) => {
         const user = _req.query.user;
         console.log(user);
         if (user != '') {
-            const usertransactions = await Transactions.aggregate(
+            const usertransactions =  Transactions.aggregate(
                 [
                     {
                         $match: { UserId: user },
@@ -41,15 +41,57 @@ router.get('/', async (_req, res) => {
                     } else {
                         //console.log(data_ut);
                         response.usertransactions = data_ut;
+                        const userappointment = DoctorAppointment.aggregate( [
+                            {
+                                $match: { UserId: user },
+                            },
+                            {
+                                $project: {
+                                    doctorObjId: { $toObjectId: '$DoctorId' },
+                                    UserId: 1,
+                                    AppointmentDetails: 1,
+                                    Status: 1
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'User',
+                                    localField: 'doctorObjId',
+                                    foreignField: '_id',
+                                    as: 'doctor_appointments',
+                                },
+                            },
+                            {
+                                $unwind: {
+                                    path: '$doctor_appointments',
+                                    preserveNullAndEmptyArrays: true
+                                }
+                            },
+                            {
+                                $project: {
+                                    UserId: 1,
+                                    doctor_name: {$concat: [
+                                        '$doctor_appointments.firstName',
+                                        ' ',
+                                        '$doctor_appointments.lastName',
+                                    ]},
+                                    AppointmentDetails: 1,
+                                    Status: 1,
+                                },
+                            },
+                        ],(error_dp, data_dp) => {
+                            if (error_dp) {
+                                res.status(400).send(error_dp);
+                            } else {
+                        response.userappointments = data_dp;
+                    }}
+                        )
                     }
                 }
             );
 
-            const userappointment = await DoctorAppointment.find({ UserId: user });
-            //console.log(userappointment);
-            response.userappointments = userappointment;
-        }
-        const resources = await Resources.aggregate(
+            }
+        const resources =  Resources.aggregate(
             [
                 {
                     $group: {
@@ -59,14 +101,13 @@ router.get('/', async (_req, res) => {
                 },
                 {
                     $sort: { resource_SKU: -1 },
-                },
-            ],
-            (error, data) => {
+                }
+            ],(error, data) => {
                 if (error) {
                     //console.log('error', error);
                     res.status(400).send(error);
                 } else {
-                    console.log(data);
+                    //console.log(data);
                     response.resources = data;
                     const service_user = Services.aggregate(
                         [
@@ -129,7 +170,7 @@ router.get('/', async (_req, res) => {
                                 res.status(400).send(error);
                             } else {
                                 response.services = result_service;
-                                console.log(result_service);
+                                //console.log(result_service);
                                 const users = Users.count({}, (error2, usercount) => {
                                     if (error2) {
                                         res.status(400).send(error2);
