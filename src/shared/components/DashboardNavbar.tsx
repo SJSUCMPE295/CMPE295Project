@@ -27,9 +27,9 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     return (
         <AppBar elevation={0} {...rest}>
             <Toolbar>
-                {/*<RouterLink to="/">*/}
+                <RouterLink to="/">
                 <Logo />
-                {/*</RouterLink>*/}
+                </RouterLink>
                 <Box sx={{ flexGrow: 1 }} />
                 <Hidden mdDown>
                     <IconButton color="inherit" size="large">
