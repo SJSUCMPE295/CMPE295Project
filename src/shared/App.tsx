@@ -13,6 +13,7 @@ import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
 import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import AuthContextProvider from 'contexts/AuthContext';
+import GetHelp from 'pages/GetHelp/GetHelp';
 import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
