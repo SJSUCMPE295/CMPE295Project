@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 // import CustomerList from 'pages/CustomerList';
-// import Dashboard from 'pages/Dashboard';
+import Dashboard from 'pages/Dashboard/Dashboard';
 import Account from 'pages/Account/Account';
 import MedicalAssistance from 'pages/MedicalAssistance';
 import Settings from 'pages/Settings/Settings';
@@ -17,7 +17,9 @@ import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
-import GiveHelpScreen from './pages/GiveHelp/AddService';
+//import AddServiceScreen from './pages/GiveHelp/AddService';
+import GiveHelpScreen from './pages/GiveHelp/LandingPage';
+//import AddResourceScreen from './pages/GiveHelp/AddResource';
 
 const App: React.FC<any> = () => {
     return (
@@ -30,8 +32,8 @@ const App: React.FC<any> = () => {
                             <DashboardLayout>
                                 <Switch>
                                     <Route path={'/app/account'} component={Account} />
-                                    <Route path={'/app/customers'} component={Account} />
-                                    <Route path={'/app/dashboard'} component={Account} />
+                                    <Route path={'/app/gethelp'} component={GetHelp} />
+                                    <Route path={'/app/dashboard'} component={Dashboard} />
                                     <Route
                                         path={'/app/medicalAssistance'}
                                         component={MedicalAssistance}
