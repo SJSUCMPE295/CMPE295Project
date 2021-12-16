@@ -8,12 +8,12 @@ import MedicalAssistance from 'pages/MedicalAssistance';
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
 import Register1 from 'pages/Register/RegisterFirstPage';
-//import Register2 from 'pages/Register/RegisterSecondPage';
+import Register2 from 'pages/Register/RegisterSecondPage';
 import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
 import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
-//import AuthContextProvider from 'contexts/AuthContext';
-//import { useAuth } from 'contexts/AuthContext';
+import AuthContextProvider from 'contexts/AuthContext';
+import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
@@ -21,6 +21,7 @@ import GiveHelpScreen from './pages/GiveHelp/AddService';
 
 const App: React.FC<any> = () => {
     return (
+        <AuthContextProvider>
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <div>
@@ -53,7 +54,7 @@ const App: React.FC<any> = () => {
                         </Route>
                         <Route path={'/register2'}>
                             <MainLayout>
-                                <Account />
+                                <Register2 />
                             </MainLayout>
                         </Route>
                         <Route path={'/forgot-password'}>
@@ -75,6 +76,7 @@ const App: React.FC<any> = () => {
                 </div>
             </ThemeProvider>
         </StyledEngineProvider>
+        </AuthContextProvider>
     );
 };
 
