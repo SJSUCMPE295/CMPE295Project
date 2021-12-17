@@ -18,9 +18,9 @@ import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
-//import AddServiceScreen from './pages/GiveHelp/AddService';
+import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
-//import AddResourceScreen from './pages/GiveHelp/AddResource';
+import AddResourceScreen from './pages/GiveHelp/AddResource';
 
 const App: React.FC<any> = () => {
     return (
@@ -39,6 +39,8 @@ const App: React.FC<any> = () => {
                                         path={'/app/medicalAssistance'}
                                         component={MedicalAssistance}
                                     />
+                                    <Route path={'/app/givehelp/addservice'} component={AddServiceScreen} />
+                                    <Route path={'/app/givehelp/addresource'} component={AddResourceScreen} />
                                     <Route path={'/app/givehelp'} component={GiveHelpScreen} />
                                     <Route path={'/app/settings'} component={Settings} />
                                 </Switch>
