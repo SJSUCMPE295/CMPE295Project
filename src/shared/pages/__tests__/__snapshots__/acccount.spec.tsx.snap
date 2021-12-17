@@ -28,23 +28,16 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                 >
                   <img
                     class="MuiAvatar-img css-1pqm26d-MuiAvatar-img"
-                    src="/static/images/avatars/avatar_1.png"
+                    src="/static/images/avatars/avatar_2.png"
                   />
                 </div>
-                <h3
-                  class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-6lfueu-MuiTypography-root"
-                >
-                  Katarina Smith
-                </h3>
+                <h4
+                  class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-1ndhd1t-MuiTypography-root"
+                />
                 <p
                   class="MuiTypography-root MuiTypography-body1 css-ngt9wa-MuiTypography-root"
                 >
-                  Los Angeles USA
-                </p>
-                <p
-                  class="MuiTypography-root MuiTypography-body1 css-ngt9wa-MuiTypography-root"
-                >
-                  example of timezone bellow
+                  San Jose USA
                 </p>
               </div>
             </div>
@@ -86,7 +79,7 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                   <span
                     class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-15pqjh0-MuiTypography-root"
                   >
-                    Profile
+                    User Profile
                   </span>
                   <span
                     class="MuiTypography-root MuiTypography-body1 MuiCardHeader-subheader css-1atwq5k-MuiTypography-root"
@@ -111,8 +104,8 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
                     >
                       <label
-                        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required css-1wx1fhp-MuiFormLabel-root-MuiInputLabel-root"
-                        data-shrink="true"
+                        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required css-1y9gz45-MuiFormLabel-root-MuiInputLabel-root"
+                        data-shrink="false"
                       >
                         First name
                         <span
@@ -132,14 +125,14 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                           name="firstName"
                           required=""
                           type="text"
-                          value="Katarina"
+                          value=""
                         />
                         <fieldset
                           aria-hidden="true"
                           class="MuiOutlinedInput-notchedOutline css-1o2jng6-MuiOutlinedInput-notchedOutline"
                         >
                           <legend
-                            class="css-17xdsu"
+                            class="css-2s9zix"
                           >
                             <span>
                               First name
@@ -149,7 +142,7 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                         </fieldset>
                       </div>
                       <p
-                        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled Mui-required css-19alodt-MuiFormHelperText-root"
+                        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained Mui-required css-19alodt-MuiFormHelperText-root"
                       >
                         Please specify the first name
                       </p>
@@ -162,8 +155,8 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
                     >
                       <label
-                        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled Mui-required css-1wx1fhp-MuiFormLabel-root-MuiInputLabel-root"
-                        data-shrink="true"
+                        class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required css-1y9gz45-MuiFormLabel-root-MuiInputLabel-root"
+                        data-shrink="false"
                       >
                         Last name
                         <span
@@ -183,14 +176,14 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                           name="lastName"
                           required=""
                           type="text"
-                          value="Smith"
+                          value=""
                         />
                         <fieldset
                           aria-hidden="true"
                           class="MuiOutlinedInput-notchedOutline css-1o2jng6-MuiOutlinedInput-notchedOutline"
                         >
                           <legend
-                            class="css-17xdsu"
+                            class="css-2s9zix"
                           >
                             <span>
                               Last name
@@ -229,7 +222,7 @@ exports[`<AccountPage {...defaultProps} /> should render element 1`] = `
                           name="email"
                           required=""
                           type="text"
-                          value="demo@devias.io"
+                          value="abc@example.com"
                         />
                         <fieldset
                           aria-hidden="true"
