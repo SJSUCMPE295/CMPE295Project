@@ -6,6 +6,7 @@ const router = Router();
 
 ///API for signup
 router.post('/user', async (req, res) => {
+    console.log("req.body : ",req.body);
     const {
         userName = 'test005',
         password = 'test005',
