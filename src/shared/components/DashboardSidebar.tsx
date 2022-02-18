@@ -17,7 +17,7 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
-import userProfileReducer from '../store/userProfileReducer';
+import userProfileReducer from '../store/reducers/userProfileReducer';
 const user = {
     avatar: '/static/images/avatars/avatar_2.png',
     jobTitle: 'San Jose,CA',

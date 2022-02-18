@@ -1,15 +1,13 @@
-import { combineReducers } from 'redux';
-import user from './user/reducer';
-//import app from './app/reducer';
-import userProfileReducer from './userProfileReducer';
-import loginReducer from './loginReducer';
+import  {resetState}  from "./constants/action-types";
+import appReducer from "./appReducer";
 
-const createRootReducer = () =>
-    combineReducers({
-        user,
-        //app,
-        userProfileReducer,
-        loginReducer,
-    });
+const rootReducer = (state, action) => {
+  if (action.type === resetState) {
+    // storage.removeItem("persist:root");
 
-export default createRootReducer;
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
+export default rootReducer;

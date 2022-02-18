@@ -9,7 +9,9 @@ import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
 import useMounted  from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import {loginAction} from '../../store/constants/action-types';
+import {loginAction, createUserProfile, saveUserName} from '../../store/constants/action-types';
+import axios from 'axios';
+import serverUrl from '../../utils/config';
 
 const Login = () => {
     const history = useHistory();
@@ -20,8 +22,68 @@ const Login = () => {
     const {login, signinWithGoogle} = useAuth();
     const mounted = useMounted();
     const handleSubmit = (email) => {
+        
         dispatch({type:loginAction, email});
-        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+        const payload = {
+            userName: email
+        };
+        axios.defaults.withCredentials = true;
+          // make a post request with the user data
+          axios.post(serverUrl + 'login', payload).then(
+            (response) => {
+                console.log("axios call")
+              if (response.status === 200) {
+                  console.log("login successful", response.data.user);
+                  const payload1 = {
+                    firstName: response.data.user.firstName,
+                    lastName: response.data.user.lastName,
+                    email: response.data.user.userName,
+                };
+                  const payload2 = {
+                    isDoctor: response.data.user.userMetaData.isDoctor,
+                    address1: response.data.user.address[0].address1,
+                    address2: response.data.user.address[0].address2,
+                    city: response.data.user.address[0].city,
+                    state: response.data.user.state,
+                    zipCode: response.data.user.address[0].zipCode,
+                    country: response.data.user.address[0].country,
+                    phoneNumber: response.data.user.profile.phoneNumber,
+                    gender: response.data.user.userMetaData.gender,
+                };
+                dispatch({
+                    type: saveUserName,
+                    firstName: response.data.user.firstName,
+                    lastName: response.data.user.lastName,
+                    email: response.data.user.userName,
+                });
+                dispatch({
+                    type: createUserProfile,
+                    isDoctor: response.data.user.userMetaData.isDoctor,
+                    address1: response.data.user.address[0].address1,
+                    address2: response.data.user.address[0].address2,
+                    city: response.data.user.address[0].city,
+                    state: response.data.user.state,
+                    zipCode: response.data.user.address[0].zipCode,
+                    country: response.data.user.address[0].country,
+                    phoneNumber: response.data.user.profile.phoneNumber,
+                    gender: response.data.user.userMetaData.gender,
+                });
+                  history.push('app/dashboard', { replace: true });
+                // this.setState({
+                //   errorMessage: response.data,
+                //   signupSuccess: true,
+                // });
+              }
+            },
+            (error) => {
+                console.log("login error")
+            //   this.setState({
+            //     errorMessage: error.response.data,
+            //     signupFailed: true,
+            //   });
+            }
+          );
+        // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
     }
 
     const handleSubmitWithGoogle = (email) => {
@@ -77,8 +139,18 @@ const Login = () => {
                                 .catch((error) => {
                                     //console.log(error.message);
                                     setAlert(true);
-                                    console.log(error);
-                                    setError(error.message);
+                                    values.isSubmitting = false;
+                                    switch (error.code) {
+                                        case "auth/wrong-password" : {
+                                            setError("Invalid password");
+                                            break;
+                                        }
+                                        case "auth/user-not-found" : {
+                                            setError("Username does not exists");
+                                            break;
+                                        }
+                                    }
+                                    // setError(error.message);
                                    
                                 })
                                 .finally(() => {

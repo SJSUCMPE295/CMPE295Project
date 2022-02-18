@@ -147,7 +147,7 @@ const Statistics: FunctionComponent<any> = (props) => {
             xAxes: [
                 {
                     ticks: {
-                        fontColor: theme.palette.text.secondary,
+                        Color: theme.palette.text.secondary,
                     },
                     gridLines: {
                         display: false,

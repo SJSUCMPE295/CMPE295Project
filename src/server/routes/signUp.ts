@@ -9,7 +9,7 @@ router.post('/user', async (req, res) => {
     console.log("req.body : ",req.body);
     const {
         userName = 'test005',
-        password = 'test005',
+        // password = 'test005',
         firstName = 'Jimmy',
         lastName = 'Blake',
         userMetaData = {
@@ -35,7 +35,7 @@ router.post('/user', async (req, res) => {
     const userdata = new userModel({
         _userId: new Mongoose.Types.ObjectId(),
         userName,
-        password,
+        // password,
         firstName,
         lastName,
         userMetaData,

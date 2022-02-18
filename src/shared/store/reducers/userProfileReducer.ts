@@ -1,4 +1,4 @@
-import { saveUserName, createUserProfile } from './constants/action-types';
+import { saveUserName, createUserProfile } from '../constants/action-types';
 
 const defaultState = {};
 
@@ -9,11 +9,12 @@ const userProfileReducer = (state = defaultState, action) => {
                 ...state,
                 firstName: action.firstName,
                 lastName: action.lastName,
-                email: action.email,
+                userName: action.email,
                 //   return Object.assign(state, action.payload);
             };
         }
         case createUserProfile: {
+            console.log("inside createuserprofile");
             return {
                 ...state,
                 isDoctor: action.isDoctor,

@@ -15,8 +15,9 @@ import webhookVerification from './middleware/webhookVerification';
 import getHelpRouter from './routes/gethelp';
 import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
-import signUpRouter from './routes/signUp';
+import signUpRouter from './routes/signup';
 import loginRouter from './routes/login';
+import staticRouter from './routes/static';
 
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -43,6 +44,8 @@ app.use('/api/home', homeRouter);
 app.use('/api/givehelp', giveHelpRouter);
 app.use('/api/signup', signUpRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/static', staticRouter);
 
 /* End: Api routes*/
 app.use(addStore);
