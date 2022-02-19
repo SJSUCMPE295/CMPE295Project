@@ -6,13 +6,16 @@ import Category from '../models/category';
 import TransactionLogger from '../models/transactionLogger';
 import User from '../models/user';
 const router = Router();
+const calculateMiles = (kilometer) => {
+    const milesFactor = 0.621371;
+    const val = parseInt(kilometer.slice(0, -3).replace(',', ''));
+    return (val * milesFactor).toFixed(2);
+};
+export const updateResourceServiceAvailability = async (req, res) => {
+    const { id, sku } = req.query || {};
+    const resource_service = req.query.resource_service;
+    const userId = req.query.user_id;
 
-//update resource/service availability and transaction _logger
-router.post('/', async (_req, res) => {
-    const resource_service = _req.query.resource_service;
-    const id = _req.query.id;
-    const userid = _req.query.user_id;
-    console.log(userid);
     var resource_sku = 0;
     var category_name;
     var category_id;
@@ -21,17 +24,16 @@ router.post('/', async (_req, res) => {
     };
     var service_Id = '';
     var resource_Id = '';
-
     var transaction_sku = 0;
     if (resource_service == 'resource') {
         resource_Id = id;
-        transaction_sku = _req.query.sku;
-        resource_sku = Number(_req.query.sku) * -1;
+        transaction_sku = sku;
+        resource_sku = Number(sku) * -1;
         query_params._id = id;
         const update = { $inc: { SKU: resource_sku } };
         const resource = await Resources.findById(id);
         category_name = resource.Resource_Name;
-        var remaining_resource = resource.SKU - _req.query.sku;
+        var remaining_resource = resource.SKU - sku;
         console.log(remaining_resource);
         if (remaining_resource == 0) {
             Resources.deleteOne(query_params, function (error) {
@@ -51,7 +53,7 @@ router.post('/', async (_req, res) => {
     category_id = category._id;
     var currentDate = new Date();
     const transaction = new TransactionLogger({
-        userId: userid,
+        userId: userId,
         ResourceId: resource_Id,
         ServiceId: service_Id,
         Date: currentDate,
@@ -64,10 +66,9 @@ router.post('/', async (_req, res) => {
         if (err) throw err;
         res.send(result);
     });
-});
-
-// Retrieve  resources and services
-router.get('/', async (_req, res) => {
+};
+export const getResourceService = async (req, res) => {
+    const { name, miles } = req.query || {};
     const client = new Client({});
     const user_location = {};
     const user_loc = await client
@@ -88,8 +89,6 @@ router.get('/', async (_req, res) => {
         resources: [{}],
         services: [{}],
     };
-    const name = _req.query.name;
-    const miles = _req.query.miles;
     var query_params_resource = {};
     var query_params_service = {};
     const destArray = {};
@@ -247,10 +246,38 @@ router.get('/', async (_req, res) => {
 
         res.send(response);
     }
-});
-const calculateMiles = (kilometer) => {
-    const milesFactor = 0.621371;
-    const val = parseInt(kilometer.slice(0, -3).replace(',', ''));
-    return (val * milesFactor).toFixed(2);
 };
+//update resource/service availability and transaction _logger
+router.post('/', updateResourceServiceAvailability);
+// Retrieve  resources and services
+router.get('/', async (_req, res) => getResourceService);
+// Create a new Resource
+export const createHandler = async (_req, res) => {
+    res.send({ hello: 'Create a new Resource' });
+};
+router.post('/', createHandler);
+
+// Retrieve all Resources
+export const getAllHandler = async (_req, res) => {
+    res.send({ hello: 'Retrieve all Resources' });
+};
+router.get('/', getAllHandler);
+
+// Retrieve a single Resource with id
+export const getItemHandler = async (_req, res) => {
+    res.send({ hello: 'Retrieve a single Resource with id' });
+};
+router.get('/:id', getItemHandler);
+
+// Update a Resource with id
+export const updateItemHandler = async (_req, res) => {
+    res.send({ hello: 'Update a Resource with id' });
+};
+router.put('/:id', updateItemHandler);
+
+// Delete a Resource with id
+export const deleteItemHandler = async (_req, res) => {
+    res.send({ hello: 'Delete a Resource with id' });
+};
+router.delete('/:id', deleteItemHandler);
 export default router;
