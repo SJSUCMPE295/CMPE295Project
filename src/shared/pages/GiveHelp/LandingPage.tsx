@@ -25,8 +25,7 @@ const LandingPage = () => (
                         justifyContent: 'center',
                         pt: 3,
                     }}
-                >
-                </Box>
+                ></Box>
             </Container>
         </Box>
     </>

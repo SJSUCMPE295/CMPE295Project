@@ -25,8 +25,7 @@ const AddService = () => (
                         justifyContent: 'center',
                         pt: 3,
                     }}
-                >
-                </Box>
+                ></Box>
             </Container>
         </Box>
     </>

@@ -25,62 +25,68 @@ import AddResourceScreen from './pages/GiveHelp/AddResource';
 const App: React.FC<any> = () => {
     return (
         <AuthContextProvider>
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-                <div>
-                    <Switch>
-                        <Route path={'/app'}>
-                            <DashboardLayout>
-                                <Switch>
-                                    <Route path={'/app/account'} component={Account} />
-                                    <Route path={'/app/gethelp'} component={GetHelp} />
-                                    <Route path={'/app/dashboard'} component={Dashboard} />
-                                    <Route
-                                        path={'/app/medicalAssistance'}
-                                        component={MedicalAssistance}
-                                    />
-                                    <Route path={'/app/givehelp/addservice'} component={AddServiceScreen} />
-                                    <Route path={'/app/givehelp/addresource'} component={AddResourceScreen} />
-                                    <Route path={'/app/givehelp'} component={GiveHelpScreen} />
-                                    <Route path={'/app/settings'} component={Settings} />
-                                </Switch>
-                            </DashboardLayout>
-                        </Route>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <div>
+                        <Switch>
+                            <Route path={'/app'}>
+                                <DashboardLayout>
+                                    <Switch>
+                                        <Route path={'/app/account'} component={Account} />
+                                        <Route path={'/app/gethelp'} component={GetHelp} />
+                                        <Route path={'/app/dashboard'} component={Dashboard} />
+                                        <Route
+                                            path={'/app/medicalAssistance'}
+                                            component={MedicalAssistance}
+                                        />
+                                        <Route
+                                            path={'/app/givehelp/addservice'}
+                                            component={AddServiceScreen}
+                                        />
+                                        <Route
+                                            path={'/app/givehelp/addresource'}
+                                            component={AddResourceScreen}
+                                        />
+                                        <Route path={'/app/givehelp'} component={GiveHelpScreen} />
+                                        <Route path={'/app/settings'} component={Settings} />
+                                    </Switch>
+                                </DashboardLayout>
+                            </Route>
 
-                        <Route path={'/login'}>
-                            <MainLayout>
-                                <Login />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/register1'}>
-                            <MainLayout>
-                                <Register1 />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/register2'}>
-                            <MainLayout>
-                                <Register2 />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/forgot-password'}>
-                            <MainLayout>
-                                <ForgotPassword />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/reset-password'}>
-                            <MainLayout>
-                                <ResetPassword />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path="/">
-                            <Redirect to="/app/dashboard" />
-                        </Route>
-                        <Route path={'/404'} component={NotFound} />
-                        <Redirect to="/404" />
-                    </Switch>
-                </div>
-            </ThemeProvider>
-        </StyledEngineProvider>
+                            <Route path={'/login'}>
+                                <MainLayout>
+                                    <Login />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/register1'}>
+                                <MainLayout>
+                                    <Register1 />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/register2'}>
+                                <MainLayout>
+                                    <Register2 />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/forgot-password'}>
+                                <MainLayout>
+                                    <ForgotPassword />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/reset-password'}>
+                                <MainLayout>
+                                    <ResetPassword />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path="/">
+                                <Redirect to="/app/dashboard" />
+                            </Route>
+                            <Route path={'/404'} component={NotFound} />
+                            <Redirect to="/404" />
+                        </Switch>
+                    </div>
+                </ThemeProvider>
+            </StyledEngineProvider>
         </AuthContextProvider>
     );
 };

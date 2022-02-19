@@ -24,7 +24,6 @@ const user = {
     name: 'Katarina Smith',
 };
 
-
 const items = [
     {
         href: '/app/dashboard',

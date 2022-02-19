@@ -23,7 +23,7 @@ router.get('/', async (_req, res) => {
         const user = _req.query.user;
         console.log(user);
         if (user != '') {
-            const usertransactions =  Transactions.aggregate(
+            const usertransactions = Transactions.aggregate(
                 [
                     {
                         $match: { UserId: user },
@@ -41,57 +41,61 @@ router.get('/', async (_req, res) => {
                     } else {
                         //console.log(data_ut);
                         response.usertransactions = data_ut;
-                        const userappointment = DoctorAppointment.aggregate( [
-                            {
-                                $match: { UserId: user },
-                            },
-                            {
-                                $project: {
-                                    doctorObjId: { $toObjectId: '$DoctorId' },
-                                    UserId: 1,
-                                    AppointmentDetails: 1,
-                                    Status: 1
+                        const userappointment = DoctorAppointment.aggregate(
+                            [
+                                {
+                                    $match: { UserId: user },
                                 },
-                            },
-                            {
-                                $lookup: {
-                                    from: 'User',
-                                    localField: 'doctorObjId',
-                                    foreignField: '_id',
-                                    as: 'doctor_appointments',
+                                {
+                                    $project: {
+                                        doctorObjId: { $toObjectId: '$DoctorId' },
+                                        UserId: 1,
+                                        AppointmentDetails: 1,
+                                        Status: 1,
+                                    },
                                 },
-                            },
-                            {
-                                $unwind: {
-                                    path: '$doctor_appointments',
-                                    preserveNullAndEmptyArrays: true
+                                {
+                                    $lookup: {
+                                        from: 'User',
+                                        localField: 'doctorObjId',
+                                        foreignField: '_id',
+                                        as: 'doctor_appointments',
+                                    },
+                                },
+                                {
+                                    $unwind: {
+                                        path: '$doctor_appointments',
+                                        preserveNullAndEmptyArrays: true,
+                                    },
+                                },
+                                {
+                                    $project: {
+                                        UserId: 1,
+                                        doctor_name: {
+                                            $concat: [
+                                                '$doctor_appointments.firstName',
+                                                ' ',
+                                                '$doctor_appointments.lastName',
+                                            ],
+                                        },
+                                        AppointmentDetails: 1,
+                                        Status: 1,
+                                    },
+                                },
+                            ],
+                            (error_dp, data_dp) => {
+                                if (error_dp) {
+                                    res.status(400).send(error_dp);
+                                } else {
+                                    response.userappointments = data_dp;
                                 }
-                            },
-                            {
-                                $project: {
-                                    UserId: 1,
-                                    doctor_name: {$concat: [
-                                        '$doctor_appointments.firstName',
-                                        ' ',
-                                        '$doctor_appointments.lastName',
-                                    ]},
-                                    AppointmentDetails: 1,
-                                    Status: 1,
-                                },
-                            },
-                        ],(error_dp, data_dp) => {
-                            if (error_dp) {
-                                res.status(400).send(error_dp);
-                            } else {
-                        response.userappointments = data_dp;
-                    }}
-                        )
+                            }
+                        );
                     }
                 }
             );
-
-            }
-        const resources =  Resources.aggregate(
+        }
+        const resources = Resources.aggregate(
             [
                 {
                     $group: {
@@ -101,8 +105,9 @@ router.get('/', async (_req, res) => {
                 },
                 {
                     $sort: { resource_SKU: -1 },
-                }
-            ],(error, data) => {
+                },
+            ],
+            (error, data) => {
                 if (error) {
                     //console.log('error', error);
                     res.status(400).send(error);
