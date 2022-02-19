@@ -6,7 +6,7 @@ import AddServiceCard from '../../components/givehelp/AddServiceCard';
 const AddService = () => (
     <>
         <Helmet>
-            <title>Products | Material Kit</title>
+            <title>WeCare</title>
         </Helmet>
         <Box
             sx={{

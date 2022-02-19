@@ -100,7 +100,7 @@ export const ProductList = (props) => {
     return (
         <>
             <Helmet>
-                <title>Products | Material Kit</title>
+                <title>WeCare</title>
             </Helmet>
             <Box
                 sx={{

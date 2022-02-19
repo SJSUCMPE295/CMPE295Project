@@ -76,8 +76,6 @@ export const saveService = async (req, res) => {
         res.json({ message: err });
     }
 };
-// const auth = require('../middleware/auth');
-// const fetchController = require('../controller/fetch');
 // API to post resource
 router.post('/resource', saveResource);
 // API to post service
