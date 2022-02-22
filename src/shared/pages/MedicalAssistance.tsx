@@ -12,8 +12,8 @@ import {
     TextField,
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
-import { getHelp, setGetHelp } from 'store/actions';
 import { connect } from 'react-redux';
+import { getHelp, setGetHelp } from 'store/actions';
 
 const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
@@ -59,7 +59,15 @@ const rows = [
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
-
+const availableTimesInput = [
+    { text: 'Sunday', value: '', selected: false },
+    { text: 'Monday', value: '' },
+    { text: 'Tuesday', value: '' },
+    { text: 'Wednesday', value: '' },
+    { text: 'Thursday', value: '' },
+    { text: 'Friday', value: '' },
+    { text: 'Saturday', value: '' },
+];
 export const DataTable = () => {
     return (
         <div style={{ height: 800, width: '100%' }}>
@@ -84,6 +92,7 @@ const formInputs = [
 ];
 export const ProductList = (props) => {
     const [open, setOpen] = React.useState(false);
+    const [availableTimes, setAvailableTimes] = React.useState(availableTimesInput);
     React.useEffect(() => {
         getHelp()
             .then((response) => props.setGetHelp(response.data))
@@ -95,6 +104,11 @@ export const ProductList = (props) => {
 
     const handleClose = () => {
         setOpen(false);
+    };
+    const handleOnClickAvailablityBtn = (i) => {
+        availableTimes[i].selected = !availableTimes[i].selected;
+        console.log(availableTimes);
+        setAvailableTimes([...availableTimes]);
     };
 
     return (
@@ -129,7 +143,43 @@ export const ProductList = (props) => {
                 <DialogTitle>Provide Medical Assistance</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Set up you availability</DialogContentText>
-                    <TextField autoFocus id="name" fullWidth variant="standard" />
+                    <form className="" noValidate>
+                        <Box sx={{ my: 2 }}>
+                            <TextField
+                                id="datetime-local"
+                                label="From"
+                                type="datetime-local"
+                                defaultValue="2017-05-24T10:30"
+                                className="mb-2"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Box>
+                        <Box sx={{ my: 2 }}>
+                            <TextField
+                                id="datetime-local"
+                                label="To"
+                                type="datetime-local"
+                                defaultValue="2017-05-24T10:30"
+                                className="mb-2"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </Box>
+                        <Box sx={{ mb: 2 }}>
+                            {availableTimes.map((x, i) => (
+                                <Button
+                                    key={x.text}
+                                    variant={x.selected ? 'contained' : 'outlined'}
+                                    onClick={() => handleOnClickAvailablityBtn(i)}
+                                >
+                                    {x.text}
+                                </Button>
+                            ))}
+                        </Box>
+                    </form>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>

@@ -247,8 +247,20 @@ export const getResourceService = async (req, res) => {
         res.send(response);
     }
 };
+// Retrieve a single Service with id
+export const getServiceHandler = async (req, res) => {
+    const service = await Services.findById(req.params.id);
+    res.send(service);
+};
+// Retrieve a single Resource with id
+export const getResourceHandler = async (req, res) => {
+    const service = await Resources.findById(req.params.id);
+    res.send(service);
+};
 //update resource/service availability and transaction _logger
 router.post('/', updateResourceServiceAvailability);
 // Retrieve  resources and services
 router.get('/', async (_req, res) => getResourceService);
+router.get('/services/:id', getServiceHandler);
+router.get('/resources/:id', getResourceHandler);
 export default router;
