@@ -1,18 +1,22 @@
 import { Router } from 'express';
 import { Client } from '@googlemaps/google-maps-services-js';
+import mongoose, { ObjectId } from 'mongoose';
 import Services from '../models/services';
 import Resources from '../models/resources';
 import Category from '../models/category';
 import TransactionLogger from '../models/transactionLogger';
 import User from '../models/user';
 const router = Router();
+const calculateMiles = (kilometer) => {
+    const milesFactor = 0.621371;
+    const val = parseInt(kilometer.slice(0, -3).replace(',', ''));
+    return (val * milesFactor).toFixed(2);
+};
+export const updateResourceServiceAvailability = async (req, res) => {
+    const { id, sku } = req.query || {};
+    const resource_service = req.query.resource_service;
+    const userId = req.query.user_id;
 
-//update resource/service availability and transaction _logger
-router.post('/', async (_req, res) => {
-    const resource_service = _req.query.resource_service;
-    const id = _req.query.id;
-    const userid = _req.query.user_id;
-    console.log(userid);
     var resource_sku = 0;
     var category_name;
     var category_id;
@@ -21,17 +25,16 @@ router.post('/', async (_req, res) => {
     };
     var service_Id = '';
     var resource_Id = '';
-
     var transaction_sku = 0;
     if (resource_service == 'resource') {
         resource_Id = id;
-        transaction_sku = _req.query.sku;
-        resource_sku = Number(_req.query.sku) * -1;
+        transaction_sku = sku;
+        resource_sku = Number(sku) * -1;
         query_params._id = id;
         const update = { $inc: { SKU: resource_sku } };
         const resource = await Resources.findById(id);
         category_name = resource.Resource_Name;
-        var remaining_resource = resource.SKU - _req.query.sku;
+        var remaining_resource = resource.SKU - sku;
         console.log(remaining_resource);
         if (remaining_resource == 0) {
             Resources.deleteOne(query_params, function (error) {
@@ -51,7 +54,7 @@ router.post('/', async (_req, res) => {
     category_id = category._id;
     var currentDate = new Date();
     const transaction = new TransactionLogger({
-        userId: userid,
+        userId: userId,
         ResourceId: resource_Id,
         ServiceId: service_Id,
         Date: currentDate,
@@ -64,10 +67,9 @@ router.post('/', async (_req, res) => {
         if (err) throw err;
         res.send(result);
     });
-});
-
-// Retrieve  resources and services
-router.get('/', async (_req, res) => {
+};
+export const getResourceService = async (req, res) => {
+    const { name, miles } = req.query || {};
     const client = new Client({});
     const user_location = {};
     const user_loc = await client
@@ -88,8 +90,6 @@ router.get('/', async (_req, res) => {
         resources: [{}],
         services: [{}],
     };
-    const name = _req.query.name;
-    const miles = _req.query.miles;
     var query_params_resource = {};
     var query_params_service = {};
     const destArray = {};
@@ -97,7 +97,7 @@ router.get('/', async (_req, res) => {
         query_params_resource = { Resource_Name: name };
         query_params_service = { Service_Name: name };
     }
-
+    console.log('query_params_resource', query_params_resource);
     const resource_user = await Resources.aggregate(
         [
             { $match: query_params_resource },
@@ -153,6 +153,7 @@ router.get('/', async (_req, res) => {
             response.resources = result;
         }
     );
+    console.log('resource_user', resource_user);
     const service_user = await Services.aggregate(
         [
             { $match: query_params_service },
@@ -205,7 +206,10 @@ router.get('/', async (_req, res) => {
             //res.send(response);//comment
         }
     );
-    var destinations = Array.from(new Set(Object.keys(destArray)));
+    var destinations = Array.from(new Set(Object.keys(destArray))) || [
+        'San Francisco, CA, USA',
+        'Victoria, BC, Canada',
+    ];
     const distance_matrix = await client
         .distancematrix({
             params: {
@@ -221,10 +225,12 @@ router.get('/', async (_req, res) => {
                     r.data.rows[0].elements[0].distance.text
                 ); //+","+r.data.rows[0].elements[0].duration.text;
             }
+            console.log('distance_matrix', r);
             sendResponse();
         })
         .catch((e) => {
-            console.log(e);
+            console.log('distance_matrix: Error', e);
+            sendResponse();
         });
 
     function sendResponse() {
@@ -247,10 +253,31 @@ router.get('/', async (_req, res) => {
 
         res.send(response);
     }
-});
-const calculateMiles = (kilometer) => {
-    const milesFactor = 0.621371;
-    const val = parseInt(kilometer.slice(0, -3).replace(',', ''));
-    return (val * milesFactor).toFixed(2);
 };
+// Retrieve a single Service with id
+export const getServiceHandler = async (req, res) => {
+    Services.findById(new mongoose.Types.ObjectId(req?.params?.id))
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).json({ message: err.message });
+        });
+};
+// Retrieve a single Resource with id
+export const getResourceHandler = async (req, res) => {
+    Resources.findById(new mongoose.Types.ObjectId(req?.params?.id))
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).json({ message: err.message });
+        });
+};
+//update resource/service availability and transaction _logger
+router.post('/', updateResourceServiceAvailability);
+// Retrieve  resources and services
+router.get('/', getResourceService);
+router.get('/services/:id', getServiceHandler);
+router.get('/resources/:id', getResourceHandler);
 export default router;

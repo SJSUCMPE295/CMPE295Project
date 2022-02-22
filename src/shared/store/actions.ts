@@ -1,5 +1,7 @@
 import axios from 'axios';
-
+const api = axios.create({
+    //    withCredentials: true,
+});
 export const ActionTypes = {
     SETGETHELP: 'app/set-get-help',
 };
@@ -13,8 +15,12 @@ const jsonToQueryString = (json) => {
         .join('&');
     return str ? '?' + str : '';
 };
-export const getHelp = (data = {}) => axios.get('/api/gethelp' + jsonToQueryString(data));
-export const giveHelp = (data = {}) => axios.post('/api/gethelp', data);
-export const getHome = (data = {}) => axios.get('/api/listing' + jsonToQueryString(data));
-export const signUp = (data = {}) => axios.post('/api/signup', data);
-export const login = (data = {}) => axios.post('/api/login', data);
+export const getHelp = (data = {}) => api.get('/api/gethelp' + jsonToQueryString(data));
+export const giveHelp = (data = {}) => api.post('/api/gethelp', data);
+export const getHome = (data = {}) => api.get('/api/listing' + jsonToQueryString(data));
+export const signUp = (data = {}) => api.post('/api/signup', data);
+export const login = (data = {}) => api.post('/api/login', data);
+export const getServiceById = (id, data = {}) =>
+    api.get(`/api/gethelp/services/${id}${jsonToQueryString(data)}`);
+export const getResourcesById = (id, data = {}) =>
+    api.get(`/api/gethelp/resources/${id}${jsonToQueryString(data)}`);

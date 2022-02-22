@@ -6,7 +6,7 @@ import AddResourceCard from '../../components/givehelp/AddResourceCard';
 const AddResource = () => (
     <>
         <Helmet>
-            <title>Products | Material Kit</title>
+            <title>WeCare</title>
         </Helmet>
         <Box
             sx={{
@@ -25,8 +25,7 @@ const AddResource = () => (
                         justifyContent: 'center',
                         pt: 3,
                     }}
-                >
-                </Box>
+                ></Box>
             </Container>
         </Box>
     </>

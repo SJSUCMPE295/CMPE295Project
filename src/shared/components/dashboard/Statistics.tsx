@@ -18,7 +18,7 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    Tooltip
+    Tooltip,
 } from '@material-ui/core';
 import moment from 'moment';
 import { v4 as uuid } from 'uuid';
@@ -369,7 +369,8 @@ const Statistics: FunctionComponent<any> = (props) => {
                                     p: 2,
                                 }}
                             >
-                                <Button href="/app/gethelp"
+                                <Button
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -432,7 +433,8 @@ const Statistics: FunctionComponent<any> = (props) => {
                                     p: 2,
                                 }}
                             >
-                                <Button href="/app/gethelp"
+                                <Button
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -484,8 +486,8 @@ const Statistics: FunctionComponent<any> = (props) => {
                                                             color="textPrimary"
                                                             variant="text"
                                                         >
-                                                            You have an appointment with {doctor_name}{' '}
-                                                            at {AppointmentDetails}
+                                                            You have an appointment with{' '}
+                                                            {doctor_name} at {AppointmentDetails}
                                                         </Typography>
                                                     )
                                                 )
@@ -500,7 +502,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                             </Card>
                         </Grid>
                     ) : null}
-                    <Grid  item style={{maxHeight: '100vh', overflow: 'auto'}} >
+                    <Grid item style={{ maxHeight: '100vh', overflow: 'auto' }}>
                         <HealthNews />
                     </Grid>
                 </Grid>

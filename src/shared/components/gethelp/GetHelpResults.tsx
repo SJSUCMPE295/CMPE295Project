@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import getInitials from '../../utils/getInitials';
 
-const GetHelpResults = ({ resources, ...rest }) => {
+const GetHelpResults = ({ resources, onClickTableRow = () => {}, ...rest }) => {
     const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(0);
@@ -96,6 +96,7 @@ const GetHelpResults = ({ resources, ...rest }) => {
                                     hover
                                     key={customer.id}
                                     selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                                    onClick={(e) => onClickTableRow(e, customer)}
                                 >
                                     <TableCell padding="checkbox">
                                         <Checkbox

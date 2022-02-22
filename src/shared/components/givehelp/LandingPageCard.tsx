@@ -4,64 +4,66 @@ import Stack from '@mui/material/Stack';
 
 const LandingPageCard = (props) => (
     <Box {...props}>
-        <Box 
+        <Box
             sx={{
-                width:900,
-                height:700,
-                p: 1
-                }}
+                width: 900,
+                height: 700,
+                p: 1,
+            }}
         >
-            <Card 
+            <Card
                 sx={{
-                height: 300,
-                maxWidth:900
+                    height: 300,
+                    maxWidth: 900,
                 }}
             >
-               <CardHeader 
+                <CardHeader
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                    }}
+                    titleTypographyProps={{ variant: 'h2' }}
+                    subheader="select from below type resource/service to enter details"
+                    title="Select type"
+                />
+                <Divider />
+                <CardContent>
+                    <Box
                         sx={{
                             display: 'flex',
                             justifyContent: 'flex-start',
                         }}
-                        titleTypographyProps={{ variant: 'h2' }} subheader="select from below type resource/service to enter details" title="Select type"
-                />
-                <Divider />
-                <CardContent>
-                    <Box 
-                        sx={{
-                                display: 'flex',
-                                justifyContent: 'flex-start',       
-                        }}
                     >
-                        <Button 
-                            type="submit" 
-                            color="primary" 
+                        <Button
+                            type="submit"
+                            color="primary"
                             variant="contained"
                             onClick={(e) => {
                                 e.preventDefault();
-                                window.location.href='givehelp/addresource';
-                                }}
+                                window.location.href = 'givehelp/addresource';
+                            }}
                         >
                             Add a Resource
-                        </Button> 
+                        </Button>
                     </Box>
-                    <Box 
+                    <Box
                         sx={{
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                pt:6       
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            pt: 6,
                         }}
                     >
-                        <Button 
-                            type="submit" 
-                            color="primary" 
+                        <Button
+                            type="submit"
+                            color="primary"
                             variant="contained"
                             onClick={(e) => {
                                 e.preventDefault();
-                                window.location.href='givehelp/addservice';
-                                }}
+                                window.location.href = 'givehelp/addservice';
+                            }}
                         >
                             Add a Service
-                        </Button> 
+                        </Button>
                     </Box>
                 </CardContent>
             </Card>

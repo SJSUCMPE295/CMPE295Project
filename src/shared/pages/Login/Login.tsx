@@ -4,12 +4,21 @@ import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Link,
+    TextField,
+    Typography,
+    Alert,
+} from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
-import useMounted  from '../hooks/useMounted';
+import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import {loginAction} from '../../store/constants/action-types';
+import { loginAction } from '../../store/constants/action-types';
 
 const Login = () => {
     const history = useHistory();
@@ -17,23 +26,23 @@ const Login = () => {
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
-    const {login, signinWithGoogle} = useAuth();
+    const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();
     const handleSubmit = (email) => {
-        dispatch({type:loginAction, email});
+        dispatch({ type: loginAction, email });
         history.push(location.state?.from ?? '/app/dashboard', { replace: true });
-    }
+    };
 
     const handleSubmitWithGoogle = (email) => {
-        dispatch({type:loginAction, email});
+        dispatch({ type: loginAction, email });
         history.push(location.state?.from ?? '/app/dashboard', { replace: true });
-    }
+    };
     return (
         <>
             <Helmet>
                 <title>WeCare - Login</title>
             </Helmet>
-            
+
             <Box
                 sx={{
                     backgroundColor: '#ffffff',
@@ -47,16 +56,14 @@ const Login = () => {
                     {/* <Paper elevation={0}>
                     <img src={image} height="100" style={{marginLeft:"400"}}/>
                 </Paper> */}
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
-                        {alert ?  
-                            <Alert severity="error">{error}</Alert>
-                        : <></> }
+                    <div style={{ marginTop: '50px', marginBottom: '50px' }}>
+                        {alert ? <Alert severity="error">{error}</Alert> : <></>}
                     </div>
                     <Formik
                         initialValues={{
                             email: '',
                             password: '',
-                            isSubmitting: false
+                            isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
@@ -79,11 +86,10 @@ const Login = () => {
                                     setAlert(true);
                                     console.log(error);
                                     setError(error.message);
-                                   
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
-                                })
+                                });
                             // history.push('/app/dashboard', { replace: true });
                         }}
                     >
@@ -107,7 +113,12 @@ const Login = () => {
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
-                                    <Typography color="textSecondary" gutterBottom variant="body2" style={{marginTop:"5px"}}>
+                                    <Typography
+                                        color="textSecondary"
+                                        gutterBottom
+                                        variant="body2"
+                                        style={{ marginTop: '5px' }}
+                                    >
                                         Sign in on the WeCare platform using Social
                                     </Typography>
                                 </Box>
@@ -119,28 +130,32 @@ const Login = () => {
                                     alignItems="center"
                                     justifyContent="center"
                                 > */}
-                                    {/* <Grid item xs={12} md={6}> */}
-                                    <Box >
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={() => 
-                                                signinWithGoogle()
-                                                .then((user:any) => {
+                                {/* <Grid item xs={12} md={6}> */}
+                                <Box>
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={() =>
+                                            signinWithGoogle()
+                                                .then((user: any) => {
                                                     console.log(user);
                                                     handleSubmitWithGoogle(user.user.email);
-                                                    history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+                                                    history.push(
+                                                        location.state?.from ?? '/app/dashboard',
+                                                        { replace: true }
+                                                    );
                                                 })
-                                                .catch(error =>  {console.log(error)})
-                                                
-                                            }
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Box>
-                                    {/* </Grid>
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                })
+                                        }
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
+                                </Box>
+                                {/* </Grid>
                                 </Grid> */}
                                 <Box
                                     sx={{
@@ -202,7 +217,7 @@ const Login = () => {
                                             variant="h6"
                                             underline="hover"
                                         >
-                                        Forgot Password?
+                                            Forgot Password?
                                         </Link>
                                     </Typography>
                                     <Typography color="textSecondary" variant="body1">
