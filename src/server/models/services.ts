@@ -3,7 +3,7 @@ const Schema2 = mongoose2.Schema;
 
 export const Service = new Schema2(
     {
-        userId: { type: Object, required: true },
+        UserId: { type: Object, required: true },
         Service_Name: { type: String, required: true },
         Category: { type: String, required: true },
         AddressId: { type: String, required: true },
