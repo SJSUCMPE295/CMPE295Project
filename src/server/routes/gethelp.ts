@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Client } from '@googlemaps/google-maps-services-js';
+import mongoose, { ObjectId } from 'mongoose';
 import Services from '../models/services';
 import Resources from '../models/resources';
 import Category from '../models/category';
@@ -96,7 +97,7 @@ export const getResourceService = async (req, res) => {
         query_params_resource = { Resource_Name: name };
         query_params_service = { Service_Name: name };
     }
-
+    console.log('query_params_resource', query_params_resource);
     const resource_user = await Resources.aggregate(
         [
             { $match: query_params_resource },
@@ -152,6 +153,7 @@ export const getResourceService = async (req, res) => {
             response.resources = result;
         }
     );
+    console.log('resource_user', resource_user);
     const service_user = await Services.aggregate(
         [
             { $match: query_params_service },
@@ -204,7 +206,10 @@ export const getResourceService = async (req, res) => {
             //res.send(response);//comment
         }
     );
-    var destinations = Array.from(new Set(Object.keys(destArray)));
+    var destinations = Array.from(new Set(Object.keys(destArray))) || [
+        'San Francisco, CA, USA',
+        'Victoria, BC, Canada',
+    ];
     const distance_matrix = await client
         .distancematrix({
             params: {
@@ -220,10 +225,12 @@ export const getResourceService = async (req, res) => {
                     r.data.rows[0].elements[0].distance.text
                 ); //+","+r.data.rows[0].elements[0].duration.text;
             }
+            console.log('distance_matrix', r);
             sendResponse();
         })
         .catch((e) => {
-            console.log(e);
+            console.log('distance_matrix: Error', e);
+            sendResponse();
         });
 
     function sendResponse() {
@@ -249,18 +256,28 @@ export const getResourceService = async (req, res) => {
 };
 // Retrieve a single Service with id
 export const getServiceHandler = async (req, res) => {
-    const service = await Services.findById(req.params.id);
-    res.send(service);
+    Services.findById(new mongoose.Types.ObjectId(req?.params?.id))
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).json({ message: err.message });
+        });
 };
 // Retrieve a single Resource with id
 export const getResourceHandler = async (req, res) => {
-    const service = await Resources.findById(req.params.id);
-    res.send(service);
+    Resources.findById(new mongoose.Types.ObjectId(req?.params?.id))
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).json({ message: err.message });
+        });
 };
 //update resource/service availability and transaction _logger
 router.post('/', updateResourceServiceAvailability);
 // Retrieve  resources and services
-router.get('/', async (_req, res) => getResourceService);
+router.get('/', getResourceService);
 router.get('/services/:id', getServiceHandler);
 router.get('/resources/:id', getResourceHandler);
 export default router;

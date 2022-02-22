@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box, Container } from '@material-ui/core';
-import { getServiceById } from 'store/actions';
+import { getResourcesById } from 'store/actions';
 const GetHelpItem = (props) => {
-    const [service, setServiceData] = React.useState();
+    const [resource, setResource] = React.useState({});
     React.useEffect(() => {
         const id = props?.match?.params?.id;
-        getServiceById(id)
+        getResourcesById(id)
             .then((result) => {
-                setServiceData(result.data);
+                console.log('result',result.data)
+                setResource(result.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -27,7 +28,7 @@ const GetHelpItem = (props) => {
                 }}
             >
                 <Container maxWidth={false}>
-                    <Box sx={{ pt: 3 }}>{'Item Page'}</Box>
+                    <Box sx={{ pt: 3 }}>{resource?.Resource_Name}</Box>
                 </Container>
             </Box>
         </>

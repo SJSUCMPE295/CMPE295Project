@@ -6,18 +6,22 @@ import GetHelpToolbar from '../../components/gethelp/GetHelpToolbar';
 import GetHelpResults from '../../components/gethelp/GetHelpResults';
 import resourcesMock from '../../__mocks__/resources';
 
-const GetHelp = (props) => {
+const GetHelp = ({ history, ...props }) => {
     const [resources, setResources] = React.useState(resourcesMock);
     React.useEffect(() => {
-        const id = props?.match?.params?.id;
-        getHelp(id)
+        getHelp()
             .then((result) => {
-                setResources(result.data);
+                const data = result?.data?.resources;
+                data?.length && setResources(data);
             })
             .catch((error) => {
                 console.log(error);
             });
     }, []);
+    const handleOnClickTableRow = (e, resource) => {
+        console.log(props, resource, 'api/gethelp/resources/61731b22a76a197cf20e7d4f');
+        history.push(`/app/gethelp/${resource.id}`)
+    };
     return (
         <>
             <Helmet>
@@ -33,7 +37,10 @@ const GetHelp = (props) => {
                 <Container maxWidth={false}>
                     <GetHelpToolbar />
                     <Box sx={{ pt: 3 }}>
-                        <GetHelpResults resources={resources} />
+                        <GetHelpResults
+                            onClickTableRow={handleOnClickTableRow}
+                            resources={resources}
+                        />
                     </Box>
                 </Container>
             </Box>

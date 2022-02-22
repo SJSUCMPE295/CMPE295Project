@@ -22,3 +22,5 @@ export const signUp = (data = {}) => api.post('/api/signup', data);
 export const login = (data = {}) => api.post('/api/login', data);
 export const getServiceById = (id, data = {}) =>
     api.get(`/api/gethelp/services/${id}${jsonToQueryString(data)}`);
+export const getResourcesById = (id, data = {}) =>
+    api.get(`/api/gethelp/resources/${id}${jsonToQueryString(data)}`);
