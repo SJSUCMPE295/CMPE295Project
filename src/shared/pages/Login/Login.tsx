@@ -21,11 +21,22 @@ const Login = () => {
     const [error, setError] = useState('');
     const {login, signinWithGoogle} = useAuth();
     const mounted = useMounted();
-    const handleSubmit = (email) => {
+    const handleSubmit = (email, token) => {
         
         dispatch({type:loginAction, email});
+        apiCall(email, token);
+    }
+
+    const handleSubmitWithGoogle = (email, token) => {
+        dispatch({type:loginAction, email});
+        apiCall(email, token);
+        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+    }
+
+    const apiCall = (email, token) => {
         const payload = {
-            userName: email
+            userName: email,
+            token: token
         };
         axios.defaults.withCredentials = true;
           // make a post request with the user data
@@ -83,12 +94,6 @@ const Login = () => {
             //   });
             }
           );
-        // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
-    }
-
-    const handleSubmitWithGoogle = (email) => {
-        dispatch({type:loginAction, email});
-        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
     }
     return (
         <>
@@ -133,8 +138,8 @@ const Login = () => {
                             setAlert(false);
                             login(values.email, values.password)
                                 .then((response) => {
-                                    console.log(response);
-                                    handleSubmit(values.email);
+                                    console.log(response.user);
+                                    handleSubmit(values.email, response.user.accessToken);
                                 })
                                 .catch((error) => {
                                     //console.log(error.message);
@@ -200,7 +205,7 @@ const Login = () => {
                                                 signinWithGoogle()
                                                 .then((user:any) => {
                                                     console.log(user);
-                                                    handleSubmitWithGoogle(user.user.email);
+                                                    handleSubmitWithGoogle(user.user.email, user._token.idtoken);
                                                     history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch(error =>  {console.log(error)})

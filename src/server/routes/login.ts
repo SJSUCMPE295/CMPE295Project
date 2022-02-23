@@ -6,7 +6,7 @@ const router = Router();
 
 //API for login
 router.post('/', async (req, res) => {
-    console.log('login page' + JSON.stringify(req.body));
+    // console.log('login page' + JSON.stringify(req.body));
 
     Users.findOne({ userName: req.body.userName }, (err, user) => {
         if (err) {

@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import './Register.css';
 import {
     Box,
     Button,
@@ -32,13 +33,13 @@ const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
-    const [user, setUser] = React.useState(useSelector((state) => state.userProfileReducer.email));
-    const [firstName, setFirstName] = React.useState(
-        useSelector((state) => state.userProfileReducer.firstName)
-    );
-    const [lastName, setLastName] = React.useState(
-        useSelector((state) => state.userProfileReducer.lastName)
-    );
+    const [user, setUser] = React.useState(useSelector((state) => state.userProfileReducer.userName));
+    // const [firstName, setFirstName] = React.useState(
+    //     useSelector((state) => state.userProfileReducer.firstName)
+    // );
+    // const [lastName, setLastName] = React.useState(
+    //     useSelector((state) => state.userProfileReducer.lastName)
+    // );
 
     // var specialityOptions = [];
     const genderOptions = [
@@ -47,16 +48,16 @@ const RegisterSecondPage = () => {
         "Do not want to specify"
     ]
 
-    const countryOptions = [
-        "Female",
-        "Male",
-        "Do not want to specify"
-    ]
-    const statesOptions = [
-        "Female",
-        "Male",
-        "Do not want to specify"
-    ]
+    // const countryOptions = [
+    //     "Female",
+    //     "Male",
+    //     "Do not want to specify"
+    // ]
+    // const statesOptions = [
+    //     "Female",
+    //     "Male",
+    //     "Do not want to specify"
+    // ]
 
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
@@ -94,15 +95,15 @@ const RegisterSecondPage = () => {
         );
       },[1]);
    
-    const handleSubmit = (address1, address2, city, zipCode, phoneNumber) => {
+    const handleSubmit = (address1, city, zipCode, phoneNumber) => {
         console.log('inside submit');
-        console.log("first page data", firstName, lastName, user);
+        console.log("first page data",  user);
         const isDoctor = checked;
         const payload = {
             userName: user,
             //password = 005',
-            firstName: firstName,
-            lastName: lastName,
+            // firstName: firstName,
+            // lastName: lastName,
             userMetaData: {
                 isDoctor: checked,
                 gender: gender,
@@ -115,7 +116,7 @@ const RegisterSecondPage = () => {
             address: [
                 {
                     location: address1,
-                    address2: address2,
+                    // address2: address2,
                     city: city,
                     state: state,
                     country: country,
@@ -124,26 +125,25 @@ const RegisterSecondPage = () => {
             ],
         };
         console.log("payload", payload);
-        dispatch({
-            type: createUserProfile,
-            isDoctor,
-            address1,
-            address2,
-            city,
-            state,
-            zipCode,
-            country,
-            phoneNumber,
-            gender,
-        });
         // set the with credentials to true
           axios.defaults.withCredentials = true;
           // make a post request with the user data
-          axios.post(serverUrl + 'signup/user', payload).then(
+          axios.post(serverUrl + 'signup/user/register', payload).then(
             (response) => {
                 console.log("axios call")
               if (response.status === 200) {
                   console.log("updated successfully");
+                  dispatch({
+                    type: createUserProfile,
+                    isDoctor,
+                    address1,
+                    city,
+                    state,
+                    zipCode,
+                    country,
+                    phoneNumber,
+                    gender,
+                });
                   history.push('app/dashboard', { replace: true });
                 // this.setState({
                 //   errorMessage: response.data,
@@ -219,20 +219,20 @@ const RegisterSecondPage = () => {
                             address1: '',
                             address2: '',
                             city: '',
-                            state: '',
+                            // state: '',
                             zipcode: '',
                             phonenumber: '',
-                            gender: '',
-                            country: '',
+                            // gender: '',
+                            // country: '',
                             isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
                             address1: Yup.string().max(255).required('Address is required'),
                             city: Yup.string().max(255).required('City is required'),
-                            country: Yup.string().max(255).required('Country is required'),
-                            state: Yup.string().max(255).required('State is required'),
+                            // country: Yup.string().max(255).required('Country is required'),
+                            // state: Yup.string().max(255).required('State is required'),
                             zipcode: Yup.string().max(255).required('Zipcode is required'),
-                            gender: Yup.string().max(255).required('Gender is required'),
+                            // gender: Yup.string().max(255).required('Gender is required'),
                             phonenumber: Yup.number().max(10).required('Phone Number is required'),
                             // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
@@ -243,7 +243,7 @@ const RegisterSecondPage = () => {
                                 values.address1,
                                 values.city,
                                 values.zipcode,
-                                values.phonenumber,
+                                values.phonenumber
                                 // values.gender
                             );
                             
@@ -310,20 +310,9 @@ const RegisterSecondPage = () => {
                                             > 
                                             
                                                 isLoading ? (<div>Loading ...</div>) :
-                                                {/* //  <MenuItem value="">
-                                                //     <em>None</em>
-                                                //  </MenuItem> */}
                                         ({specialityOptions.map((speciality) => (
                                           <MenuItem key={speciality} value={speciality}>{speciality}</MenuItem>
                                         ))})
-                                        
-                                        
-                                                {/* <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Neurologists</MenuItem>
-                                                <MenuItem value={20}>Psychiatrists</MenuItem>
-                                                <MenuItem value={30}>Family physicians</MenuItem> */}
                                             </Select>
                                           
                                         </FormControl>
@@ -400,17 +389,6 @@ const RegisterSecondPage = () => {
                                         variant="outlined"
                                         fullWidth
                                     />
-                                    {/* <TextField
-                                        error={Boolean(touched.address2 && errors.address2)}
-                                        helperText={touched.address2 && errors.address2}
-                                        label="Address2"
-                                        margin="normal"
-                                        name="address2"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.address2}
-                                        variant="outlined"
-                                    /> */}
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <TextField
@@ -435,14 +413,16 @@ const RegisterSecondPage = () => {
                                      <CountryDropdown
                                         value={country}
                                         onChange={(val) => selectCountry(val)}
-
                                         style={{
                                             width:"250px",
                                             height:"60px",
                                             borderRadius: "4px",
-                                            fontSize: 15,
+                                            // fontSize: 15,
                                             borderColor: "grey",
-                                            color:"grey"
+                                            color:"grey",
+                                            fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
+                                            fontWeight: 400,
+                                            fontSize: "1rem"
                                         }}
                                           tabIndex={1000}
                                         />
@@ -483,9 +463,12 @@ const RegisterSecondPage = () => {
                                         width:"250px",
                                         height:"60px",
                                         borderRadius: "4px",
-                                        fontSize: 15,
+                                        // fontSize: 15,
                                         borderColor: "grey",
-                                        color:"grey"
+                                        color:"grey",
+                                        fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
+                                        fontWeight: 400,
+                                        fontSize: "1rem"
                                     }}
                                       tabIndex={1000} />
                                       </FormControl>

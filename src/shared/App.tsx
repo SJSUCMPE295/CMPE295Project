@@ -73,7 +73,7 @@ const App: React.FC<any> = () => {
                             </MainLayout>
                         </Route>
                         <Route exact path="/">
-                            <Redirect to="/app/dashboard" />
+                            <Redirect to="/login" />
                         </Route>
                         <Route path={'/404'} component={NotFound} />
                         <Redirect to="/404" />

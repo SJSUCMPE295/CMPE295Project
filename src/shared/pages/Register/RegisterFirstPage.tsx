@@ -4,6 +4,8 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
+import serverUrl from '../../utils/config';
 import {
     Box,
     Button,
@@ -34,14 +36,44 @@ const RegisterFirstPage = () => {
     const mounted = useMounted();
 
     const handleSubmit = (userName, firstName, lastName) => {
-        dispatch({ type: saveUserName, firstName, lastName, userName });
-        history.push('/register2', { replace: true });
+        const payload = {
+            userName: userName,
+            //password = 005',
+            firstName: firstName,
+            lastName: lastName,
+            // userMetaData: { },
+            // profile: { },
+            // address: [],
+        };
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios.post(serverUrl + 'signup/user', payload).then(
+          (response) => {
+              console.log("axios call")
+            if (response.status === 200) {
+                console.log("updated successfully", response);
+                dispatch({ type: saveUserName, firstName, lastName, userName });
+                history.push('/register2', { replace: true });
+              // this.setState({
+              //   errorMessage: response.data,
+              //   signupSuccess: true,
+              // });
+            }
+          },
+          (error) => {
+              console.log("register error")
+          //   this.setState({
+          //     errorMessage: error.response.data,
+          //     signupFailed: true,
+          //   });
+          }
+        );
     };
 
-    const handleSubmitWithGoogle = (userName, firstName, lastName) => {
-        dispatch({ type: saveUserName, firstName, lastName, userName });
-        history.push('/register2', { replace: true });
-    };
+    // const handleSubmitWithGoogle = (userName, firstName, lastName) => {
+    //     dispatch({ type: saveUserName, firstName, lastName, userName });
+    //     history.push('/register2', { replace: true });
+    // };
 
     return (
         <>
@@ -266,7 +298,7 @@ const RegisterFirstPage = () => {
                                             signinWithGoogle()
                                                 .then((user: any) => {
                                                     // console.log(user._tokenResponse.lastName);
-                                                    handleSubmitWithGoogle(
+                                                    handleSubmit(
                                                         user.user.email,
                                                         user._tokenResponse.firstName,
                                                         user._tokenResponse.lastName
