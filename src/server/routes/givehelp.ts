@@ -12,7 +12,11 @@ router.post('/resource', async (req, res) => {
     const Category=req.body.Category;
     const Description=req.body.Description;
     const Phone_Number=req.body.Phone_Number;
-    const AddressId=req.body.AddressId;
+    const Address=req.body.Address;
+    const City=req.body.City;
+    const State=req.body.State;
+    const Zipcode=req.body.Zipcode;
+    const Country=req.body.Country;
     const SKU=req.body.SKU;
     const resourcedata = new resourceModel({
         UserId,
@@ -20,7 +24,11 @@ router.post('/resource', async (req, res) => {
         Category,
         Description,
         Phone_Number,
-        AddressId,
+        Address,
+        City,
+        State,
+        Zipcode,
+        Country,
         SKU,
     });
     try {
@@ -45,7 +53,11 @@ router.post('/service', async (req, res) => {
     const Category=req.body.Category;
     const Description=req.body.Description;
     const Phone_Number=req.body.Phone_Number;
-    const AddressId=req.body.AddressId;
+    const Address=req.body.Address;
+    const City=req.body.City;
+    const State=req.body.State;
+    const Zipcode=req.body.Zipcode;
+    const Country=req.body.Country;
     const Availability=req.body.Availability;
     const servicedata = new serviceModel({
         UserId,
@@ -53,7 +65,11 @@ router.post('/service', async (req, res) => {
         Category,
         Description,
         Phone_Number,
-        AddressId,
+        Address,
+        City,
+        State,
+        Zipcode,
+        Country,
         Availability,
     });
     try {
