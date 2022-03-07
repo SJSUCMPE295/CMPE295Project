@@ -54,7 +54,7 @@ router.post('/user', async (req, res) => {
                   });
                   res.end('UserName does not exists');
                 } else {
-                    console.log('success');
+                    console.log('success', data);
                     res.writeHead(200, {
                         'Content-Type': 'text/plain',
                       });

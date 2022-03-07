@@ -30,7 +30,6 @@ const Login = () => {
     const handleSubmitWithGoogle = (email, token) => {
         dispatch({type:loginAction, email});
         apiCall(email, token);
-        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
     }
 
     const apiCall = (email, token) => {
@@ -42,7 +41,7 @@ const Login = () => {
           // make a post request with the user data
           axios.post(serverUrl + 'login', payload).then(
             (response) => {
-                console.log("axios call")
+                console.log("axios call", response);
               if (response.status === 200) {
                   console.log("login successful", response.data.user);
                   const payload1 = {
@@ -85,13 +84,14 @@ const Login = () => {
                 //   signupSuccess: true,
                 // });
               }
+              if(response.data.status === 401) {
+                //redirect to register page
+                history.push('/login2register', { replace: true });
+              }
             },
             (error) => {
-                console.log("login error")
-            //   this.setState({
-            //     errorMessage: error.response.data,
-            //     signupFailed: true,
-            //   });
+                console.log("login error", error);
+                
             }
           );
     }
@@ -137,7 +137,7 @@ const Login = () => {
                             values.isSubmitting = true;
                             setAlert(false);
                             login(values.email, values.password)
-                                .then((response) => {
+                                .then((response:any) => {
                                     console.log(response.user);
                                     handleSubmit(values.email, response.user.accessToken);
                                 })
@@ -180,7 +180,7 @@ const Login = () => {
                                     flexDirection="column"
                                     alignItems="center"
                                     justifyContent="center"
-                                >
+                                >   
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
@@ -205,8 +205,8 @@ const Login = () => {
                                                 signinWithGoogle()
                                                 .then((user:any) => {
                                                     console.log(user);
-                                                    handleSubmitWithGoogle(user.user.email, user._token.idtoken);
-                                                    history.push(location.state?.from ?? '/app/dashboard', { replace: true });
+                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.idtoken);
+                                                    // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch(error =>  {console.log(error)})
                                                 

@@ -7,6 +7,7 @@ import Account from 'pages/Account/Account';
 import MedicalAssistance from 'pages/MedicalAssistance';
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
+import RegisterThruLogin from 'pages/Login/RegisterThruLogin';
 import Register1 from 'pages/Register/RegisterFirstPage';
 import Register2 from 'pages/Register/RegisterSecondPage';
 import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
@@ -50,6 +51,11 @@ const App: React.FC<any> = () => {
                         <Route path={'/login'}>
                             <MainLayout>
                                 <Login />
+                            </MainLayout>
+                        </Route>
+                        <Route path={'/login2register'}>
+                            <MainLayout>
+                                <RegisterThruLogin />
                             </MainLayout>
                         </Route>
                         <Route path={'/register1'}>

@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
             res.status(500).end('System Error');
         }
         if (!user) {
-            res.status(401).end('No such user exists');
+            res.json({status: 401, message: 'No such user exists'});
         } else {
             console.log("user", user);
             // if (req.body.password == user.password) {

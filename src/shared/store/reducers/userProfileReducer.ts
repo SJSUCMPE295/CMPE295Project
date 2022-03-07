@@ -3,7 +3,6 @@ import { saveUserName, createUserProfile } from '../constants/action-types';
 const defaultState = {};
 
 const userProfileReducer = (state = defaultState, action) => {
-    console.log("inside user profile reducer", action);
     switch (action.type) {
         case saveUserName: {
             return {
@@ -15,7 +14,6 @@ const userProfileReducer = (state = defaultState, action) => {
             };
         }
         case createUserProfile: {
-            console.log("inside createuserprofile");
             return {
                 ...state,
                 isDoctor: action.isDoctor,
