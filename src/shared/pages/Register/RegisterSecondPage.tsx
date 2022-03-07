@@ -25,7 +25,7 @@ import {
     Select
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { createUserProfile } from '../../store/constants/action-types';
+import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 // import {storage} from '../../utils/firebase';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
@@ -33,31 +33,12 @@ const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
-    const [user, setUser] = React.useState(useSelector((state) => state.userProfileReducer.userName));
-    // const [firstName, setFirstName] = React.useState(
-    //     useSelector((state) => state.userProfileReducer.firstName)
-    // );
-    // const [lastName, setLastName] = React.useState(
-    //     useSelector((state) => state.userProfileReducer.lastName)
-    // );
-
-    // var specialityOptions = [];
+    const [user, setUser] = React.useState(useSelector((state: any) => state.userProfileReducer.userName));
     const genderOptions = [
         "Female",
         "Male",
         "Do not want to specify"
     ]
-
-    // const countryOptions = [
-    //     "Female",
-    //     "Male",
-    //     "Do not want to specify"
-    // ]
-    // const statesOptions = [
-    //     "Female",
-    //     "Male",
-    //     "Do not want to specify"
-    // ]
 
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
@@ -66,7 +47,6 @@ const RegisterSecondPage = () => {
     const [country, setCountry] = React.useState('');
     const [state, setState] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
-    // const [fileName, setFileName] = React.useState('');
     useEffect(() => {
         // set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -101,9 +81,6 @@ const RegisterSecondPage = () => {
         const isDoctor = checked;
         const payload = {
             userName: user,
-            //password = 005',
-            // firstName: firstName,
-            // lastName: lastName,
             userMetaData: {
                 isDoctor: checked,
                 gender: gender,
@@ -116,7 +93,6 @@ const RegisterSecondPage = () => {
             address: [
                 {
                     location: address1,
-                    // address2: address2,
                     city: city,
                     state: state,
                     country: country,
@@ -130,25 +106,33 @@ const RegisterSecondPage = () => {
           // make a post request with the user data
           axios.post(serverUrl + 'signup/user/register', payload).then(
             (response) => {
-                console.log("axios call")
+                console.log("axios call", response);
               if (response.status === 200) {
                   console.log("updated successfully");
                   dispatch({
-                    type: createUserProfile,
-                    isDoctor,
-                    address1,
-                    city,
-                    state,
-                    zipCode,
-                    country,
-                    phoneNumber,
-                    gender,
+                    type: saveUserName,
+                    firstName: response.data.data.firstName,
+                    lastName: response.data.data.lastName,
+                    userName: response.data.data.userName,
                 });
-                  history.push('app/dashboard', { replace: true });
-                // this.setState({
-                //   errorMessage: response.data,
-                //   signupSuccess: true,
+                dispatch({
+                    type: createUserProfile,
+                    userMetaData: response.data.data.userMetaData,
+                      profile: response.data.data.profile,
+                      address: response.data.data.address,
+                });
+                //   dispatch({
+                //     type: createUserProfile,
+                //     isDoctor,
+                //     address1,
+                //     city,
+                //     state,
+                //     zipCode,
+                //     country,
+                //     phoneNumber,
+                //     gender,
                 // });
+                  history.push('app/dashboard', { replace: true });
               }
             },
             (error) => {
@@ -177,13 +161,6 @@ const RegisterSecondPage = () => {
     const selectState = (val) => {
         setState(val);
       }
-    // const handleChangeCountry = (event) => {
-    //     setCountry(event.target.value);
-    // };
-
-    // const handleChangeState = (event) => {
-    //     setState(event.target.value);
-    // };
 
     const saveFile = (event) => {
         if (event.target.files[0] === null) {
@@ -217,13 +194,9 @@ const RegisterSecondPage = () => {
                     <Formik
                         initialValues={{
                             address1: '',
-                            address2: '',
                             city: '',
-                            // state: '',
                             zipcode: '',
                             phonenumber: '',
-                            // gender: '',
-                            // country: '',
                             isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
@@ -246,8 +219,6 @@ const RegisterSecondPage = () => {
                                 values.phonenumber
                                 // values.gender
                             );
-                            
-                            // history.push('app/dashboard', { replace: true });
                         }}
                     >
                         {({

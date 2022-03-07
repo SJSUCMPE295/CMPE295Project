@@ -15,6 +15,7 @@ import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import AuthContextProvider from 'contexts/AuthContext';
 import GetHelp from 'pages/GetHelp/GetHelp';
+import GetHelpItem from 'pages/GetHelpItem';
 import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
@@ -26,27 +27,34 @@ import AddResourceScreen from './pages/GiveHelp/AddResource';
 const App: React.FC<any> = () => {
     return (
         <AuthContextProvider>
-        <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-                <div>
-                    <Switch>
-                        <Route path={'/app'}>
-                            <DashboardLayout>
-                                <Switch>
-                                    <Route path={'/app/account'} component={Account} />
-                                    <Route path={'/app/gethelp'} component={GetHelp} />
-                                    <Route path={'/app/dashboard'} component={Dashboard} />
-                                    <Route
-                                        path={'/app/medicalAssistance'}
-                                        component={MedicalAssistance}
-                                    />
-                                    <Route path={'/app/givehelp/addservice'} component={AddServiceScreen} />
-                                    <Route path={'/app/givehelp/addresource'} component={AddResourceScreen} />
-                                    <Route path={'/app/givehelp'} component={GiveHelpScreen} />
-                                    <Route path={'/app/settings'} component={Settings} />
-                                </Switch>
-                            </DashboardLayout>
-                        </Route>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <div>
+                        <Switch>
+                            <Route path={'/app'}>
+                                <DashboardLayout>
+                                    <Switch>
+                                        <Route path={'/app/account'} component={Account} />
+                                        <Route path={'/app/gethelp/:id'} component={GetHelpItem} />
+                                        <Route path={'/app/gethelp'} component={GetHelp} />
+                                        <Route path={'/app/dashboard'} component={Dashboard} />
+                                        <Route
+                                            path={'/app/medicalAssistance'}
+                                            component={MedicalAssistance}
+                                        />
+                                        <Route
+                                            path={'/app/givehelp/addservice'}
+                                            component={AddServiceScreen}
+                                        />
+                                        <Route
+                                            path={'/app/givehelp/addresource'}
+                                            component={AddResourceScreen}
+                                        />
+                                        <Route path={'/app/givehelp'} component={GiveHelpScreen} />
+                                        <Route path={'/app/settings'} component={Settings} />
+                                    </Switch>
+                                </DashboardLayout>
+                            </Route>
 
                         <Route path={'/login'}>
                             <MainLayout>

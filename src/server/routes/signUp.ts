@@ -47,18 +47,19 @@ router.post('/user', async (req, res) => {
     try {
         // console.log('data', userdata);
         userdata.save((error, data) => {
-            if (error) {
-                console.log('System Error', error);
+            if (data) {
+                console.log('success', data);
+                    res.writeHead(200, {
+                        'Content-Type': 'text/plain',
+                      });
+                      res.end(JSON.stringify({message:'Signup Successful', data: data}));
+                
+                } else {
+                    console.log('System Error', error);
                 res.writeHead(404, {
                     'Content-Type': 'text/plain',
                   });
                   res.end('UserName does not exists');
-                } else {
-                    console.log('success', data);
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain',
-                      });
-                      res.end(JSON.stringify('Signup Successful'));
                 }
             });
         } catch (err) {
@@ -74,18 +75,18 @@ router.post('/user/register', async (req, res) => {
     try {
         // console.log('data', userdata);
         userModel.findOneAndUpdate({userName}, {userMetaData, profile, address}, (error, user) => {
-            if (error) {
-                res.writeHead(404, {
-                    'Content-Type': 'text/plain',
-                  });
-                  res.end('UserName does not exists');
-            } else {
-
+            if (user) {
                 console.log('success', user);
                 res.writeHead(200, {
                     'Content-Type': 'text/plain',
                   });
-                  res.end(JSON.stringify('Register successful'));
+                  res.end(JSON.stringify({message: 'Register successful', data: user}));
+                
+            } else {
+                res.writeHead(404, {
+                    'Content-Type': 'text/plain',
+                  });
+                  res.end('UserName does not exists');        
             }
         })
         // userdata.save((error, data) => {

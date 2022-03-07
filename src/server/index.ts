@@ -40,8 +40,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /* Api routes*/
 app.use('/api/gethelp', getHelpRouter);
-app.use('/api/home', homeRouter);
 app.use('/api/givehelp', giveHelpRouter);
+app.use('/api/home', homeRouter);
 app.use('/api/signup', signUpRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/login', loginRouter);

@@ -115,26 +115,17 @@ const RegisterSecondPage = () => {
                   console.log("updated successfully");
                   dispatch({
                     type: saveUserName,
-                    firstName: firstName,
-                    lastName: lastName,
-                    userName: user
+                    firstName: response.data.data.firstName,
+                    lastName: response.data.data.lastName,
+                    userName: response.data.data.userName,
                 });
-                  dispatch({
+                dispatch({
                     type: createUserProfile,
-                    isDoctor,
-                    address1,
-                    city,
-                    state,
-                    zipCode,
-                    country,
-                    phoneNumber,
-                    gender,
+                    userMetaData: response.data.data.userMetaData,
+                      profile: response.data.data.profile,
+                      address: response.data.data.address,
                 });
                   history.push('app/dashboard', { replace: true });
-                // this.setState({
-                //   errorMessage: response.data,
-                //   signupSuccess: true,
-                // });
               }
             },
             (error) => {

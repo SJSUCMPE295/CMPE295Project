@@ -36,6 +36,10 @@ const RegisterFirstPage = () => {
     const mounted = useMounted();
 
     const handleSubmit = (userName, firstName, lastName) => {
+       apiCall(userName, firstName, lastName);
+    };
+
+    const apiCall = (userName, firstName, lastName) => {
         const payload = {
             userName: userName,
             //password = 005',
@@ -50,6 +54,10 @@ const RegisterFirstPage = () => {
         axios.post(serverUrl + 'signup/user', payload).then(
           (response) => {
               console.log("axios call")
+            if(response.data.status === 401) {
+                //redirect to register page
+                history.push('/login2register', { replace: true });
+              }
             if (response.status === 200) {
                 console.log("updated successfully", response);
                 dispatch({ type: saveUserName, firstName, lastName, userName });
@@ -68,12 +76,12 @@ const RegisterFirstPage = () => {
           //   });
           }
         );
+    }
+    const handleSubmitWithGoogle = (userName, firstName, lastName) => {
+        apiCall(userName, firstName, lastName);
+        // dispatch({ type: saveUserName, firstName, lastName, userName });
+        // history.push('/register2', { replace: true });
     };
-
-    // const handleSubmitWithGoogle = (userName, firstName, lastName) => {
-    //     dispatch({ type: saveUserName, firstName, lastName, userName });
-    //     history.push('/register2', { replace: true });
-    // };
 
     return (
         <>
@@ -119,7 +127,7 @@ const RegisterFirstPage = () => {
                                     handleSubmit(values.userName, values.firstName, values.lastName);
                                 })
                                 .catch((error) => {
-                                    //console.log(error.message);
+                                    console.log(error.message);
                                     values.isSubmitting = false;
                                     setAlert(true);
                                     switch (error.code) {
@@ -298,7 +306,7 @@ const RegisterFirstPage = () => {
                                             signinWithGoogle()
                                                 .then((user: any) => {
                                                     // console.log(user._tokenResponse.lastName);
-                                                    handleSubmit(
+                                                    handleSubmitWithGoogle(
                                                         user.user.email,
                                                         user._tokenResponse.firstName,
                                                         user._tokenResponse.lastName

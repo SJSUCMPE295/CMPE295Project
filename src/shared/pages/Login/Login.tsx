@@ -4,10 +4,19 @@ import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { Box, Button, Container, Grid, Link, TextField, Typography, Alert } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Link,
+    TextField,
+    Typography,
+    Alert,
+} from '@material-ui/core';
 import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
-import useMounted  from '../hooks/useMounted';
+import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
 import {loginAction, createUserProfile, saveUserName} from '../../store/constants/action-types';
 import axios from 'axios';
@@ -19,10 +28,9 @@ const Login = () => {
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
-    const {login, signinWithGoogle} = useAuth();
+    const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();
     const handleSubmit = (email, token) => {
-        
         dispatch({type:loginAction, email});
         apiCall(email, token);
     }
@@ -42,24 +50,12 @@ const Login = () => {
           axios.post(serverUrl + 'login', payload).then(
             (response) => {
                 console.log("axios call", response);
+                if(response.data.status === 401) {
+                    //redirect to register page
+                    history.push('/login2register', { replace: true });
+                  }
               if (response.status === 200) {
                   console.log("login successful", response.data.user);
-                  const payload1 = {
-                    firstName: response.data.user.firstName,
-                    lastName: response.data.user.lastName,
-                    email: response.data.user.userName,
-                };
-                  const payload2 = {
-                    isDoctor: response.data.user.userMetaData.isDoctor,
-                    address1: response.data.user.address[0].address1,
-                    address2: response.data.user.address[0].address2,
-                    city: response.data.user.address[0].city,
-                    state: response.data.user.state,
-                    zipCode: response.data.user.address[0].zipCode,
-                    country: response.data.user.address[0].country,
-                    phoneNumber: response.data.user.profile.phoneNumber,
-                    gender: response.data.user.userMetaData.gender,
-                };
                 dispatch({
                     type: saveUserName,
                     firstName: response.data.user.firstName,
@@ -68,25 +64,11 @@ const Login = () => {
                 });
                 dispatch({
                     type: createUserProfile,
-                    isDoctor: response.data.user.userMetaData.isDoctor,
-                    address1: response.data.user.address[0].address1,
-                    address2: response.data.user.address[0].address2,
-                    city: response.data.user.address[0].city,
-                    state: response.data.user.state,
-                    zipCode: response.data.user.address[0].zipCode,
-                    country: response.data.user.address[0].country,
-                    phoneNumber: response.data.user.profile.phoneNumber,
-                    gender: response.data.user.userMetaData.gender,
+                    userMetaData: response.data.user.userMetaData,
+                      profile: response.data.user.profile,
+                      address: response.data.user.address,
                 });
                   history.push('app/dashboard', { replace: true });
-                // this.setState({
-                //   errorMessage: response.data,
-                //   signupSuccess: true,
-                // });
-              }
-              if(response.data.status === 401) {
-                //redirect to register page
-                history.push('/login2register', { replace: true });
               }
             },
             (error) => {
@@ -100,7 +82,7 @@ const Login = () => {
             <Helmet>
                 <title>WeCare - Login</title>
             </Helmet>
-            
+
             <Box
                 sx={{
                     backgroundColor: '#ffffff',
@@ -114,16 +96,14 @@ const Login = () => {
                     {/* <Paper elevation={0}>
                     <img src={image} height="100" style={{marginLeft:"400"}}/>
                 </Paper> */}
-                    <div style={{marginTop:"50px", marginBottom:"50px"}}>
-                        {alert ?  
-                            <Alert severity="error">{error}</Alert>
-                        : <></> }
+                    <div style={{ marginTop: '50px', marginBottom: '50px' }}>
+                        {alert ? <Alert severity="error">{error}</Alert> : <></>}
                     </div>
                     <Formik
                         initialValues={{
                             email: '',
                             password: '',
-                            isSubmitting: false
+                            isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
                             email: Yup.string()
@@ -160,7 +140,7 @@ const Login = () => {
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
-                                })
+                                });
                             // history.push('/app/dashboard', { replace: true });
                         }}
                     >
@@ -184,7 +164,12 @@ const Login = () => {
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
-                                    <Typography color="textSecondary" gutterBottom variant="body2" style={{marginTop:"5px"}}>
+                                    <Typography
+                                        color="textSecondary"
+                                        gutterBottom
+                                        variant="body2"
+                                        style={{ marginTop: '5px' }}
+                                    >
                                         Sign in on the WeCare platform using Social
                                     </Typography>
                                 </Box>
@@ -196,28 +181,29 @@ const Login = () => {
                                     alignItems="center"
                                     justifyContent="center"
                                 > */}
-                                    {/* <Grid item xs={12} md={6}> */}
-                                    <Box >
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={() => 
-                                                signinWithGoogle()
-                                                .then((user:any) => {
+                                {/* <Grid item xs={12} md={6}> */}
+                                <Box>
+                                    <Button
+                                        fullWidth
+                                        startIcon={<GoogleIcon />}
+                                        onClick={() =>
+                                            signinWithGoogle()
+                                                .then((user: any) => {
                                                     console.log(user);
                                                     handleSubmitWithGoogle(user.user.email, user._tokenResponse.idtoken);
                                                     // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
-                                                .catch(error =>  {console.log(error)})
-                                                
-                                            }
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Box>
-                                    {/* </Grid>
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                })
+                                        }
+                                        size="large"
+                                        variant="contained"
+                                    >
+                                        Login with Google
+                                    </Button>
+                                </Box>
+                                {/* </Grid>
                                 </Grid> */}
                                 <Box
                                     sx={{
@@ -279,7 +265,7 @@ const Login = () => {
                                             variant="h6"
                                             underline="hover"
                                         >
-                                        Forgot Password?
+                                            Forgot Password?
                                         </Link>
                                     </Typography>
                                     <Typography color="textSecondary" variant="body1">

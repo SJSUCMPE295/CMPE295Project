@@ -3,6 +3,7 @@ import { saveUserName, createUserProfile } from '../constants/action-types';
 const defaultState = {};
 
 const userProfileReducer = (state = defaultState, action) => {
+    console.log("inside userprofile reducer", action);
     switch (action.type) {
         case saveUserName: {
             return {
@@ -16,14 +17,17 @@ const userProfileReducer = (state = defaultState, action) => {
         case createUserProfile: {
             return {
                 ...state,
-                isDoctor: action.isDoctor,
-                address1: action.address1,
-                address2: action.address2,
-                city: action.city,
-                state: action.state,
-                zipCode: action.zipCode,
-                phoneNumber: action.phoneNumber,
-                gender: action.gender,
+                userMetaData: action.userMetaData,
+                profile: action.profile,
+                address: action.address
+                // isDoctor: action.isDoctor,
+                // address1: action.address1,
+                // address2: action.address2,
+                // city: action.city,
+                // state: action.state,
+                // zipCode: action.zipCode,
+                // phoneNumber: action.phoneNumber,
+                // gender: action.gender,
                 //   return Object.assign(state, action.payload);
             };
         }
