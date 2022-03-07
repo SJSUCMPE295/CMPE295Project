@@ -60,7 +60,7 @@ const Login = () => {
                     type: saveUserName,
                     firstName: response.data.user.firstName,
                     lastName: response.data.user.lastName,
-                    email: response.data.user.userName,
+                    userName: response.data.user.userName,
                 });
                 dispatch({
                     type: createUserProfile,

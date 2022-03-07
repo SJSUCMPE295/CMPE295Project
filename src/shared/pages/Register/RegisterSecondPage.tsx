@@ -90,7 +90,7 @@ const RegisterSecondPage = () => {
                 profileActive: true,
                 profilePic: '',
             },
-            address: [
+            address: 
                 {
                     location: address1,
                     city: city,
@@ -98,7 +98,6 @@ const RegisterSecondPage = () => {
                     country: country,
                     zipCode: zipCode,
                 },
-            ],
         };
         console.log("payload", payload);
         // set the with credentials to true

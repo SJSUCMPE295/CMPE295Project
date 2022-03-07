@@ -42,30 +42,18 @@ const RegisterFirstPage = () => {
     const apiCall = (userName, firstName, lastName) => {
         const payload = {
             userName: userName,
-            //password = 005',
             firstName: firstName,
             lastName: lastName,
-            // userMetaData: { },
-            // profile: { },
-            // address: [],
         };
         axios.defaults.withCredentials = true;
         // make a post request with the user data
         axios.post(serverUrl + 'signup/user', payload).then(
           (response) => {
               console.log("axios call")
-            if(response.data.status === 401) {
-                //redirect to register page
-                history.push('/login2register', { replace: true });
-              }
             if (response.status === 200) {
                 console.log("updated successfully", response);
                 dispatch({ type: saveUserName, firstName, lastName, userName });
                 history.push('/register2', { replace: true });
-              // this.setState({
-              //   errorMessage: response.data,
-              //   signupSuccess: true,
-              // });
             }
           },
           (error) => {

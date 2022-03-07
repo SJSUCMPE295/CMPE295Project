@@ -23,7 +23,7 @@ router.post('/user', async (req, res) => {
             profileActive: false,
             profilePic: '',
         },
-        address = [
+        address = 
             {
                 location: '',
                 city: '',
@@ -31,7 +31,6 @@ router.post('/user', async (req, res) => {
                 country: '',
                 zipCode: '',
             },
-        ],
     } = req.body;
     // console.log('create', req);
     const userdata = new userModel({
@@ -72,9 +71,10 @@ router.post('/user', async (req, res) => {
 router.post('/user/register', async (req, res) => {
     console.log("req.body : ",req.body);
     const{userName, userMetaData, profile, address} = req.body;
+    console.log("address", address);
     try {
         // console.log('data', userdata);
-        userModel.findOneAndUpdate({userName}, {userMetaData, profile, address}, (error, user) => {
+        userModel.findOneAndUpdate({userName}, {userMetaData, profile, address}, {new:true},(error, user) => {
             if (user) {
                 console.log('success', user);
                 res.writeHead(200, {
@@ -89,15 +89,6 @@ router.post('/user/register', async (req, res) => {
                   res.end('UserName does not exists');        
             }
         })
-        // userdata.save((error, data) => {
-        //     if (error) {
-        //         console.log('System Error', error);
-        //         return res.json(500).send('System Error');
-        //     } else {
-        //         console.log('success');
-        //         return res.json(200).send('User data captured successfully!');
-        //     }
-        // });
     } catch (err) {
         console.log('Exception Error', err);
         res.json({ message: err });
