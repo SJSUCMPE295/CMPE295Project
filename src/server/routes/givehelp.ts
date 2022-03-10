@@ -7,13 +7,14 @@ const router = Router();
 // const fetchController = require('../controller/fetch');
 // API to post resource
 router.post('/resource', async (req, res) => {
-    const UserId=req.body.UserId;
-    const Resource_Name=req.body.Resource_Name;
-    const Category=req.body.Category;
-    const Description=req.body.Description;
-    const Phone_Number=req.body.Phone_Number;
+    const UserId=req.body;
     const AddressId=req.body.AddressId;
     const SKU=req.body.SKU;
+    const Category=req.body.Category;
+    const Description=req.body.Description;
+    const Resource_Name=req.body.Resource_Name;
+    const Phone_Number=req.body.Phone_Number;
+
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,

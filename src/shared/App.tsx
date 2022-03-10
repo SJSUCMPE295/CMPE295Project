@@ -4,7 +4,9 @@ import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 // import CustomerList from 'pages/CustomerList';
 import Dashboard from 'pages/Dashboard/Dashboard';
 import Account from 'pages/Account/Account';
-import MedicalAssistance from 'pages/MedicalAssistance';
+import MedicalAssistance from 'pages/MedicalAssistance/MedicalAssistance';
+import LookForMedicalAssistance from 'pages/MedicalAssistance/LookForMedicalAssistance';
+
 import Settings from 'pages/Settings/Settings';
 import Login from 'pages/Login/Login';
 import Register1 from 'pages/Register/RegisterFirstPage';
@@ -22,7 +24,7 @@ import DashboardLayout from './components/DashboardLayout';
 import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
-
+import './styles.css'
 const App: React.FC<any> = () => {
     return (
         <AuthContextProvider>
@@ -40,6 +42,10 @@ const App: React.FC<any> = () => {
                                         <Route
                                             path={'/app/medicalAssistance'}
                                             component={MedicalAssistance}
+                                        />
+                                        <Route
+                                            path={'/app/lookformedicalAssistance'}
+                                            component={LookForMedicalAssistance}
                                         />
                                         <Route
                                             path={'/app/givehelp/addservice'}

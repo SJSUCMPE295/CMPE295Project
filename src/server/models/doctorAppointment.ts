@@ -1,15 +1,14 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model } from 'mongoose';
 
 const DoctorAppointment = new Schema(
     {
-        UserId: { type: Object, required: true },
-        DoctorId: { type: Object, required: true },
-        AppointmentDetails: { type: String, required: true },
-        Status: { type: String, required: true },
+        userId: { type: Object, required: true },
+        doctorId: { type: Object, required: true },
+        appointmentDetails: { type: String, required: true },
+        status: { type: String, required: true },
     },
     { collection: 'Doctor_Appointment', versionKey: false }
 );
 
-export const doctorAppointmentModel = mongoose.model('doctor_appointment', DoctorAppointment);
+export const doctorAppointmentModel = model('doctor_appointment', DoctorAppointment);
 export default doctorAppointmentModel;

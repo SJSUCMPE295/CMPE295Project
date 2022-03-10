@@ -10,30 +10,17 @@ import {
     DialogContentText,
     DialogTitle,
     TextField,
+    TextareaAutosize
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
 import { getHelp, setGetHelp } from 'store/actions';
 
 const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
     {
-        field: 'firstName',
-        headerName: 'First name',
+        field: 'time',
+        headerName: 'Time',
         flex: 1,
-        editable: true,
-    },
-    {
-        field: 'lastName',
-        headerName: 'Last name',
-        flex: 1,
-        editable: true,
-    },
-    {
-        field: 'age',
-        headerName: 'Age',
-        flex: 1,
-        editable: true,
     },
     {
         field: 'fullName',
@@ -46,14 +33,37 @@ const columns = [
                 params.getValue(params.id, 'lastName') || ''
             }`,
     },
+    {
+        field: 'age',
+        headerName: 'Age',
+        flex: 1,
+    },
+    {
+        field: 'gender',
+        headerName: 'Gender',
+        flex: 1,
+    },
+    {
+        field: 'notes',
+        headerName: 'notes',
+        flex: 1,
+        editable: true,
+    },
 ];
 
 const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    {
+        id: 1,
+        lastName: 'Snow',
+        firstName: 'Jon',
+        age: 35,
+        gender: 'Male',
+        notes: 'allergies',
+        time: 'Mar 09 9:00pm',
+    },
     { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
     { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
     { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
     { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
     { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
@@ -68,19 +78,7 @@ const availableTimesInput = [
     { text: 'Friday', value: '' },
     { text: 'Saturday', value: '' },
 ];
-export const DataTable = () => {
-    return (
-        <div style={{ height: 800, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                checkboxSelection
-                disableSelectionOnClick
-            />
-        </div>
-    );
-};
+
 const formInputs = [
     {
         margin: 'dense',
@@ -93,6 +91,8 @@ const formInputs = [
 export const ProductList = (props) => {
     const [open, setOpen] = React.useState(false);
     const [availableTimes, setAvailableTimes] = React.useState(availableTimesInput);
+    const [activeUser, setActiveUser] = React.useState();
+
     React.useEffect(() => {
         getHelp()
             .then((response) => props.setGetHelp(response.data))
@@ -101,8 +101,11 @@ export const ProductList = (props) => {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
+    const handleRowClick = ({ row }) => {
+        setActiveUser(row);
+    };
     const handleClose = () => {
+        setActiveUser(null);
         setOpen(false);
     };
     const handleOnClickAvailablityBtn = (i) => {
@@ -110,7 +113,13 @@ export const ProductList = (props) => {
         console.log(availableTimes);
         setAvailableTimes([...availableTimes]);
     };
-
+    const DataTable = () => {
+        return (
+            <div style={{ height: 800, width: '100%' }}>
+                <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick onRowClick={handleRowClick} />
+            </div>
+        );
+    };
     return (
         <>
             <Helmet>
@@ -119,7 +128,7 @@ export const ProductList = (props) => {
             <Box
                 sx={{
                     backgroundColor: 'background.default',
-                    minHeight: '100%',
+                    minHeight: '100vh',
                     py: 3,
                 }}
             >
@@ -139,23 +148,31 @@ export const ProductList = (props) => {
                     </Box>
                 </Container>
             </Box>
+            <Dialog open={!!activeUser} onClose={handleClose} fullWidth>
+                <DialogTitle>{activeUser?.firstName}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Notes</DialogContentText>
+                    <form className="" noValidate>
+                        <Box sx={{ my: 2 }}>
+                            <TextareaAutosize
+                                id="datetime-local"
+                                minRows={10}
+                                defaultValue={activeUser?.notes}
+                                className="full-width"
+                            />
+                        </Box>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>Save</Button>
+                </DialogActions>
+            </Dialog>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Provide Medical Assistance</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Set up you availability</DialogContentText>
+                    <DialogContentText>Set up your availability</DialogContentText>
                     <form className="" noValidate>
-                        <Box sx={{ my: 2 }}>
-                            <TextField
-                                id="datetime-local"
-                                label="From"
-                                type="datetime-local"
-                                defaultValue="2017-05-24T10:30"
-                                className="mb-2"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Box>
                         <Box sx={{ my: 2 }}>
                             <TextField
                                 id="datetime-local"
@@ -167,17 +184,6 @@ export const ProductList = (props) => {
                                     shrink: true,
                                 }}
                             />
-                        </Box>
-                        <Box sx={{ mb: 2 }}>
-                            {availableTimes.map((x, i) => (
-                                <Button
-                                    key={x.text}
-                                    variant={x.selected ? 'contained' : 'outlined'}
-                                    onClick={() => handleOnClickAvailablityBtn(i)}
-                                >
-                                    {x.text}
-                                </Button>
-                            ))}
                         </Box>
                     </form>
                 </DialogContent>
