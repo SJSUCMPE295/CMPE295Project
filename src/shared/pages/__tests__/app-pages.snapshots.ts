@@ -4,11 +4,14 @@ const routes = [
     '/app/customers',
     '/app/dashboard',
     '/app/products',
+    '/app/medicalAssistance',
+    '/app/lookformedicalAssistance',
     '/login',
     '/register1',
     '/register2',
     '/404',
 ];
+const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 describe('Visual Regression Tests', () => {
     let browser;
     beforeEach(async () => {

@@ -8,7 +8,7 @@ const GetHelpItem = (props) => {
         const id = props?.match?.params?.id;
         getResourcesById(id)
             .then((result) => {
-                console.log('result',result.data)
+                console.log('result', result.data);
                 setResource(result.data);
             })
             .catch((error) => {

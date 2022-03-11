@@ -5,7 +5,7 @@ import cors from 'cors';
 import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import bodyParser from 'body-parser';
-import appointmentsRouter from "routes/appointments";
+import appointmentsRouter from 'routes/appointments';
 import paths from '../../config/paths';
 import mongoDB from './utils/config';
 // import { configureStore } from '../shared/store';

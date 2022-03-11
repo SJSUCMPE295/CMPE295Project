@@ -10,7 +10,7 @@ import {
     DialogContentText,
     DialogTitle,
     TextField,
-    TextareaAutosize
+    TextareaAutosize,
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
@@ -116,7 +116,13 @@ export const ProductList = (props) => {
     const DataTable = () => {
         return (
             <div style={{ height: 800, width: '100%' }}>
-                <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick onRowClick={handleRowClick} />
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    disableSelectionOnClick
+                    onRowClick={handleRowClick}
+                />
             </div>
         );
     };

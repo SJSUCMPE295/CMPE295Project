@@ -20,7 +20,7 @@ const GetHelp = ({ history, ...props }) => {
     }, []);
     const handleOnClickTableRow = (e, resource) => {
         console.log(props, resource, 'api/gethelp/resources/61731b22a76a197cf20e7d4f');
-        history.push(`/app/gethelp/${resource.id}`)
+        history.push(`/app/gethelp/${resource.id}`);
     };
     return (
         <>
