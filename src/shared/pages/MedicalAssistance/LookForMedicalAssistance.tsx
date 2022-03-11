@@ -1,11 +1,31 @@
 import * as React from 'react';
-import { Box, Button, Container, Stepper, Step, StepLabel, Typography } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Stepper,
+    Step,
+    StepLabel,
+    Typography,
+    TextField,
+    MenuItem,
+    Select,
+    Avatar,
+    CardHeader,
+    CardContent,
+    Card,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
-import { getHelp, setGetHelp } from 'store/actions';
+import { getAvailableDoctors, getHelp, setGetHelp } from 'store/actions';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
-
 export const LookForMedicalAssistance = (props) => {
     const [activeStep, setActiveStep] = React.useState(0);
+    const [selectedTime, setSelectedTime] = React.useState('2017-05-24T10:30');
+    const [doctors, setDoctors] = React.useState([]);
+    const [selectedDoctor, setSelectedDoctor] = React.useState(null);
+    const notesInput = React.useRef();
+    const [notes, setNotes] = React.useState('');
+
     const [skipped, setSkipped] = React.useState(new Set());
 
     const isStepOptional = (step) => {
@@ -25,6 +45,11 @@ export const LookForMedicalAssistance = (props) => {
 
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         setSkipped(newSkipped);
+        // @ts-ignore
+        const notesValue = notesInput?.current?.value;
+        if (notesValue && notesValue !== notes) {
+            setNotes(notesValue);
+        }
     };
 
     const handleBack = () => {
@@ -49,7 +74,91 @@ export const LookForMedicalAssistance = (props) => {
     const handleReset = () => {
         setActiveStep(0);
     };
-
+    const StepContainer = (props: any) => {
+        switch (props?.step) {
+            case 0: {
+                return (
+                    <TextField
+                        id="datetime-local"
+                        label="To"
+                        type="datetime-local"
+                        defaultValue={selectedTime}
+                        className="mb-2"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={({ currentTarget }) => {
+                            setSelectedTime(currentTarget?.value);
+                            getAvailableDoctors({ time: currentTarget?.value })
+                                .then((response) => setDoctors(response.data))
+                                .catch(console.log);
+                        }}
+                    />
+                );
+            }
+            case 1: {
+                if (doctors.length) {
+                    return (
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedDoctor?._id || '-1'}
+                            label="Doctors"
+                            onChange={({ target }) => {
+                                setSelectedDoctor(
+                                    doctors.find((x) => x?._id === target?.value) || null
+                                );
+                            }}
+                        >
+                            <MenuItem disabled value="-1">
+                                <em>Select Doctor</em>
+                            </MenuItem>
+                            {doctors.map((doctor, id) => (
+                                <MenuItem key={id} value={doctor?._id}>
+                                    {doctor?.firstName}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    );
+                }
+                return (
+                    <Typography sx={{ mt: 2, mb: 1 }}>
+                        No Doctors Available Please Select a new time
+                    </Typography>
+                );
+            }
+            case 2: {
+                const props = {
+                    ref: notesInput,
+                    id: 'datetime-local',
+                    rows: 10,
+                    defaultValue: notes,
+                    className: 'full-width',
+                };
+                // @ts-ignore
+                return <textarea {...props} />;
+            }
+            case 3: {
+                return (
+                    <Card sx={{ maxWidth: 345 }}>
+                        <CardHeader
+                            avatar={<Avatar src="" aria-label="" />}
+                            title={selectedDoctor?.firstName}
+                            subheader="September 14, 2016"
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="text.secondary">
+                                {notes || 'appointment'}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                );
+            }
+            default: {
+                return null;
+            }
+        }
+    };
     return (
         <Box
             sx={{
@@ -91,7 +200,9 @@ export const LookForMedicalAssistance = (props) => {
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
-                            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+                            <Box sx={{ my: 2 }}>
+                                <StepContainer step={activeStep} />
+                            </Box>
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                 <Button
                                     color="inherit"

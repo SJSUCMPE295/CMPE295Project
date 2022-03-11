@@ -10,3 +10,6 @@
 .full-width {
     width: 100%;
 }
+.box--min-height {
+    min-height: 450px;
+}
