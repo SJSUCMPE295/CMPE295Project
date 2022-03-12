@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const UserModel = new Schema(
     {
         userName: { type: String, required: true },
-        password: { type: String, required: true },
+        // password: { type: String, required: true },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         userMetaData: {
@@ -16,7 +16,7 @@ const UserModel = new Schema(
             profileActive: { type: Boolean, required: true },
             profilePic: { type: String, required: false },
         },
-        address: [
+        address: 
             {
                 location: { type: String, required: false },
                 city: { type: String, required: false },
@@ -24,7 +24,6 @@ const UserModel = new Schema(
                 country: { type: String, required: false },
                 zipCode: { type: Number, required: false },
             },
-        ],
     },
     { collection: 'User' },
     {

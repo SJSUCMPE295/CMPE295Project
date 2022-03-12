@@ -1,9 +1,8 @@
-import { loginAction, logoutAction } from './constants/action-types';
+import { loginAction, logoutAction } from '../constants/action-types';
 
 const initialState = {};
 
-const userReducer = (state = initialState, action) => {
-    console.log(action);
+const loginReducer = (state = initialState, action) => {
     switch (action.type) {
         case loginAction:
             return {
@@ -17,4 +16,4 @@ const userReducer = (state = initialState, action) => {
     }
 };
 
-export default userReducer;
+export default loginReducer;

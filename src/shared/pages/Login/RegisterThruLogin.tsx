@@ -7,7 +7,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
-import './Register.css';
+// import './Register.css';
 import {
     Box,
     Button,
@@ -28,18 +28,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 // import {storage} from '../../utils/firebase';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
+// import RootState from '../../store/rootReducer';
 
 const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
-    const [user, setUser] = React.useState(useSelector((state: any) => state.userProfileReducer.userName));
+    const [user, setUser] = React.useState(useSelector((state: any) => state.loginReducer.email));
     const genderOptions = [
         "Female",
         "Male",
         "Do not want to specify"
     ]
-
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
     const [speciality, setSpeciality] = React.useState('');
@@ -75,12 +75,15 @@ const RegisterSecondPage = () => {
         );
       },[1]);
    
-    const handleSubmit = (address1, city, zipCode, phoneNumber) => {
+    const handleSubmit = (firstName, lastName, address1, city, zipCode, phoneNumber) => {
         console.log('inside submit');
         console.log("first page data",  user);
         const isDoctor = checked;
         const payload = {
             userName: user,
+            //password = 005',
+            firstName: firstName,
+            lastName: lastName,
             userMetaData: {
                 isDoctor: checked,
                 gender: gender,
@@ -93,6 +96,7 @@ const RegisterSecondPage = () => {
             address: 
                 {
                     location: address1,
+                    // address2: address2,
                     city: city,
                     state: state,
                     country: country,
@@ -103,7 +107,7 @@ const RegisterSecondPage = () => {
         // set the with credentials to true
           axios.defaults.withCredentials = true;
           // make a post request with the user data
-          axios.post(serverUrl + 'signup/user/register', payload).then(
+          axios.post(serverUrl + 'signup/user', payload).then(
             (response) => {
                 console.log("axios call", response);
               if (response.status === 200) {
@@ -120,17 +124,6 @@ const RegisterSecondPage = () => {
                       profile: response.data.data.profile,
                       address: response.data.data.address,
                 });
-                //   dispatch({
-                //     type: createUserProfile,
-                //     isDoctor,
-                //     address1,
-                //     city,
-                //     state,
-                //     zipCode,
-                //     country,
-                //     phoneNumber,
-                //     gender,
-                // });
                   history.push('app/dashboard', { replace: true });
               }
             },
@@ -160,6 +153,13 @@ const RegisterSecondPage = () => {
     const selectState = (val) => {
         setState(val);
       }
+    // const handleChangeCountry = (event) => {
+    //     setCountry(event.target.value);
+    // };
+
+    // const handleChangeState = (event) => {
+    //     setState(event.target.value);
+    // };
 
     const saveFile = (event) => {
         if (event.target.files[0] === null) {
@@ -192,13 +192,20 @@ const RegisterSecondPage = () => {
                 <Container maxWidth="sm" style={{ marginTop: '100px' }}>
                     <Formik
                         initialValues={{
+                            firstName: '',
+                            lastName: '',
                             address1: '',
                             city: '',
+                            // state: '',
                             zipcode: '',
                             phonenumber: '',
+                            // gender: '',
+                            // country: '',
                             isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
+                            firstName: Yup.string().max(255).required('First Name is required'),
+                            lastName: Yup.string().max(255).required('Last Name is required'),
                             address1: Yup.string().max(255).required('Address is required'),
                             city: Yup.string().max(255).required('City is required'),
                             // country: Yup.string().max(255).required('Country is required'),
@@ -212,12 +219,16 @@ const RegisterSecondPage = () => {
                             console.log("insde submit");
                             values.isSubmitting = true;
                             handleSubmit(
+                                values.firstName,
+                                values.lastName,
                                 values.address1,
                                 values.city,
                                 values.zipcode,
                                 values.phonenumber
                                 // values.gender
                             );
+                            
+                            // history.push('app/dashboard', { replace: true });
                         }}
                     >
                         {({
@@ -238,9 +249,39 @@ const RegisterSecondPage = () => {
                                     justifyContent="center"
                                 >
                                     <Typography color="textPrimary" variant="h2">
-                                        Create new account
+                                        New User! Complete the Registration
                                     </Typography>
                                 </Box>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <TextField
+                                        error={Boolean(touched.firstName && errors.firstName)}
+                                        helperText={touched.firstName && errors.firstName}
+                                        label="First Name"
+                                        margin="normal"
+                                        name="firstName"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.firstName}
+                                        variant="outlined"
+                                        style={{
+                                            width:"250px"
+                                        }}
+                                    />
+                                    <TextField
+                                        error={Boolean(touched.lastName && errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName}
+                                        label="Last Name"
+                                        margin="normal"
+                                        name="lastName"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.lastName}
+                                        variant="outlined"
+                                        style={{
+                                            width:"250px"
+                                        }}
+                                    />
+                                </div>
                                 <div >
                                     <FormControlLabel
                                         label="I am a Doctor"
