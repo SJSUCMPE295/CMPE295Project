@@ -6,6 +6,7 @@ const DoctorAppointment = new Schema(
         doctorId: { type: Object, required: true },
         appointmentDetails: { type: String, required: true },
         status: { type: String, required: true },
+        notes: { type: String, required: false },
     },
     { collection: 'Doctor_Appointment', versionKey: false }
 );

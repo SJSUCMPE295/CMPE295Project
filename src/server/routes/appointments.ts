@@ -4,7 +4,21 @@ import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
 import userModel from 'models/user';
 const router = Router();
-
+export const getAllUsers = async (userIds) => {
+    const userIdsObjects = userIds.map((id) => {
+        if (typeof id === 'string') {
+            return new mongoose.Types.ObjectId(id);
+        }
+        return id;
+    });
+    const users =
+        (await userModel.find({
+            _id: {
+                $in: userIdsObjects,
+            },
+        })) || [];
+    return users;
+};
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
     newAppointment
@@ -19,24 +33,28 @@ export const createAppointmentHandler = async ({ body }, res) => {
 export const getAllDoctorsAppointmentHandler = async (req, res) => {
     doctorAppointmentModel
         .find({ doctorId: req?.params?.id })
-        .then((data) => {
-            res.send(data);
+        .then(async (data) => {
+            const userIds = data.map((x) => x.userId);
+            const users = await getAllUsers(userIds);
+            res.send(
+                data.map((appointment) => {
+                    let user = users.find((x) => x?._id.toString() === appointment?.userId) || {};
+                    user = user?.toJSON ? user.toJSON() : user;
+                    return { ...user, appointment, password: '' };
+                })
+            );
         })
         .catch((err) => {
             res.status(500).json({ message: err.message });
         });
 };
+
 export const getAllAvailableDoctorsHandler = async (req, res) => {
     doctorModel
         .find(req?.query)
         .then(async (data = []) => {
-            const userIds = data.map((x) => new mongoose.Types.ObjectId(x.userId));
-            const users =
-                (await userModel.find({
-                    _id: {
-                        $in: userIds,
-                    },
-                })) || [];
+            const userIds = data.map((x) => x.userId);
+            const users = await getAllUsers(userIds);
             res.send(
                 data.map((doctor) => {
                     let user = users.find((x) => x?._id.toString() === doctor?.userId) || {};
