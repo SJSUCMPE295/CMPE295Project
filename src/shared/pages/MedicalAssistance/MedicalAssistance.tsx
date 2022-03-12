@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
-import { getHelp, setGetHelp } from 'store/actions';
+import { getAllDoctorsAppointments, setGetHelp } from 'store/actions';
 
 const columns = [
     {
@@ -69,32 +69,13 @@ const rows = [
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
-const availableTimesInput = [
-    { text: 'Sunday', value: '', selected: false },
-    { text: 'Monday', value: '' },
-    { text: 'Tuesday', value: '' },
-    { text: 'Wednesday', value: '' },
-    { text: 'Thursday', value: '' },
-    { text: 'Friday', value: '' },
-    { text: 'Saturday', value: '' },
-];
 
-const formInputs = [
-    {
-        margin: 'dense',
-        id: 'name',
-        label: 'Email Address',
-        type: 'email',
-        variant: 'standard',
-    },
-];
 export const ProductList = (props) => {
     const [open, setOpen] = React.useState(false);
-    const [availableTimes, setAvailableTimes] = React.useState(availableTimesInput);
     const [activeUser, setActiveUser] = React.useState();
 
     React.useEffect(() => {
-        getHelp()
+        getAllDoctorsAppointments('')
             .then((response) => props.setGetHelp(response.data))
             .catch(console.log);
     }, []);
@@ -107,11 +88,6 @@ export const ProductList = (props) => {
     const handleClose = () => {
         setActiveUser(null);
         setOpen(false);
-    };
-    const handleOnClickAvailablityBtn = (i) => {
-        availableTimes[i].selected = !availableTimes[i].selected;
-        console.log(availableTimes);
-        setAvailableTimes([...availableTimes]);
     };
     const DataTable = () => {
         return (

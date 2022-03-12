@@ -16,6 +16,8 @@ const jsonToQueryString = (json) => {
     return str ? '?' + str : '';
 };
 export const getHelp = (data = {}) => api.get('/api/gethelp' + jsonToQueryString(data));
+export const getAllDoctorsAppointments = (id, data = {}) =>
+    api.get(`/api/appointments/doctors/${id}${jsonToQueryString(data)}`);
 export const getAvailableDoctors = (data = {}) =>
     api.get('/api/appointments/doctors' + jsonToQueryString(data));
 export const giveHelp = (data = {}) => api.post('/api/gethelp', data);

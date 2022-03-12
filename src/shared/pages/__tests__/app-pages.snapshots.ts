@@ -29,6 +29,7 @@ describe('Visual Regression Tests', () => {
         const page = await browser.newPage();
         await page.goto('http://localhost:8500' + route);
         const image = await page.screenshot();
+        await page.waitFor(2000);
         expect(image).toMatchImageSnapshot();
     });
 });
