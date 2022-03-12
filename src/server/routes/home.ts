@@ -21,7 +21,7 @@ router.get('/', async (_req, res) => {
     };
     try {
         const user = _req.query.user;
-        console.log(user);
+        // console.log(user);
         if (user != '') {
             const usertransactions = Transactions.aggregate(
                 [
@@ -188,7 +188,7 @@ router.get('/', async (_req, res) => {
                                                     res.status(400).send(error3);
                                                 } else {
                                                     response.transactions = transactioncount;
-                                                    console.log(response);
+                                                    // console.log(response);
                                                     res.send(response);
                                                 }
                                             }
