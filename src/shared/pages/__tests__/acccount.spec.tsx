@@ -1,6 +1,6 @@
 import React from 'react';
 import { cleanup, render, fireEvent } from '@testing-library/react';
-import AccountPage from '../Account';
+import AccountPage from '../Account/Account';
 import { withAppProviders } from '../../../utils/test-utils';
 const AccountPageWithApp = withAppProviders(AccountPage);
 describe('<AccountPage {...defaultProps} />', () => {

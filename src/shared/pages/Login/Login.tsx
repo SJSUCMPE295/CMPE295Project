@@ -18,7 +18,9 @@ import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
 import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import { loginAction } from '../../store/constants/action-types';
+import {loginAction, createUserProfile, saveUserName} from '../../store/constants/action-types';
+import axios from 'axios';
+import serverUrl from '../../utils/config';
 
 const Login = () => {
     const history = useHistory();
@@ -28,16 +30,53 @@ const Login = () => {
     const [error, setError] = useState('');
     const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();
+    const handleSubmit = (email, token) => {
+        dispatch({type:loginAction, email});
+        apiCall(email, token);
+    }
 
-    const handleSubmit = (email) => {
-        dispatch({ type: loginAction, email });
-        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
-    };
+    const handleSubmitWithGoogle = (email, token) => {
+        dispatch({type:loginAction, email});
+        apiCall(email, token);
+    }
 
-    const handleSubmitWithGoogle = (email) => {
-        dispatch({ type: loginAction, email });
-        history.push(location.state?.from ?? '/app/dashboard', { replace: true });
-    };
+    const apiCall = (email, token) => {
+        const payload = {
+            userName: email,
+            token: token
+        };
+        axios.defaults.withCredentials = true;
+          // make a post request with the user data
+          axios.post(serverUrl + 'login', payload).then(
+            (response) => {
+                console.log("axios call", response);
+                if(response.data.status === 401) {
+                    //redirect to register page
+                    history.push('/login2register', { replace: true });
+                  }
+              if (response.status === 200) {
+                  console.log("login successful", response.data.user);
+                dispatch({
+                    type: saveUserName,
+                    firstName: response.data.user.firstName,
+                    lastName: response.data.user.lastName,
+                    userName: response.data.user.userName,
+                });
+                dispatch({
+                    type: createUserProfile,
+                    userMetaData: response.data.user.userMetaData,
+                      profile: response.data.user.profile,
+                      address: response.data.user.address,
+                });
+                  history.push('app/dashboard', { replace: true });
+              }
+            },
+            (error) => {
+                console.log("login error", error);
+                
+            }
+          );
+    }
     return (
         <>
             <Helmet>
@@ -78,15 +117,26 @@ const Login = () => {
                             values.isSubmitting = true;
                             setAlert(false);
                             login(values.email, values.password)
-                                .then((response) => {
-                                    console.log(response);
-                                    handleSubmit(values.email);
+                                .then((response:any) => {
+                                    console.log(response.user);
+                                    handleSubmit(values.email, response.user.accessToken);
                                 })
                                 .catch((error) => {
                                     //console.log(error.message);
                                     setAlert(true);
-                                    console.log(error);
-                                    setError(error.message);
+                                    values.isSubmitting = false;
+                                    switch (error.code) {
+                                        case "auth/wrong-password" : {
+                                            setError("Invalid password");
+                                            break;
+                                        }
+                                        case "auth/user-not-found" : {
+                                            setError("Username does not exists");
+                                            break;
+                                        }
+                                    }
+                                    // setError(error.message);
+                                   
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
@@ -110,7 +160,7 @@ const Login = () => {
                                     flexDirection="column"
                                     alignItems="center"
                                     justifyContent="center"
-                                >
+                                >   
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
@@ -140,11 +190,8 @@ const Login = () => {
                                             signinWithGoogle()
                                                 .then((user: any) => {
                                                     console.log(user);
-                                                    handleSubmitWithGoogle(user.user.email);
-                                                    history.push(
-                                                        location.state?.from ?? '/app/dashboard',
-                                                        { replace: true }
-                                                    );
+                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.idtoken);
+                                                    // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch((error) => {
                                                     console.log(error);

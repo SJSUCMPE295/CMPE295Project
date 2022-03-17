@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
+import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import './Register.css';
 import {
     Box,
     Button,
@@ -19,37 +22,65 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select,
+    Select
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { createUserProfile } from '../../store/constants/action-types';
+import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 // import {storage} from '../../utils/firebase';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const [user, setUser] = React.useState(useSelector((state) => state.userProfileReducer.email));
-    const [firstName, setFirstName] = React.useState(
-        useSelector((state) => state.userProfileReducer.firstName)
-    );
-    const [lastName, setLastName] = React.useState(
-        useSelector((state) => state.userProfileReducer.lastName)
-    );
+    const [isLoading, setLoading] = useState(true);
+    const [user, setUser] = React.useState(useSelector((state: any) => state.userProfileReducer.userName));
+    const genderOptions = [
+        "Female",
+        "Male",
+        "Do not want to specify"
+    ]
 
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
     const [speciality, setSpeciality] = React.useState('');
     const [gender, setGender] = React.useState('');
-    // const [fileName, setFileName] = React.useState('');
-
-    const handleSubmit = (address1, address2, city, state, zipCode, phoneNumber, gender) => {
+    const [country, setCountry] = React.useState('');
+    const [state, setState] = React.useState('');
+    const [specialityOptions, setSpecialityOptions] = React.useState([]);
+    useEffect(() => {
+        // set the with credentials to true
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios.get(serverUrl + 'static/speciality').then(
+          (response) => {
+              console.log("axios call")
+            if (response.status === 200) {
+                console.log("updated successfully", response.data[0].name);
+                setSpecialityOptions(response.data[0].name);
+                setLoading(false);
+                //history.push('app/dashboard', { replace: true });
+              // this.setState({
+              //   errorMessage: response.data,
+              //   signupSuccess: true,
+              // });
+            }
+          },
+          (error) => {
+              console.log("register error")
+          //   this.setState({
+          //     errorMessage: error.response.data,
+          //     signupFailed: true,
+          //   });
+          }
+        );
+      },[1]);
+   
+    const handleSubmit = (address1, city, zipCode, phoneNumber) => {
+        console.log('inside submit');
+        console.log("first page data",  user);
         const isDoctor = checked;
         const payload = {
             userName: user,
-            //password = 005',
-            firstName: firstName,
-            lastName: lastName,
             userMetaData: {
                 isDoctor: checked,
                 gender: gender,
@@ -59,48 +90,59 @@ const RegisterSecondPage = () => {
                 profileActive: true,
                 profilePic: '',
             },
-            address: [
+            address: 
                 {
-                    address1: address1,
-                    address2: address2,
-                    city: '',
-                    state: '',
-                    country: '',
-                    zipCode: '',
+                    location: address1,
+                    city: city,
+                    state: state,
+                    country: country,
+                    zipCode: zipCode,
                 },
-            ],
         };
-        dispatch({
-            type: createUserProfile,
-            isDoctor,
-            address1,
-            address2,
-            city,
-            state,
-            zipCode,
-            phoneNumber,
-            gender,
-        });
+        console.log("payload", payload);
         // set the with credentials to true
-        //   axios.defaults.withCredentials = true;
-        //   // make a post request with the user data
-        //   axios.post(serverUrl + 'user', payload).then(
-        //     (response) => {
-        //       if (response.status === 201) {
-        //         this.setState({
-        //           errorMessage: response.data,
-        //           signupSuccess: true,
-        //         });
-        //       }
-        //     },
-        //     (error) => {
-        //       this.setState({
-        //         errorMessage: error.response.data,
-        //         signupFailed: true,
-        //       });
-        //     }
-        //   );
-        history.push('app/dashboard', { replace: true });
+          axios.defaults.withCredentials = true;
+          // make a post request with the user data
+          axios.post(serverUrl + 'signup/user/register', payload).then(
+            (response) => {
+                console.log("axios call", response);
+              if (response.status === 200) {
+                  console.log("updated successfully");
+                  dispatch({
+                    type: saveUserName,
+                    firstName: response.data.data.firstName,
+                    lastName: response.data.data.lastName,
+                    userName: response.data.data.userName,
+                });
+                dispatch({
+                    type: createUserProfile,
+                    userMetaData: response.data.data.userMetaData,
+                      profile: response.data.data.profile,
+                      address: response.data.data.address,
+                });
+                //   dispatch({
+                //     type: createUserProfile,
+                //     isDoctor,
+                //     address1,
+                //     city,
+                //     state,
+                //     zipCode,
+                //     country,
+                //     phoneNumber,
+                //     gender,
+                // });
+                  history.push('app/dashboard', { replace: true });
+              }
+            },
+            (error) => {
+                console.log("register error")
+            //   this.setState({
+            //     errorMessage: error.response.data,
+            //     signupFailed: true,
+            //   });
+            }
+          );
+        
     };
 
     const handleChangeSpeciality = (event) => {
@@ -110,6 +152,14 @@ const RegisterSecondPage = () => {
     const handleChangeGender = (event) => {
         setGender(event.target.value);
     };
+
+    const selectCountry = (val) => {
+        setCountry(val);
+      }
+
+    const selectState = (val) => {
+        setState(val);
+      }
 
     const saveFile = (event) => {
         if (event.target.files[0] === null) {
@@ -143,33 +193,31 @@ const RegisterSecondPage = () => {
                     <Formik
                         initialValues={{
                             address1: '',
-                            address2: '',
                             city: '',
-                            state: '',
                             zipcode: '',
                             phonenumber: '',
-                            gender: '',
+                            isSubmitting: false
                         }}
                         validationSchema={Yup.object().shape({
-                            address1: Yup.string().max(255).required('Address1 is required'),
+                            address1: Yup.string().max(255).required('Address is required'),
                             city: Yup.string().max(255).required('City is required'),
-                            state: Yup.string().max(255).required('State is required'),
+                            // country: Yup.string().max(255).required('Country is required'),
+                            // state: Yup.string().max(255).required('State is required'),
                             zipcode: Yup.string().max(255).required('Zipcode is required'),
-                            gender: Yup.string().max(255).required('Gender is required'),
-                            // phonenumber: Yup.number().max(10).required('Phone Number is required'),
+                            // gender: Yup.string().max(255).required('Gender is required'),
+                            phonenumber: Yup.number().max(10).required('Phone Number is required'),
                             // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={(values) => {
+                            console.log("insde submit");
+                            values.isSubmitting = true;
                             handleSubmit(
                                 values.address1,
-                                values.address2,
                                 values.city,
-                                values.state,
                                 values.zipcode,
-                                values.phonenumber,
-                                values.gender
+                                values.phonenumber
+                                // values.gender
                             );
-                            // history.push('app/dashboard', { replace: true });
                         }}
                     >
                         {({
@@ -193,7 +241,7 @@ const RegisterSecondPage = () => {
                                         Create new account
                                     </Typography>
                                 </Box>
-                                <div style={{ marginLeft: '50px' }}>
+                                <div >
                                     <FormControlLabel
                                         label="I am a Doctor"
                                         control={
@@ -211,30 +259,32 @@ const RegisterSecondPage = () => {
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
-                                            marginLeft: '50px',
+                                            
                                         }}
                                     >
                                         <FormControl
                                             variant="standard"
                                             sx={{ m: 1, minWidth: 120 }}
                                         >
-                                            <InputLabel id="demo-simple-select-standard-label">
+                                            <InputLabel id="demo-simple-select-standard-label" >
                                                 Speciality
                                             </InputLabel>
+                                            
                                             <Select
                                                 labelId="demo-simple-select-standard-label"
                                                 id="demo-simple-select-standard"
                                                 value={speciality}
                                                 onChange={handleChangeSpeciality}
                                                 label="Speciality"
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Neurologists</MenuItem>
-                                                <MenuItem value={20}>Psychiatrists</MenuItem>
-                                                <MenuItem value={30}>Family physicians</MenuItem>
+                                                style={{width:"250px"}}
+                                            > 
+                                            
+                                                isLoading ? (<div>Loading ...</div>) :
+                                        ({specialityOptions.map((speciality) => (
+                                          <MenuItem key={speciality} value={speciality}>{speciality}</MenuItem>
+                                        ))})
                                             </Select>
+                                          
                                         </FormControl>
                                         <Button
                                             variant="text"
@@ -249,52 +299,68 @@ const RegisterSecondPage = () => {
                                 ) : (
                                     ''
                                 )}
-                                <div style={{ marginLeft: '35px' }}>
-                                    <FormControl variant="outlined" sx={{ m: 1, minWidth: 190 }}>
+                                <div style={{  display: 'flex', justifyContent: 'flex-start' , marginTop:"20px"}}>
+                                    <div style={{
+                                            width:"250px"
+                                        }}>
+                                    <FormControl variant="outlined" sx={{ minWidth: 190 }}>
                                         <InputLabel id="demo-simple-select-standard-label">
                                             Gender
                                         </InputLabel>
                                         <Select
                                             labelId="demo-simple-select-standard-label"
                                             id="demo-simple-select-standard"
-                                            value={values.gender}
+                                            value={gender}
                                             onChange={handleChangeGender}
                                             label="Gender"
+                                            style={{width:"250px"}}
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
-                                            <MenuItem value={10}>Female</MenuItem>
-                                            <MenuItem value={20}>Male</MenuItem>
-                                            <MenuItem value={30}>Do no want to specify</MenuItem>
+                                            {genderOptions.map((state) => (
+                                          <MenuItem value={state}>{state}</MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
+                                    </div>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                <div style={{  display: 'flex', justifyContent: 'flex-start', marginTop:"15px" }}>
+                                    <TextField
+                                        error={Boolean(touched.phonenumber && errors.phonenumber)}
+                                        helperText={touched.phonenumber && errors.phonenumber}
+                                        label="Phone Number"
+                                        margin="normal"
+                                        name="phonenumber"
+                                        type="number"
+                                        // onInput={(e)=>{ 
+                                        //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
+                                        // }}
+                                        style={{
+                                            width:"250px",
+                                            height:"60px",
+                                        }}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.phonenumber}
+                                        variant="outlined"
+                                    />
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'flex-start'}}>
                                     <TextField
                                         error={Boolean(touched.address1 && errors.address1)}
                                         helperText={touched.address1 && errors.address1}
-                                        label="Address1"
+                                        label="Address"
                                         margin="normal"
                                         name="address1"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         value={values.address1}
                                         variant="outlined"
-                                    />
-                                    <TextField
-                                        error={Boolean(touched.address2 && errors.address2)}
-                                        helperText={touched.address2 && errors.address2}
-                                        label="Address2"
-                                        margin="normal"
-                                        name="address2"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.address2}
-                                        variant="outlined"
+                                        fullWidth
                                     />
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <TextField
                                         error={Boolean(touched.city && errors.city)}
                                         helperText={touched.city && errors.city}
@@ -305,23 +371,99 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.city}
                                         variant="outlined"
+                                        style={{
+                                            width:"250px"
+                                        }}
                                     />
-                                    <TextField
-                                        error={Boolean(touched.state && errors.state)}
-                                        helperText={touched.state && errors.state}
-                                        label="State"
-                                        margin="normal"
-                                        name="state"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.state}
-                                        variant="outlined"
-                                    />
+                                    <div style={{marginTop:"17px"}}>
+                                    <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+                                        {/* <InputLabel id="demo-simple-select-standard-label">
+                                            Country
+                                        </InputLabel> */}
+                                     <CountryDropdown
+                                        value={country}
+                                        onChange={(val) => selectCountry(val)}
+                                        style={{
+                                            width:"250px",
+                                            height:"60px",
+                                            borderRadius: "4px",
+                                            // fontSize: 15,
+                                            borderColor: "grey",
+                                            color:"grey",
+                                            fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
+                                            fontWeight: 400,
+                                            fontSize: "1rem"
+                                        }}
+                                          tabIndex={1000}
+                                        />
+                                        </FormControl>
+                                    {/* <FormControl variant="outlined" sx={{ minWidth: 190 }}>
+                                        <InputLabel id="demo-simple-select-standard-label">
+                                            Country
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-standard-label"
+                                            id="demo-simple-select-standard"
+                                            value={country}
+                                            onChange={handleChangeCountry}
+                                            label="Country"
+                                        >
+                                            <MenuItem value="">
+                                                <em>None</em>
+                                            </MenuItem>
+                                            {countryOptions.map((state) => (
+                                          <MenuItem value={state}>{state}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl> */}
+                                    </div>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FormControl variant="outlined" sx={{ minWidth: 190, marginTop:"15px" }}>
+                                        {/* <InputLabel id="demo-simple-select-standard-label">
+                                            Select State
+                                        </InputLabel> */}
+                                <RegionDropdown
+                                    country={country}
+                                    value={state}
+                                    onChange={(val) => selectState(val)}
+                                    blankOptionLabel={"Select State"}
+                                    defaultOptionLabel={"Select State"}
+                                    style={{
+                                        width:"250px",
+                                        height:"60px",
+                                        borderRadius: "4px",
+                                        // fontSize: 15,
+                                        borderColor: "grey",
+                                        color:"grey",
+                                        fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
+                                        fontWeight: 400,
+                                        fontSize: "1rem"
+                                    }}
+                                      tabIndex={1000} />
+                                      </FormControl>
+                                {/* <FormControl variant="outlined" sx={{ minWidth: 190 }}>
+                                        <InputLabel id="demo-simple-select-standard-label">
+                                            State
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-standard-label"
+                                            id="demo-simple-select-standard"
+                                            value={state}
+                                            onChange={handleChangeState}
+                                            label="State"
+                                        >
+                                            <MenuItem value="">
+                                                <em>None</em>
+                                            </MenuItem>
+                                            {statesOptions.map((state) => (
+                                          <MenuItem value={state}>{state}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl> */}
                                     <TextField
                                         error={Boolean(touched.zipcode && errors.zipcode)}
-                                        helperText={touched.state && errors.state}
+                                        helperText={touched.zipcode && errors.zipcode}
                                         label="Zipcode"
                                         margin="normal"
                                         name="zipcode"
@@ -329,18 +471,9 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.zipcode}
                                         variant="outlined"
-                                    />
-                                    <TextField
-                                        error={Boolean(touched.phonenumber && errors.phonenumber)}
-                                        helperText={touched.phonenumber && errors.phonenumber}
-                                        label="Phone Number"
-                                        margin="normal"
-                                        name="phonenumber"
-                                        type="number"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.phonenumber}
-                                        variant="outlined"
+                                        style={{
+                                            width:"250px"
+                                        }}
                                     />
                                 </div>
                                 {/* <Box
@@ -374,11 +507,13 @@ const RegisterSecondPage = () => {
                                 <Box sx={{ py: 2, alignItems: 'center', display: 'flex', ml: 5 }}>
                                     <Button
                                         color="primary"
-                                        disabled={isSubmitting}
+                                        disabled={values.isSubmitting}
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         style={{ width: '475px' }}
+                                        // onClick={()=>handleSubmit}
+                                        // onClick={()=>{history.push('app/dashboard', { replace: true })}}
                                     >
                                         Create
                                     </Button>

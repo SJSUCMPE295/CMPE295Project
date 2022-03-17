@@ -6,3 +6,10 @@
     --font-size-h4: 16px;
     --font-size-h5: 14px;
 }
+
+.full-width {
+    width: 100%;
+}
+.box--min-height {
+    min-height: 450px;
+}

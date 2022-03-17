@@ -4,6 +4,8 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
+import serverUrl from '../../utils/config';
 import {
     Box,
     Button,
@@ -33,14 +35,40 @@ const RegisterFirstPage = () => {
     const { register, signinWithGoogle } = useAuth();
     const mounted = useMounted();
 
-    const handleSubmit = (email, firstName, lastName) => {
-        dispatch({ type: saveUserName, firstName, lastName, email });
-        history.push('/register2', { replace: true });
+    const handleSubmit = (userName, firstName, lastName) => {
+       apiCall(userName, firstName, lastName);
     };
 
-    const handleSubmitWithGoogle = (email, firstName, lastName) => {
-        dispatch({ type: saveUserName, firstName, lastName, email });
-        history.push('/register2', { replace: true });
+    const apiCall = (userName, firstName, lastName) => {
+        const payload = {
+            userName: userName,
+            firstName: firstName,
+            lastName: lastName,
+        };
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios.post(serverUrl + 'signup/user', payload).then(
+          (response) => {
+              console.log("axios call")
+            if (response.status === 200) {
+                console.log("updated successfully", response);
+                dispatch({ type: saveUserName, firstName, lastName, userName });
+                history.push('/register2', { replace: true });
+            }
+          },
+          (error) => {
+              console.log("register error")
+          //   this.setState({
+          //     errorMessage: error.response.data,
+          //     signupFailed: true,
+          //   });
+          }
+        );
+    }
+    const handleSubmitWithGoogle = (userName, firstName, lastName) => {
+        apiCall(userName, firstName, lastName);
+        // dispatch({ type: saveUserName, firstName, lastName, userName });
+        // history.push('/register2', { replace: true });
     };
 
     return (
@@ -63,14 +91,14 @@ const RegisterFirstPage = () => {
                     </div>
                     <Formik
                         initialValues={{
-                            email: '',
+                            userName: '',
                             firstName: '',
                             lastName: '',
                             password: '',
                             isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
-                            email: Yup.string()
+                            userName: Yup.string()
                                 .email('Must be a valid email')
                                 .max(255)
                                 .required('Email is required'),
@@ -81,15 +109,22 @@ const RegisterFirstPage = () => {
                         onSubmit={(values) => {
                             console.log(values);
                             values.isSubmitting = true;
-                            register(values.email, values.password)
+                            register(values.userName, values.password)
                                 .then((response) => {
                                     console.log(response);
-                                    handleSubmit(values.email, values.firstName, values.lastName);
+                                    handleSubmit(values.userName, values.firstName, values.lastName);
                                 })
                                 .catch((error) => {
-                                    //console.log(error.message);
+                                    console.log(error.message);
+                                    values.isSubmitting = false;
                                     setAlert(true);
-                                    setError(error.message);
+                                    switch (error.code) {
+                                        case "auth/email-already-in-use" : {
+                                            setError("User Name already exists");
+                                            break;
+                                        }
+                                    }
+                                    // setError(error.message);
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
@@ -138,16 +173,16 @@ const RegisterFirstPage = () => {
                                     variant="outlined"
                                 />
                                 <TextField
-                                    error={Boolean(touched.email && errors.email)}
+                                    error={Boolean(touched.userName && errors.userName)}
                                     fullWidth
-                                    helperText={touched.email && errors.email}
-                                    label="Email Address"
+                                    helperText={touched.userName && errors.userName}
+                                    label="User Name(Email)"
                                     margin="normal"
-                                    name="email"
+                                    name="userName"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                     type="email"
-                                    value={values.email}
+                                    value={values.userName}
                                     variant="outlined"
                                 />
                                 <TextField

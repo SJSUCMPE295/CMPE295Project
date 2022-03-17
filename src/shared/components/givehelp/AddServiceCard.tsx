@@ -8,13 +8,12 @@ import {
     TextField,
     Divider,
     FormControlLabel,
-    FormGroup
+    FormGroup,
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 // import { styled, Box } from '@mui/system';
 // import ModalUnstyled from '@mui/base/ModalUnstyled';
-
 
 const states = [
     {
@@ -40,7 +39,7 @@ const states = [
     {
         value: 'Utah',
         label: 'Utah',
-    }
+    },
 ];
 
 const handleChange = (event) => {
@@ -50,72 +49,42 @@ const handleChange = (event) => {
     });
 };
 
-// const StyledModal = styled(ModalUnstyled)`
-//   position: fixed;
-//   z-index: 1300;
-//   right: 0;
-//   bottom: 0;
-//   top: 0;
-//   left: 0;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
-
-// const Backdrop = styled('div')`
-//   z-index: -1;
-//   position: fixed;
-//   right: 0;
-//   bottom: 0;
-//   top: 0;
-//   left: 0;
-//   background-color: rgba(0, 0, 0, 0.5);
-//   -webkit-tap-highlight-color: transparent;
-// `;
-
-// const style = {
-//   width: 400,
-//   bgcolor: 'background.paper',
-//   border: '2px solid #000',
-//   p: 2,
-//   px: 4,
-//   pb: 3,
-// };
-
 
 const AddServiceCard = (props) => (
     <Box {...props}>
-        <Box 
+        <Box
             sx={{
                 display: 'flex',
                 justifyContent: 'flex-start',
-                width:500,
-                height:700,
-                p: 1
-                }}
-        >
-        <form autoComplete="off" noValidate {...props}>
-            <Card 
-                sx={{
+                width: 500,
                 height: 700,
-                width:900,
-                justifyContent:'center',
-                }}
-            >
-                    <CardHeader 
+                p: 1,
+            }}
+        >
+            <form autoComplete="off" noValidate {...props}>
+                <Card
+                    sx={{
+                        height: 700,
+                        width: 900,
+                        justifyContent: 'center',
+                    }}
+                >
+                    <CardHeader
                         sx={{
                             display: 'flex',
                             justifyContent: 'flex-start',
                         }}
-                        titleTypographyProps={{ variant: 'h2' }} subheader="update the resource/service details you would like to provide" title="Give Help"
+                        titleTypographyProps={{ variant: 'h2' }}
+                        subheader="update the resource/service details you would like to provide"
+                        title="Give Help"
                     />
                     <Divider />
                     <CardContent>
-                        <Box 
-                        sx={{
+                        <Box
+                            sx={{
                                 display: 'flex',
-                                justifyContent: 'flex-start',       
-                        }}
+                                justifyContent: 'flex-start',
+                            }}
                         >
                             <TextField
                                 id="filled-basic"
@@ -167,7 +136,10 @@ const AddServiceCard = (props) => (
                         </Box>
                         <Box sx={{ pt: 2 }}>
                             <FormGroup>
-                                <FormControlLabel control={<Checkbox/>} label="Use my profile address" />
+                                <FormControlLabel
+                                    control={<Checkbox />}
+                                    label="Use my profile address"
+                                />
                             </FormGroup>
                         </Box>
                         <Box sx={{ pt: 2 }}>

@@ -17,6 +17,7 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
+import userProfileReducer from '../store/reducers/userProfileReducer';
 const user = {
     avatar: '/static/images/avatars/avatar_2.png',
     jobTitle: 'San Jose,CA',
@@ -30,7 +31,7 @@ const items = [
         title: 'Dashboard',
     },
     {
-        href: '/app/customers',
+        href: '/app/gethelp',
         icon: PackageIcon,
         title: 'Get Help',
     },
