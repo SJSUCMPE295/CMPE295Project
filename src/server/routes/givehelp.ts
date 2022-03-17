@@ -7,21 +7,28 @@ const router = Router();
 // const fetchController = require('../controller/fetch');
 // API to post resource
 router.post('/resource', async (req, res) => {
-    const UserId = req.body;
-    const AddressId = req.body.AddressId;
-    const SKU = req.body.SKU;
-    const Category = req.body.Category;
-    const Description = req.body.Description;
-    const Resource_Name = req.body.Resource_Name;
-    const Phone_Number = req.body.Phone_Number;
-
+    const UserId=req.body.UserId;
+    const Resource_Name=req.body.Resource_Name;
+    const Category=req.body.Category;
+    const Description=req.body.Description;
+    const Phone_Number=req.body.Phone_Number;
+    const Address=req.body.Address;
+    const City=req.body.City;
+    const State=req.body.State;
+    const Zipcode=req.body.Zipcode;
+    const Country=req.body.Country;
+    const SKU=req.body.SKU;
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,
         Category,
         Description,
         Phone_Number,
-        AddressId,
+        Address,
+        City,
+        State,
+        Zipcode,
+        Country,
         SKU,
     });
     try {
@@ -41,20 +48,28 @@ router.post('/resource', async (req, res) => {
 
 // API to post service
 router.post('/service', async (req, res) => {
-    const UserId = req.body.UserId;
-    const Service_Name = req.body.Service_Name;
-    const Category = req.body.Category;
-    const Description = req.body.Description;
-    const Phone_Number = req.body.Phone_Number;
-    const AddressId = req.body.AddressId;
-    const Availability = req.body.Availability;
+    const UserId=req.body.UserId;
+    const Service_Name=req.body.Service_Name;
+    const Category=req.body.Category;
+    const Description=req.body.Description;
+    const Phone_Number=req.body.Phone_Number;
+    const Address=req.body.Address;
+    const City=req.body.City;
+    const State=req.body.State;
+    const Zipcode=req.body.Zipcode;
+    const Country=req.body.Country;
+    const Availability=req.body.Availability;
     const servicedata = new serviceModel({
         UserId,
         Service_Name,
         Category,
         Description,
         Phone_Number,
-        AddressId,
+        Address,
+        City,
+        State,
+        Zipcode,
+        Country,
         Availability,
     });
     try {
@@ -78,7 +93,7 @@ router.post('/update', async (_req, res) => {
     try {
         serviceModel.findByIdAndUpdate(
             id,
-            { $set: { Availability: _req.body.Availability } },
+            {$set:{ Availability: _req.body.Availability }},
             (error, data) => {
                 if (error) {
                     console.log('error', error);
