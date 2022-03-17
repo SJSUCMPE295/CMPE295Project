@@ -1,11 +1,20 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createRootReducer from './rootReducer';
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 type StoreParams = {
     initialState?: { [key: string]: any };
     middleware?: any[];
 };
+
+// const persistConfig = {
+//     key: "root",
+//     storage,
+//   };
+
+// const persistedReducer = persistReducer(persistConfig, createRootReducer);
 
 export const configureStore = ({ initialState, middleware = [] }: StoreParams) => {
     const devtools =
@@ -16,7 +25,7 @@ export const configureStore = ({ initialState, middleware = [] }: StoreParams) =
     const composeEnhancers = devtools || compose;
 
     const store = createStore(
-        createRootReducer(),
+        createRootReducer,
         initialState,
         composeEnhancers(applyMiddleware(...[thunk].concat(...middleware)))
     );
@@ -28,7 +37,7 @@ export const configureStore = ({ initialState, middleware = [] }: StoreParams) =
             );
         }
     }
-
+    
     return store;
 };
 

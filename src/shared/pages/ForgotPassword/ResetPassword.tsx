@@ -29,7 +29,6 @@ const ResetPassword = () => {
     const { resetPassword } = useAuth();
     const mounted = useMounted();
     const query = useQuery();
-
     return (
         <>
             <Helmet>
@@ -71,7 +70,7 @@ const ResetPassword = () => {
                             password: Yup.string().max(255).required('Password is required'),
                         })}
                         onSubmit={(values) => {
-                            resetPassword(query.get('oobcode'), values.password)
+                            resetPassword(query.get('oobCode'), values.password)
                                 .then((response) => {
                                     console.log(response);
                                     setSuccessAlert(true);

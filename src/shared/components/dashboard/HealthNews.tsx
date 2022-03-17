@@ -42,7 +42,7 @@ const HealthNews = () => {
         fetch(newsRssFeed)
             .then((res) => res.json())
             .then((data) => data.items.filter((item) => item.title.length > 0))
-            //.then((newArticles) => newArticles.slice(0, MAX_ARTICLES))
+            .then((newArticles) => newArticles.slice(0, MAX_ARTICLES))
             .then((articles) => setArticles(articles));
         //.catch((error) => console.log(error))
         //.then(data => console.log(data))

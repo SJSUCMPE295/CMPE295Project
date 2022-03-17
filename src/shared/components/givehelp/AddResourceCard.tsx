@@ -8,13 +8,12 @@ import {
     TextField,
     Divider,
     FormControlLabel,
-    FormGroup
+    FormGroup,
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { useState, FunctionComponent, useEffect } from 'react';
 import axios from 'axios';
-
 
 // const states = [
 //     {

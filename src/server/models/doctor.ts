@@ -1,7 +1,5 @@
-const mongoose3 = require('mongoose');
-const Schema3 = mongoose3.Schema;
-
-export const DoctorModel = new Schema3(
+import { Schema, model } from 'mongoose';
+export const DoctorModel = new Schema(
     {
         userId: { type: Object, required: true },
         speciality: { type: String, required: true },
@@ -9,14 +7,11 @@ export const DoctorModel = new Schema3(
         qualification: { type: String, required: true },
         experience: { type: String, required: true },
         gender: { type: String, required: false },
-        availability: { type: Date, required: true },
+        availability: { type: Date, required: false },
         description: { type: String, required: false },
     },
-    { collection: 'Doctor' },
-    {
-        versionKey: false,
-    }
+    { collection: 'Doctor', versionKey: false }
 );
 
-export const doctorModel = mongoose3.model('doctor', DoctorModel);
+export const doctorModel = model('doctor', DoctorModel);
 export default doctorModel;

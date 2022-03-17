@@ -5,6 +5,7 @@ import cors from 'cors';
 import chalk from 'chalk';
 import manifestHelpers from 'express-manifest-helpers';
 import bodyParser from 'body-parser';
+import appointmentsRouter from 'routes/appointments';
 import paths from '../../config/paths';
 import mongoDB from './utils/config';
 // import { configureStore } from '../shared/store';
@@ -17,6 +18,7 @@ import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
 import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
+import staticRouter from './routes/static';
 
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -39,10 +41,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /* Api routes*/
 app.use('/api/gethelp', getHelpRouter);
-app.use('/api/home', homeRouter);
 app.use('/api/givehelp', giveHelpRouter);
+app.use('/api/home', homeRouter);
 app.use('/api/signup', signUpRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/appointments', appointmentsRouter);
+app.use('/api/static', staticRouter);
 
 /* End: Api routes*/
 app.use(addStore);

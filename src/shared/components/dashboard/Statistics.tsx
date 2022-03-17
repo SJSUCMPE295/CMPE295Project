@@ -34,7 +34,6 @@ import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import { Bar } from 'react-chartjs-2';
 import AutoAwesomeIcon from '@material-ui/icons/AutoAwesomeMosaic';
 import HealthNews from '../../components/dashboard/HealthNews';
-
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WarningIcon from '@material-ui/icons/Warning';
 import axios from 'axios';
@@ -44,7 +43,6 @@ const Statistics: FunctionComponent<any> = (props) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     let UserId = '617f2fb40583ba49a0091425';
-    (''); //
     useEffect(() => {
         axios
             .get('/api/home', { params: { user: '617f2fb40583ba49a0091425' } }) //change later
@@ -149,7 +147,7 @@ const Statistics: FunctionComponent<any> = (props) => {
             xAxes: [
                 {
                     ticks: {
-                        fontColor: theme.palette.text.secondary,
+                        Color: theme.palette.text.secondary,
                     },
                     gridLines: {
                         display: false,
@@ -372,6 +370,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 }}
                             >
                                 <Button
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -435,6 +434,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 }}
                             >
                                 <Button
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -479,15 +479,15 @@ const Statistics: FunctionComponent<any> = (props) => {
                                             userappointments.length > 0 ? (
                                                 userappointments.map(
                                                     ({
-                                                        DoctorId: DoctorId,
+                                                        doctor_name: doctor_name,
                                                         AppointmentDetails: AppointmentDetails,
                                                     }) => (
                                                         <Typography
                                                             color="textPrimary"
                                                             variant="text"
                                                         >
-                                                            You have an appointment with {DoctorId}{' '}
-                                                            at {AppointmentDetails}
+                                                            You have an appointment with{' '}
+                                                            {doctor_name} at {AppointmentDetails}
                                                         </Typography>
                                                     )
                                                 )
@@ -502,7 +502,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                             </Card>
                         </Grid>
                     ) : null}
-                    <Grid item>
+                    <Grid item style={{ maxHeight: '100vh', overflow: 'auto' }}>
                         <HealthNews />
                     </Grid>
                 </Grid>

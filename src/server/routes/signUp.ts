@@ -2,25 +2,28 @@ import { Router } from 'express';
 import Mongoose from 'mongoose';
 import { userModel } from '../models/user';
 import doctorModel from '../models/doctor';
+import { User } from 'react-feather';
+import { fabClasses } from '@mui/material';
 const router = Router();
 
 ///API for signup
 router.post('/user', async (req, res) => {
+    // console.log("req.body : ",req.body);
     const {
-        userName = 'test005',
-        password = 'test005',
-        firstName = 'Jimmy',
-        lastName = 'Blake',
+        userName,
+        // password = 'test005',
+        firstName,
+        lastName,
         userMetaData = {
-            isDoctor: true,
-            gender: 'Male',
+            isDoctor: false,
+            gender: '',
         },
         profile = {
-            phoneNumber: 9010100888,
-            profileActive: true,
+            phoneNumber: 0,
+            profileActive: false,
             profilePic: '',
         },
-        address = [
+        address = 
             {
                 location: '',
                 city: '',
@@ -28,13 +31,12 @@ router.post('/user', async (req, res) => {
                 country: '',
                 zipCode: '',
             },
-        ],
     } = req.body;
-    console.log('create', req);
+    // console.log('create', req);
     const userdata = new userModel({
         _userId: new Mongoose.Types.ObjectId(),
         userName,
-        password,
+        // password,
         firstName,
         lastName,
         userMetaData,
@@ -42,16 +44,51 @@ router.post('/user', async (req, res) => {
         address,
     });
     try {
-        console.log('data', userdata);
-        await userdata.save((error, data) => {
-            if (error) {
-                console.log('System Error', error);
-                return res.json(500).send('System Error');
+        // console.log('data', userdata);
+        userdata.save((error, data) => {
+            if (data) {
+                console.log('success', data);
+                    res.writeHead(200, {
+                        'Content-Type': 'text/plain',
+                      });
+                      res.end(JSON.stringify({message:'Signup Successful', data: data}));
+                
+                } else {
+                    console.log('System Error', error);
+                res.writeHead(404, {
+                    'Content-Type': 'text/plain',
+                  });
+                  res.end('UserName does not exists');
+                }
+            });
+        } catch (err) {
+            console.log('Exception Error', err);
+            res.json({ message: err });
+        }
+});
+
+///API for user register
+router.post('/user/register', async (req, res) => {
+    console.log("req.body : ",req.body);
+    const{userName, userMetaData, profile, address} = req.body;
+    console.log("address", address);
+    try {
+        // console.log('data', userdata);
+        userModel.findOneAndUpdate({userName}, {userMetaData, profile, address}, {new:true},(error, user) => {
+            if (user) {
+                console.log('success', user);
+                res.writeHead(200, {
+                    'Content-Type': 'text/plain',
+                  });
+                  res.end(JSON.stringify({message: 'Register successful', data: user}));
+                
             } else {
-                console.log('success');
-                return res.json(200).send('User data captured successfully!');
+                res.writeHead(404, {
+                    'Content-Type': 'text/plain',
+                  });
+                  res.end('UserName does not exists');        
             }
-        });
+        })
     } catch (err) {
         console.log('Exception Error', err);
         res.json({ message: err });

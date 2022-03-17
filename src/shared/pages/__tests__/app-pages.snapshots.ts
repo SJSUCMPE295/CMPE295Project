@@ -4,11 +4,14 @@ const routes = [
     '/app/customers',
     '/app/dashboard',
     '/app/products',
+    '/app/medicalAssistance',
+    '/app/lookformedicalAssistance',
     '/login',
     '/register1',
     '/register2',
     '/404',
 ];
+const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 describe('Visual Regression Tests', () => {
     let browser;
     beforeEach(async () => {
@@ -26,6 +29,7 @@ describe('Visual Regression Tests', () => {
         const page = await browser.newPage();
         await page.goto('http://localhost:8500' + route);
         const image = await page.screenshot();
+        await page.waitFor(2000);
         expect(image).toMatchImageSnapshot();
     });
 });

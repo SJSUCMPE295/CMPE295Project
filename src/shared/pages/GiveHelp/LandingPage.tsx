@@ -6,7 +6,7 @@ import LandingPageCard from '../../components/givehelp/LandingPageCard';
 const LandingPage = () => (
     <>
         <Helmet>
-            <title>Products | Material Kit</title>
+            <title>WeCare</title>
         </Helmet>
         <Box
             sx={{
@@ -25,8 +25,7 @@ const LandingPage = () => (
                         justifyContent: 'center',
                         pt: 3,
                     }}
-                >
-                </Box>
+                ></Box>
             </Container>
         </Box>
     </>
