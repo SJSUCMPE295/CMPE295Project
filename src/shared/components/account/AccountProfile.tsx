@@ -14,7 +14,6 @@ import {
     Divider,
     Typography,
 } from '@material-ui/core';
-import userModel from 'models/user';
 
 const metadata = {
     contentType: 'image/jpg'
