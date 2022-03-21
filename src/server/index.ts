@@ -16,7 +16,7 @@ import webhookVerification from './middleware/webhookVerification';
 import getHelpRouter from './routes/gethelp';
 import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
-import signUpRouter from './routes/signup';
+import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
 import staticRouter from './routes/static';
 
