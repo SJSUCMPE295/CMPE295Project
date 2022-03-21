@@ -20,7 +20,7 @@ const AccountProfile = ({userProfileReducer, ...props}) => {
     const userMockData = {
         avatar: '/static/images/avatars/avatar_2.png',
         city: userProfileReducer.address.city,
-        country: userProfileReducer.address.country,
+        state: userProfileReducer.address.state,
         name: userProfileReducer.firstName,
     };
    return (
@@ -44,7 +44,7 @@ const AccountProfile = ({userProfileReducer, ...props}) => {
                     {userMockData.name}
                 </Typography>
                 <Typography color="textSecondary" variant="body1">
-                    {`${userMockData.city}, ${userMockData.country}`}
+                    {`${userMockData.city}, ${userMockData.state}`}
                 </Typography>
                 {/* <Typography color="textSecondary" variant="body1">
                     {`${moment().format('hh:mm A')} ${user.timezone}`}
