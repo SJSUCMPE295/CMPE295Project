@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import {
     Avatar,
@@ -12,16 +14,16 @@ import {
     Typography,
 } from '@material-ui/core';
 
-const userMockData = {
-    avatar: '/static/images/avatars/avatar_2.png',
-    city: 'San Jose',
-    country: 'USA',
-    // jobTitle: 'Senior Developer',
-    name: 'Katrina Smith',
-    // timezone: 'GTM-7',
-};
 
-const AccountProfile = ({ user, ...props }) => (
+
+const AccountProfile = ({userProfileReducer, ...props}) => {
+    const userMockData = {
+        avatar: '/static/images/avatars/avatar_2.png',
+        city: userProfileReducer.address.city,
+        state: userProfileReducer.address.state,
+        name: userProfileReducer.firstName,
+    };
+   return (
     <Card {...props}>
         <CardContent>
             <Box
@@ -39,10 +41,10 @@ const AccountProfile = ({ user, ...props }) => (
                     }}
                 />
                 <Typography color="textPrimary" gutterBottom variant="h4">
-                    {user.userName}
+                    {userMockData.name}
                 </Typography>
                 <Typography color="textSecondary" variant="body1">
-                    {`${userMockData.city} ${userMockData.country}`}
+                    {`${userMockData.city}, ${userMockData.state}`}
                 </Typography>
                 {/* <Typography color="textSecondary" variant="body1">
                     {`${moment().format('hh:mm A')} ${user.timezone}`}
@@ -56,11 +58,11 @@ const AccountProfile = ({ user, ...props }) => (
             </Button>
         </CardActions>
     </Card>
-);
+)};
 //`${moment().format('hh:mm A')} ${user.timezone}`
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
 });
 
 const mapDispatchToProps = {};
