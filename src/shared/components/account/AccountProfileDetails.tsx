@@ -26,14 +26,14 @@ const states = [
     },
 ];
 
-const AccountProfileDetails = ({ user, ...props }) => {
+const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
     const [values, setValues] = React.useState({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: 'abc@example.com',
-        phone: '',
-        state: 'Alabama',
-        country: 'USA',
+        firstName: userProfileReducer.firstName,
+        lastName: userProfileReducer.lastName,
+        email: userProfileReducer.userName,
+        phone: userProfileReducer.profile.phoneNumber,
+        state: userProfileReducer.address.state,
+        country: userProfileReducer.address.country,
     });
 
     const handleChange = (event) => {
@@ -144,8 +144,8 @@ const AccountProfileDetails = ({ user, ...props }) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
 });
 
 const mapDispatchToProps = {};
