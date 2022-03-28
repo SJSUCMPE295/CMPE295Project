@@ -1,4 +1,5 @@
 import React, { Component, useRef, useEffect, useState, FunctionComponent } from 'react';
+import { Link as RouterLink } from "react-router-dom";
 import {
     Avatar,
     Box,
@@ -65,6 +66,9 @@ const Statistics: FunctionComponent<any> = (props) => {
     let transactiontype = [];
     let transactioncount = [];
     let totalusertrans = 0;
+    let totalresources=0;
+    let usertransactions={};
+    let userappointments={};
     const theme = useTheme();
     if (data != null) {
         const resources = data.resources;
@@ -73,9 +77,9 @@ const Statistics: FunctionComponent<any> = (props) => {
             resourcename.push(element._id);
             resourcesku.push(element.resource_SKU);
         });
-        const totalresources = resourcesku.reduce((result, number) => result + number);
+         totalresources = resourcesku.reduce((result, number) => result + number);
 
-        const usertransactions = data.usertransactions;
+         usertransactions = data.usertransactions;
         if (usertransactions.length > 0) {
             usertransactions.forEach((element) => {
                 transactiontype.push(element._id);
@@ -83,7 +87,7 @@ const Statistics: FunctionComponent<any> = (props) => {
             });
             totalusertrans = transactioncount.reduce((result, number) => result + number);
         }
-        const userappointments = data.userappointments;
+        userappointments = data.userappointments;
     }
     const data_donut = {
         datasets: [
@@ -245,7 +249,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 </Typography>
                                 {data != null ? (
                                     <Typography color="textPrimary" variant="h3">
-                                        {totalresources}
+                                      {totalresources}
                                     </Typography>
                                 ) : null}
                             </Grid>
@@ -370,7 +374,13 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 }}
                             >
                                 <Button
-                                    href="/app/gethelp"
+                                    
+                                  
+                                    component={RouterLink}
+                                    to={{
+                                      pathname: "/app/gethelp",
+                                      state: { datafilter: "resources" }
+                                    }}
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -434,7 +444,11 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 }}
                             >
                                 <Button
-                                    href="/app/gethelp"
+                                    component={RouterLink}
+                                    to={{
+                                      pathname: "/app/gethelp",
+                                      state: { datafilter: "services" }
+                                    }}
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"

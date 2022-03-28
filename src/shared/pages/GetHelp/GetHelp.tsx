@@ -8,9 +8,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import RadioGroup, { useRadioGroup } from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import { Box, Grid,
 Container,
 Typography,Card,
@@ -31,8 +32,9 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker,DirectionsRenderer,InfoW
 
 
 
+
 const GetHelp : FunctionComponent<any> = (props) => {
-    const [data, setData] = useState(null);
+    
     const [error, setError] = useState(null);
     const [limit, setLimit] = useState(10);
     const [name, setName] = useState("");
@@ -42,7 +44,8 @@ const GetHelp : FunctionComponent<any> = (props) => {
     const [directions,setDirections]= useState(null);
     const [open, setOpen] = React.useState(false);
     const [resource, setResource] = React.useState(null);
- 
+    const [datafilter,setDataFilter]=React.useState("all");
+    const [data, setData] = useState(null);
     let origin = {};
     const handleLimitChange = (event) => {
         setLimit(event.target.value);
@@ -51,16 +54,24 @@ const GetHelp : FunctionComponent<any> = (props) => {
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
     };
+
+    
     useEffect(() => {
-        
+        //alert(props.location.state.datafilter);
+        if (props.location.state.datafilter != null){
+            setDataFilter(props.location.state.datafilter);
+        }
         axios
-            .get('/api/gethelp', { params: {type:'pageload'} }) //change later
+            .get('/api/gethelp', { params: {type:'pageload',datafilter: (props.location.state.datafilter!=null ? props.location.state.datafilter:datafilter)} }) //change later
             .then(
                 (response) => {
                     console.log(response);
                     setData(response.data.resources);
+                    console.log(response.data.resources);
                     setCity(response.data.user_currentcity);
                     setCurrentloc(response.data.user_currentaddress)
+                    
+                
                     //console.log(user_loc);
                 },
                 (error) => {
@@ -69,9 +80,10 @@ const GetHelp : FunctionComponent<any> = (props) => {
                 }
             );
         //.finally(()=> {setLoading(false); })
-    }, []);
+    }, [props]);
     //if (loading) return "Loading...."
     //if (error) return "Error"
+    
     const handleChangeName = (event) => {
         setName(event.target.value)
     };
@@ -89,7 +101,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
         event.preventDefault();
         //console.log("inside button fn");
         axios
-        .get('/api/gethelp', { params: { name: name , miles : miles, city :city,type:'button'} }) 
+        .get('/api/gethelp', { params: { name: name , miles : miles, city :city,datafilter:datafilter,type:'button'} }) 
         .then(
             (response) => {
                 console.log(response);
@@ -105,7 +117,28 @@ const GetHelp : FunctionComponent<any> = (props) => {
     };
     //const defaultLocation = { lat: 40.756795, lng: -73.954298 };
 
-
+   /* const loadData=() =>{
+        console.log(datafilter);
+        console.log(allData);
+        if (allData!=null){
+            console.log(datafilter);
+        if(datafilter=="resource"){
+            var resourceData = allData.filter(function(i) {
+                return i.type === "resource";
+              });
+            setData(resourceData);
+            }
+          else if(datafilter=="service"){
+            var serviceData = allData.filter(function(i) {
+                return i.type === "service";
+              });
+            setData(serviceData);
+            }
+          else{
+            setData(allData);
+            }
+        }
+    }*/
     
     
       //function that is calling the directions service
@@ -140,10 +173,10 @@ const GetHelp : FunctionComponent<any> = (props) => {
            <GoogleMap defaultCenter={{ lat: 37.318400, lng:  -121.8381589 }} defaultZoom={10}>
               
               {currentloc !== null && (<Marker  title="Your current location" key="marker_1" position={currentloc}/>)}
-              {data !== null ? ((resource) => <Marker title={resource.Name} key={resource._id}
-              position={resource.location} />):null};
-            
-              {directions !== null && (
+             
+              {data != null ? (data.map((resource) => (<Marker title={resource.Name} key={resource._id} position={resource.location} />))):null}
+             
+             {directions !== null && (
                 <DirectionsRenderer
                   directions={directions}
                   defaultOptions={{
@@ -174,7 +207,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
          const handleConfirm = () => {
             //console.log(quantity);
             setOpen(false);
-           console.log(resource);
+          // console.log(resource);
 
            axios
            .post('/api/gethelp', {resource:resource,user_id:"test"}) //change later
@@ -191,11 +224,12 @@ const GetHelp : FunctionComponent<any> = (props) => {
            );
          }; 
          
-            const [selectedValue, setSelectedValue] = React.useState('All');
-          
-            const handleRadioChange = (event) => {
-              setSelectedValue(event.target.value);
-            };    
+
+         const handleRadioChange = (event) => {
+           //setValue(event.target.value);
+       // console.log(event.target.value);
+           setDataFilter(event.target.value);
+         };  
     
     return(
    <>
@@ -228,6 +262,16 @@ const GetHelp : FunctionComponent<any> = (props) => {
                 <CardContent>
                     <Box sx={{ display: 'flex', maxWidth: 1200 }}>
                         <Box sx={{ maxWidth: 700 }}>
+                       <span>        </span> <RadioGroup row 
+
+defaultValue="all"
+value={datafilter}
+onChange={handleRadioChange}
+>
+<FormControlLabel value="all" control={<Radio />} label="All" />
+<FormControlLabel value="resources" control={<Radio />} label="Resources" />
+<FormControlLabel value="services" control={<Radio />} label="Services" />
+                        </RadioGroup><br />
                             <TextField
                                 style={{ width: 600 }}
                                 InputProps={{
@@ -283,7 +327,12 @@ const GetHelp : FunctionComponent<any> = (props) => {
                                 onChange={handleChangeMiles}
                             />
                             
+                            <br />
+                            <br />            
                            
+                           
+                            
+ 
                         </Box>
                         <Box sx={{ display: 'flex', width: 200, alignItems: 'center' }}>
                             <br />
@@ -310,7 +359,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
     <Grid container spacing={2}>
     <Grid item xs={6}>
     <Box sx={{ pt: 3 }}>
-    {data != null ? (
+    {data != null && datafilter!=null ?(
     <Grid container spacing={2}>
    {data.map((resource) => (
     <Grid item xs={6} key={resource._id}>
@@ -352,7 +401,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
                     </Grid>):null}
                 </Box></Grid>
                 <Grid item xs={6}>
-                <Box>
+                <Box paddingTop={3}>
                 
            
           
@@ -378,7 +427,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
       />
                 <CardContent>
                     <Box> 
-                    <Typography variant="body1">{resource.Name}</Typography>
+                    <Typography variant="body1"><b>Name: </b>{resource.Name}</Typography>
                {/* <div>&nbsp; <br/> </div>
               <DropDownMenu 
           value={resource.SKU} 
@@ -390,15 +439,15 @@ const GetHelp : FunctionComponent<any> = (props) => {
 
           </DropDownMenu>*/}
         
-       
-       <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
+        <b>Description: </b>{resource.Description}
+        </Typography> 
+       <Typography variant="body2" color="text.secondary" >
         {resource.type != "resource" ? ("Available on " +resource.availableDate) :("Quantity: "+resource.SKU)}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-        {resource.Description}
-        </Typography> 
+         
         <Typography variant="body2" color="text.secondary">
-        {resource.address}</Typography>
+        <b>Address: </b>{resource.address}</Typography>
         </Box>
       </CardContent>
      
