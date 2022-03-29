@@ -31,7 +31,7 @@ const items = [
         title: 'Dashboard',
     },
     {
-        href: '/app/gethelp',
+        href: '/app/gethelp/:all',
         icon: PackageIcon,
         title: 'Get Help',
     },
@@ -73,7 +73,7 @@ const items = [
     },*/
 ];
 
-export const DashboardSidebar = ({ onMobileClose, openMobile ,userProfileReducer}) => {
+export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
     const location = useLocation();
 
     React.useEffect(() => {

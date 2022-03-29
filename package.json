@@ -33,6 +33,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.5.0",
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
     "@googlemaps/google-maps-services-js": "^3.3.1",
