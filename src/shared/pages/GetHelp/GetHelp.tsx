@@ -29,7 +29,8 @@ import {
 import axios from 'axios';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker,DirectionsRenderer,InfoWindow  } from "react-google-maps";
 
-
+import{ init } from '@emailjs/browser';
+init("Tf7lGE0yewFvOLxah");
 
 
 
@@ -57,12 +58,13 @@ const GetHelp : FunctionComponent<any> = (props) => {
 
     
     useEffect(() => {
-        //alert(props.location.state.datafilter);
-        if (props.location.state.datafilter != null){
-            setDataFilter(props.location.state.datafilter);
-        }
+        //const id = props?.match?.params?.id;
+       // alert(props.location.state.datafilter);
+        const filter_value=props?.match?.params?.datafilter;
+        setDataFilter(filter_value.substring(filter_value.indexOf(':') + 1));
+        
         axios
-            .get('/api/gethelp', { params: {type:'pageload',datafilter: (props.location.state.datafilter!=null ? props.location.state.datafilter:datafilter)} }) //change later
+            .get('/api/gethelp', { params: {type:'pageload',datafilter:filter_value.substring(filter_value.indexOf(':') + 1)} }) //change later
             .then(
                 (response) => {
                     console.log(response);
@@ -79,7 +81,6 @@ const GetHelp : FunctionComponent<any> = (props) => {
                     setError(error);
                 }
             );
-        //.finally(()=> {setLoading(false); })
     }, [props]);
     //if (loading) return "Loading...."
     //if (error) return "Error"
@@ -204,11 +205,33 @@ const GetHelp : FunctionComponent<any> = (props) => {
             setQuantity(event.target.value);
            
          }   
-         const handleConfirm = () => {
+
+         let state = { feedback: '', name: 'Name', email: 'email@example.com' };
+  
+    
+      
+    
+   
+    
+      const sendEmail = (templateId, variables) => {
+        emailjs.send(
+          'gmail', templateId,
+          variables
+          ).then(res => {
+            console.log('Email successfully sent!')
+          })
+          // Handle errors here however you like, or use a React error boundary
+          .catch(err => console.error('Oh well, you failed. Here some thoughts on the error that occured:', err))
+      }
+    
+         const handleConfirm = (event) => {
             //console.log(quantity);
             setOpen(false);
           // console.log(resource);
-
+          const templateId = 'template_v9fkqmy';
+    
+        sendEmail(templateId, {message_html: "email body", from_name: state.name, reply_to: state.email})
+           
            axios
            .post('/api/gethelp', {resource:resource,user_id:"test"}) //change later
            .then(
@@ -226,8 +249,6 @@ const GetHelp : FunctionComponent<any> = (props) => {
          
 
          const handleRadioChange = (event) => {
-           //setValue(event.target.value);
-       // console.log(event.target.value);
            setDataFilter(event.target.value);
          };  
     

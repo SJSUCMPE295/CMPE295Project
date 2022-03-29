@@ -376,11 +376,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 <Button
                                     
                                   
-                                    component={RouterLink}
-                                    to={{
-                                      pathname: "/app/gethelp",
-                                      state: { datafilter: "resources" }
-                                    }}
+                                    href="/app/gethelp/:resources"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -428,7 +424,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                                                 'DD/MM/YYYY'
                                                             )}
                                                         </TableCell>
-                                                        <TableCell>{service.zipcode}</TableCell>
+                                                        <TableCell>{service.Zipcode}</TableCell>
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
@@ -444,11 +440,8 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 }}
                             >
                                 <Button
-                                    component={RouterLink}
-                                    to={{
-                                      pathname: "/app/gethelp",
-                                      state: { datafilter: "services" }
-                                    }}
+                                    
+                                    href="/app/gethelp/:services"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
