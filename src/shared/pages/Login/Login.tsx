@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { Formik } from 'formik';
 import {
     Box,
@@ -27,6 +28,7 @@ const Login = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
+    const [picUrl, setPicUrl] = useState('');
     const [error, setError] = useState('');
     const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();
@@ -41,6 +43,10 @@ const Login = () => {
     }
 
     const apiCall = (email, token) => {
+        // downloadProfilePic(email);
+        const storage = getStorage();
+        const storageRef = ref(storage, `/${email}/profilePic/userPic`);
+        
         const payload = {
             userName: email,
             token: token
@@ -56,19 +62,35 @@ const Login = () => {
                   }
               if (response.status === 200) {
                   console.log("login successful", response.data.user);
-                dispatch({
-                    type: saveUserName,
-                    firstName: response.data.user.firstName,
-                    lastName: response.data.user.lastName,
-                    userName: response.data.user.userName,
-                });
-                dispatch({
-                    type: createUserProfile,
-                    userMetaData: response.data.user.userMetaData,
-                      profile: response.data.user.profile,
-                      address: response.data.user.address,
-                });
-                  history.push('app/dashboard', { replace: true });
+                  getDownloadURL(storageRef)
+                    .then((url) => {
+                        console.log('url', url);
+                        // setPicUrl(url);
+                        response.data.user.profile.profilePic = url;
+                        console.log('picurl', picUrl);
+                        console.log('response', response);
+                        dispatch({
+                            type: saveUserName,
+                            firstName: response.data.user.firstName,
+                            lastName: response.data.user.lastName,
+                            userName: response.data.user.userName,
+                        });
+                        dispatch({
+                            type: createUserProfile,
+                            userMetaData: response.data.user.userMetaData,
+                            profile: response.data.user.profile,
+                            address: response.data.user.address,
+                        });
+                        history.push('app/dashboard', { replace: true });
+                    })
+                    .catch((error) => {
+                        switch (error.code) {
+                        case 'storage/object-not-found':
+                            setPicUrl('');
+                            break;
+                        }
+                    });
+                  
               }
             },
             (error) => {
@@ -76,6 +98,30 @@ const Login = () => {
                 
             }
           );
+    }
+
+    const downloadProfilePic = (email) => {
+        const storage = getStorage();
+        const storageRef = ref(storage, `/${email}/profilePic/userPic`);
+        getDownloadURL(storageRef)
+        .then((url) => {
+            setPicUrl(url);
+            // console.log('user avatar', avatar);
+            // setFindImage(true);
+        })
+        .catch((error) => {
+            switch (error.code) {
+            case 'storage/object-not-found':
+                setPicUrl('');
+                break;
+            // case 'storage/unauthorized':
+            //     // User doesn't have permission to access the object
+            //     break;
+            // case 'storage/canceled':
+            //     // User canceled the upload
+            //     break;
+            }
+        });
     }
     return (
         <>
