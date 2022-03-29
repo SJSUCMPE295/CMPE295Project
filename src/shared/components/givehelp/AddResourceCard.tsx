@@ -11,82 +11,12 @@ import {
     FormGroup,
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
-import { useState, FunctionComponent, useEffect } from 'react';
-import axios from 'axios';
+import { useState, FunctionComponent} from 'react';
+import { connect} from 'react-redux';
 
-// const states = [
-//     {
-//         value: 'california',
-//         label: 'California',
-//     },
-//     {
-//         value: 'new-york',
-//         label: 'New York',
-//     },
-//     {
-//         value: 'oregon',
-//         label: 'Oregon',
-//     },
-//     {
-//         value: 'arizona',
-//         label: 'Arizona',
-//     },
-//     {
-//         value: 'Texas',
-//         label: 'Texas',
-//     },
-//     {
-//         value: 'Utah',
-//         label: 'Utah',
-//     }
-// ];
-
-
-// const AddResourceCard = (props) => {
-//     const [resource, setResource] = useState({
-//         userId:"test100",resourceName:"",category:"",description:"",phoneNum:"",address:"",sku:"",city:"",state:"",zipcode:"",country:""
-//     });
-
-
-//     const handleChange = (event) => {
-//         setResource({
-//             ...resource,
-//             [event.target.name]: event.target.value,
-//         });
-//     };
-   
-//     const handleSubmit = async (e) => {
-//         //e.preventDefault();
-
-//         const { userId, resourceName, category, description, phoneNum, address, sku, city, state, zipcode, country } = resource
-    
-//         const res = await fetch("/api/givehelp/resource", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type" : "application/json"
-                
-//             },
-//             body: JSON.stringify({
-//             userId, resourceName, category, description, phoneNum, address, sku, city, state, zipcode, country 
-//             })
-//         })
-
-//         const data = await res.json();
-//         console.log(data);
-
-//         if (data.status === 500 || !data){
-//             window.alert("Failed to upload resource data!");
-//             console.log("Failed to upload resource data!");
-//         } else {
-//             window.alert("Resource added!");
-//             console.log("Resource added!");
-//         }
-//     }
-
-const AddResourceCard : FunctionComponent<any> = (props) => {
+const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
     const [check, setCheck] = useState(false);
-    const [userId,setUserId] = useState("test100");
+    const userId = userProfileReducer.userName;
     const [resourceName, setResourceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -100,6 +30,26 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
 
     const handleNameChange = (e) => {
         setResourceName(e.target.value)
+    };
+
+    const handleSetCheck = (e) => {
+        setCheck(!check)
+        if(!check){
+            const {address={},profile={}}=userProfileReducer
+            setAddress(address.location)
+            setCity(address.city)
+            setCountry(address.country)
+            setZipcode(address.zipCode)
+            setState(address.state)
+            setPhoneNum(profile.phoneNumber)
+        }else{
+            setAddress("")
+            setCity("")
+            setCountry("")
+            setZipcode("")
+            setState("")
+            setPhoneNum("") 
+        }
     };
 
     const handleCategoryChange = (e) => {
@@ -164,22 +114,6 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                     console.log("Resource added!");
                 }
             }
-
-    // useEffect(() => {
-    //     axios
-    //         .post('/api/givehelp/resource', { params: {type:'string'} })
-    //         .then(
-    //             (response) => {
-    //                 console.log(response);
-    //                 setData(response.data);
-    //             },
-    //             (error) => {
-    //                 console.log(error);
-    //                 setError(error);
-    //             }
-    //         );
-    //     }, []);
-    
     
    
 
@@ -270,7 +204,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                             </Box>
                             <Box sx={{ pt: 2 }}>
                                 <FormGroup>
-                                    <FormControlLabel control={<Checkbox/>} label="Use my profile address" onChange={() => setCheck(!check)} />
+                                    <FormControlLabel control={<Checkbox/>} label="Use my profile address" onChange={handleSetCheck} />
                                 </FormGroup>
                             </Box>
                             <Box sx={{ pt: 2 }}>
@@ -288,7 +222,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                                     required
                                     id="outlined-required"
                                     label="City"
-                                    defaultValue={city}
+                                    value={city}
                                     onChange={handleCityChange}
                                     variant="outlined"
                                     sx={{ m: 1, width: '50ch' }}
@@ -316,7 +250,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                                     required
                                     id="outlined-required"
                                     label="State"
-                                    defaultValue={state}
+                                    value={state}
                                     onChange={handleStateChange}
                                     variant="outlined"
                                     sx={{ m: 1, width: '50ch' }}
@@ -326,7 +260,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                                     required
                                     id="outlined-required-input"
                                     label="Country"
-                                    defaultValue={country}
+                                    value={country}
                                     onChange={handleCountryChange}
                                     variant="outlined"
                                     sx={{ m: 1, width: '50ch' }}
@@ -338,7 +272,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                                     required
                                     id="outlined-required-input"
                                     label="Zipcode"
-                                    defaultValue={zipcode}
+                                    value={zipcode}
                                     onChange={handleZipcodeChange}
                                     variant="outlined"
                                     sx={{ m: 1, width: '50ch' }}
@@ -348,7 +282,7 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
                                     required
                                     id="outlined-required-input"
                                     label="Phone Number"
-                                    defaultValue={phoneNum}
+                                    value={phoneNum}
                                     onChange={handlePhoneNumChange}
                                     variant="outlined"
                                     sx={{ m: 1, width: '50ch' }}
@@ -374,5 +308,14 @@ const AddResourceCard : FunctionComponent<any> = (props) => {
         </Box>
     );
 };
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
+});
+const mapDispatchToProps = {};
 
-export default AddResourceCard;
+const ConnectedAddResourceCard = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddResourceCard);
+
+export default ConnectedAddResourceCard;
