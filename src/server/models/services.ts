@@ -13,7 +13,7 @@ export const Service = new Schema2(
         Country: { type: String, required: true },
         Phone_Number: { type: Number, required: true },
         Description: { type: String, required: true },
-        availableDate: { type: Date, required: true },
+        availableDate: { type: String, required: true },
     },
     { collection: 'Services' },
     {
