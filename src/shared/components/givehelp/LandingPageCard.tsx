@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Box, Card, CardContent, CardHeader, Divider, Button } from '@material-ui/core';
 import Stack from '@mui/material/Stack';
+import { Link } from 'react-router-dom';
 
 const LandingPageCard = (props) => (
     <Box {...props}>
@@ -34,17 +35,11 @@ const LandingPageCard = (props) => (
                             justifyContent: 'flex-start',
                         }}
                     >
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                window.location.href = 'givehelp/addresource';
-                            }}
-                        >
-                            Add a Resource
-                        </Button>
+                        <Link to="/app/givehelp/addresource">
+                            <Button color="primary" variant="contained">
+                                Add a Resource
+                            </Button>
+                        </Link>
                     </Box>
                     <Box
                         sx={{
@@ -53,17 +48,11 @@ const LandingPageCard = (props) => (
                             pt: 6,
                         }}
                     >
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                window.location.href = 'givehelp/addservice';
-                            }}
-                        >
-                            Add a Service
-                        </Button>
+                        <Link to="/app/givehelp/addservice">
+                            <Button color="primary" variant="contained">
+                                Add a Service
+                            </Button>
+                        </Link>
                     </Box>
                 </CardContent>
             </Card>
