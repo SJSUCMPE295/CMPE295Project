@@ -3,7 +3,7 @@ const Schema1 = mongoose1.Schema;
 
 export const Resource = new Schema1(
     {
-        userId: { type: Object, required: true },
+        UserId: { type: Object, required: true },
         Resource_Name: { type: String, required: true },
         Category: { type: String, required: true },
         Address: { type: String, required: true },

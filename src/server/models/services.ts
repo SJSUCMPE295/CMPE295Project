@@ -3,7 +3,7 @@ const Schema2 = mongoose2.Schema;
 
 export const Service = new Schema2(
     {
-        userId: { type: Object, required: true },
+        UserId: { type: Object, required: true },
         Service_Name: { type: String, required: true },
         Category: { type: String, required: true },
         Address: { type: String, required: true },
@@ -13,7 +13,7 @@ export const Service = new Schema2(
         Country: { type: String, required: true },
         Phone_Number: { type: Number, required: true },
         Description: { type: String, required: true },
-        Availability: { type: Boolean, required: true },
+        availableDate: { type: Date, required: true },
     },
     { collection: 'Services' },
     {

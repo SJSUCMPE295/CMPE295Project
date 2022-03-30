@@ -58,7 +58,7 @@ router.post('/service', async (req, res) => {
     const State=req.body.State;
     const Zipcode=req.body.Zipcode;
     const Country=req.body.Country;
-    const Availability=req.body.Availability;
+    const availableDate=req.body.availableDate;
     const servicedata = new serviceModel({
         UserId,
         Service_Name,
@@ -70,7 +70,7 @@ router.post('/service', async (req, res) => {
         State,
         Zipcode,
         Country,
-        Availability,
+        availableDate,
     });
     try {
         await servicedata.save((error, data) => {
@@ -93,7 +93,7 @@ router.post('/update', async (_req, res) => {
     try {
         serviceModel.findByIdAndUpdate(
             id,
-            {$set:{ Availability: _req.body.Availability }},
+            {$set:{ availableDate: _req.body.availableDate }},
             (error, data) => {
                 if (error) {
                     console.log('error', error);
