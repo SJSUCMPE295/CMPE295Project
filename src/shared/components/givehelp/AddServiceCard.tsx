@@ -9,14 +9,19 @@ import {
     Divider,
     FormControlLabel,
     FormGroup,
+    Grid
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
-import { useState, FunctionComponent} from 'react';
+import { useState, FunctionComponent, forwardRef} from 'react';
 import { connect} from 'react-redux';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
+
+
+const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},user,...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = userProfileReducer.userName;
+    const userId = user._id;
     const [serviceName, setServiceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -26,7 +31,9 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
     const [country, setCountry] = useState("");
-    const [availability, setAvailability] = useState("");
+    const [availability, setAvailability] = useState(new Date());
+    const [datePickerIsOpen,togglePicker] = useState(false);
+    
 
     const handleNameChange = (e) => {
         setServiceName(e.target.value)
@@ -60,8 +67,8 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
         setZipcode(e.target.value)
     };
 
-    const handleAvailabilityChange = (e) => {
-        setAvailability(e.target.value)
+    const handleAvailabilityChange = (date) => {
+        setAvailability(date);
     };
 
     const handleCountryChange = (e) => {
@@ -87,6 +94,9 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
             setPhoneNum("") 
         }
     };
+    const handleTogglePicker = (e) => {
+        togglePicker(!datePickerIsOpen)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -106,12 +116,12 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
         const data = await res.json();
         console.log(data);
 
-        if (data.status === 500 || !data){
-            window.alert("Failed to upload service data!");
-            console.log("Failed to upload service data!");
-        } else {
+        if (res.status === 200){
             window.alert("Service added!");
             console.log("Service added!");
+        } else {
+            window.alert("Failed to upload service data!");
+            console.log("Failed to upload service data!");
         }
     }
 
@@ -145,91 +155,115 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
                         />
                         <Divider />
                         <CardContent>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                }}
-                            >
-                                <TextField
-                                    id="filled-basic"
-                                    label="Type"
-                                    variant="filled"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    value="Service"
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Service Name"
-                                    defaultValue={serviceName}
-                                    onChange={handleNameChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    helperText="Car pool, Accomodation etc. "
-                                />
-                            </Box>
-                            <Box>
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Category Name"
-                                    defaultValue={category}
-                                    onChange={handleCategoryChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Availability"
-                                    defaultValue={availability}
-                                    onChange={handleAvailabilityChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                            </Box>
-                            <Box>
-                                <TextField
-                                    id="outlined-decsription-input"
-                                    label="Description"
-                                    value={description}
-                                    onChange={handleDescriptionChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '102ch' }}
-                                />
-                            </Box>
-                            <Box sx={{ pt: 2 }}>
-                                <FormGroup>
-                                    <FormControlLabel
-                                        control={<Checkbox />}
-                                        label="Use my profile address"
-                                        onChange={handleSetCheck}
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
+                                <Grid item xs={4}>
+                                    <TextField
+                                        id="filled-basic"
+                                        label="Type"
+                                        variant="filled"
+                                        sx={{ m: 1, width: '30ch' }}
+                                        value="Service"
                                     />
-                                </FormGroup>
-                            </Box>
-                            <Box sx={{ pt: 2 }}>
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Address"
-                                    value={address}
-                                    onChange={handleAddressChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="City"
-                                    value={city}
-                                    onChange={handleCityChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                            </Box>
-                            <Box>
-                                {/* <TextField
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Service Name"
+                                        defaultValue={serviceName}
+                                        onChange={handleNameChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '30ch' }}
+                                        helperText="Car pool, Accomodation etc. "
+                                    />
+                                </Grid> 
+                                <Grid item xs={4} alignItems="right">
+                                    <Button color="primary" variant="contained" onClick={handleTogglePicker} size="large">
+                                        Select Availability
+                                    </Button>
+                                    <DatePicker
+                                        popperProps={{
+                                            positionFixed: true 
+                                          }}
+                                        selected={availability}
+                                        onChange={handleAvailabilityChange}
+                                        // todayButton={"Today"}
+                                        open={datePickerIsOpen}
+                                        onClickOutside={handleTogglePicker}
+                                        showOverlay
+                                        confirmBtnText="OK"
+                                        cancelBtnText="Cancel"
+                                    /> 
+                                </Grid>
+                            </Grid>
+                            
+                            <Grid container rowSpacing={6} columnSpacing={{ xs: 1, sm: 2, md: 3 }} zIndex={3} justify-content="center">
+                                <Grid item xs={3}>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Category Name"
+                                        defaultValue={category}
+                                        onChange={handleCategoryChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Description"
+                                        defaultValue={description}
+                                        onChange={handleDescriptionChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={6}>
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={<Checkbox />}
+                                            label="Use my profile address"
+                                            onChange={handleSetCheck}
+                                        />
+                                    </FormGroup>
+                                </Grid>
+                                {/* <Grid item xs={4} >
+                                    <Button color="primary" variant="contained" size="large">
+                                        Upload Image
+                                    </Button>
+                                </Grid> */}
+                            </Grid>
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 3, md: 3 }} zIndex={1}>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Address"
+                                        value={address}
+                                        onChange={handleAddressChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="City"
+                                        value={city}
+                                        onChange={handleCityChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />     
+                                </Grid>
+                                <Grid item xs={6}>
+                                    {/* <TextField
                                     required
                                     id="outlined-required-input"
                                     label="Select State"
@@ -237,54 +271,86 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
                                     select
                                     SelectProps={{ native: true }}
                                     sx={{ m: 1, width: '50ch' }}
-                                >
+                                    >
                                     {states.map((option) => (
                                         <option key={option.value} value={option.value}>
                                             {option.label}
                                         </option>
                                     ))}
-                                </TextField> */}
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="State"
-                                    value={state}
-                                    onChange={handleStateChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Country"
-                                    value={country}
-                                    onChange={handleCountryChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                            </Box>
-                            <Box>
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Zipcode"
-                                    value={zipcode}
-                                    onChange={handleZipcodeChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Phone Number"
-                                    value={phoneNum}
-                                    onChange={handlePhoneNumChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                            </Box>
+                                    </TextField> */}
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="State"
+                                        value={state}
+                                        onChange={handleStateChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Country"
+                                        value={country}
+                                        onChange={handleCountryChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Zipcode"
+                                        value={zipcode}
+                                        onChange={handleZipcodeChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Phone Number"
+                                        value={phoneNum}
+                                        onChange={handlePhoneNumChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                            </Grid>  
                             <Divider sx={{ pt: 2 }} />
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 3, md: 3 }} zIndex={1} paddingTop={3}>
+                                <Grid item xs={3}>
+                                    <Button color="primary" variant="contained" size="large" fullWidth>
+                                        Upload Image
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Button color="primary" variant="contained" onClick={handleSubmit} size="large" fullWidth>
+                                        Save details
+                                    </Button> 
+                                </Grid>
+                            </Grid>
+                            {/* <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    alignItems: "flex-start"
+                                }}
+                            >
+                                <Button color="primary" variant="contained">
+                                    Upload Image
+                                </Button>
+                            </Box>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -295,7 +361,7 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
                                 <Button color="primary" variant="contained" onClick={handleSubmit}>
                                     Save details
                                 </Button>
-                            </Box>
+                            </Box> */}
                         </CardContent>
                     </Card>
                 </form>
@@ -303,8 +369,9 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
         </Box>
     );
 };
-const mapStateToProps = ({ userProfileReducer }) => ({
+const mapStateToProps = ({ userProfileReducer,user }) => ({
     userProfileReducer,
+    user,
 });
 const mapDispatchToProps = {};
 
