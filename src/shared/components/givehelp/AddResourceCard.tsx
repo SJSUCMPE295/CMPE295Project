@@ -14,9 +14,9 @@ import Checkbox from '@mui/material/Checkbox';
 import { useState, FunctionComponent} from 'react';
 import { connect} from 'react-redux';
 
-const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
+const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},user,...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = userProfileReducer.userName;
+    const userId = user._id;
     const [resourceName, setResourceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -106,12 +106,12 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
                 const data = await res.json();
                 console.log(data);
         
-                if (data.status === 500 || !data){
-                    window.alert("Failed to upload resource data!");
-                    console.log("Failed to upload resource data!");
-                } else {
+                if (res.status === 200){
                     window.alert("Resource added!");
                     console.log("Resource added!");
+                } else {
+                    window.alert("Failed to upload resource data!");
+                    console.log("Failed to upload resource data!");
                 }
             }
     
@@ -308,8 +308,9 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
         </Box>
     );
 };
-const mapStateToProps = ({ userProfileReducer }) => ({
+const mapStateToProps = ({ userProfileReducer,user }) => ({
     userProfileReducer,
+    user,
 });
 const mapDispatchToProps = {};
 

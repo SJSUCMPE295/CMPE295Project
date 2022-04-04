@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import serviceModel from '../models/services';
 import resourceModel from '../models/resources';
+import userModel from '../models/user';
 import { json } from 'stream/consumers';
 const router = Router();
 // const auth = require('../middleware/auth');
@@ -18,6 +19,18 @@ router.post('/resource', async (req, res) => {
     const Zipcode=req.body.Zipcode;
     const Country=req.body.Country;
     const SKU=req.body.SKU;
+    // var id=null;
+
+    // userModel.find({userName:UserName}, (err, user) => {
+    //     if(err){
+    //         console.log(err);
+    //     }else{
+    //     console.log("Inside function")
+    //     console.log(user)
+    //     }
+    // });
+    // const UserId=id;
+    // console.log(id);
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,
@@ -35,10 +48,10 @@ router.post('/resource', async (req, res) => {
         await resourcedata.save((error, data) => {
             if (error) {
                 console.log('error', error);
-                return res.json(500).send(error);
+                return res.status(500).send({message:'Unable to upload resource data due to internal server error!'});
             } else {
                 console.log('data', data);
-                res.status(200).json(data);
+                res.status(200).send({message:'Resource data uploaded!'});
             }
         });
     } catch (err) {
@@ -76,10 +89,10 @@ router.post('/service', async (req, res) => {
         await servicedata.save((error, data) => {
             if (error) {
                 console.log('error', error);
-                res.json(500).send(error);
+                return res.status(500).send({message:'Unable to upload service data due to internal server error!'});
             } else {
                 console.log('data', data);
-                res.status(200).json(data);
+                res.status(200).send({message:'Resource data uploaded!'});
             }
         });
     } catch (err) {
