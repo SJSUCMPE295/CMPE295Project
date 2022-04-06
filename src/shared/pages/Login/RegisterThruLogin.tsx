@@ -120,6 +120,7 @@ const RegisterSecondPage = () => {
                 });
                 dispatch({
                     type: createUserProfile,
+                    id: response.data.data._id,
                     userMetaData: response.data.data.userMetaData,
                       profile: response.data.data.profile,
                       address: response.data.data.address,

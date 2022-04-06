@@ -62,13 +62,13 @@ const Login = () => {
                   }
               if (response.status === 200) {
                   console.log("login successful", response.data.user);
-                  getDownloadURL(storageRef)
-                    .then((url) => {
-                        console.log('url', url);
-                        // setPicUrl(url);
-                        response.data.user.profile.profilePic = url;
-                        console.log('picurl', picUrl);
-                        console.log('response', response);
+                //   getDownloadURL(storageRef)
+                //     .then((url) => {
+                //         console.log('url', url);
+                //         // setPicUrl(url);
+                //         response.data.user.profile.profilePic = url;
+                //         console.log('picurl', picUrl);
+                //         console.log('response', response);
                         dispatch({
                             type: saveUserName,
                             firstName: response.data.user.firstName,
@@ -77,21 +77,24 @@ const Login = () => {
                         });
                         dispatch({
                             type: createUserProfile,
+                            id: response.data.user._id,
                             userMetaData: response.data.user.userMetaData,
                             profile: response.data.user.profile,
                             address: response.data.user.address,
                         });
                         history.push('app/dashboard', { replace: true });
-                    })
-                    .catch((error) => {
-                        switch (error.code) {
-                        case 'storage/object-not-found':
-                            setPicUrl('');
-                            break;
-                        }
-                    });
+                    }
+                    // )
+                    // .catch((error) => {
+                    //     console.log(error);
+                    //     switch (error.code) {
+                    //     case 'storage/object-not-found':
+                    //         setPicUrl('');
+                    //         break;
+                    //     }
+                    // });
                   
-              }
+            //   }
             },
             (error) => {
                 console.log("login error", error);
