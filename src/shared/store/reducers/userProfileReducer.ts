@@ -16,6 +16,7 @@ const userProfileReducer = (state = defaultState, action) => {
         case createUserProfile: {
             return {
                 ...state,
+                id: action.id,
                 userMetaData: action.userMetaData,
                 profile: action.profile,
                 address: action.address
