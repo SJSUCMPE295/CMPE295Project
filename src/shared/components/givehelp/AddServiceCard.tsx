@@ -19,9 +19,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 
-const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},user,...props }) => {
+const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = user._id;
+    const userId = userProfileReducer.id;
     const [serviceName, setServiceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -369,9 +369,8 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},user,...
         </Box>
     );
 };
-const mapStateToProps = ({ userProfileReducer,user }) => ({
+const mapStateToProps = ({ userProfileReducer }) => ({
     userProfileReducer,
-    user,
 });
 const mapDispatchToProps = {};
 
