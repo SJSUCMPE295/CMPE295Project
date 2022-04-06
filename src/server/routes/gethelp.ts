@@ -30,7 +30,7 @@ const getUserCurrentLocation= async () => {
     timeout: 1000, // milliseconds
     })
     const user_currentcity=await current_city.data.results[0].address_components[3].short_name+', '+await current_city.data.results[0].address_components[5].short_name;
-   
+   console.log(await current_address);
    return  {
        current_address:await current_address,
        user_currentcity:await user_currentcity
@@ -41,8 +41,9 @@ const getUserCurrentLocation= async () => {
 };*/
 }
 
-const getData= async (query_params_resource,query_params_service,user_location,miles)=>{
+const getData= async (query_params_resource,query_params_service,user_location,miles,datafilter)=>{
    console.log("inside getdata");
+   console.log(datafilter);
     const resource_pipeline = [
         { $match: query_params_resource },
             { $project: {
@@ -166,13 +167,26 @@ const getData= async (query_params_resource,query_params_service,user_location,m
             },
         },
         ]
-       
+let resources,services;  
+if (datafilter ==="resources")
+  { resources=await (Resources.aggregate(resource_pipeline).exec());
 
-   let [resources,services]=await Promise.all([Resources.aggregate(resource_pipeline).exec(),Services.aggregate(service_pipeline).exec()]);
+  }
+  else if 
+  (datafilter ==="services")
+  { 
+      resources=await (Services.aggregate(service_pipeline).exec());
 
-   if(Object.keys(services).length != 0){resources=resources.concat(services)}
+  }
+  else{ [resources,services]=await Promise.all([Resources.aggregate(resource_pipeline).exec(),Services.aggregate(service_pipeline).exec()]);
 
-   
+    if(Object.keys(services).length != 0){resources=resources.concat(services)}
+ 
+   }
+
+
+
+
     let destinations=[];
    for (var k = 0; k < resources.length; k++) {
     
@@ -213,7 +227,7 @@ const getData= async (query_params_resource,query_params_service,user_location,m
             //console.log(resources);
         resources = await resources.filter((m) => parseFloat(m['distance']) <= miles);
         }
-      console.log(await resources);  
+      //console.log(await resources);  
     return await resources;
     
         
@@ -241,9 +255,9 @@ const getData= async (query_params_resource,query_params_service,user_location,m
 router.post('/', async (_req, res) => {
     //console.log(_req.body.resource)
     const userid = _req.body.user_id;
-    console.log(userid);
+    //console.log(userid);
     const data= _req.body.resource;
-    console.log(data);
+    //console.log(data);
     const resource_service =data.type;
     const id = data._id;
     
@@ -266,7 +280,7 @@ router.post('/', async (_req, res) => {
         const resource = await Resources.findById(id);
         category_name = await resource.Resource_Name;
         var remaining_resource = await resource.SKU - data.SKU;
-        console.log(await remaining_resource);
+        //console.log(await remaining_resource);
         if (await remaining_resource == 0) {
             Resources.deleteOne(query_params, function (error) {
                 if (error) throw error;
@@ -295,7 +309,7 @@ router.post('/', async (_req, res) => {
         Quantity: transaction_sku,
         Type: 'Get Help',
     });
-    console.log(await transaction);
+    //console.log(await transaction);
     transaction.save(function (err, result) {
         if (err) throw err;
         res.send(result);
@@ -314,12 +328,14 @@ router.get('/', async (_req, res) => {
     let name;
     let miles;
     let city;
+    const datafilter=_req.query.datafilter;
     var query_params_resource = {};
     var query_params_service = {};
     //const destArray = {};
     //console.log(type);
     if (type=='pageload'){
        name='';
+       
        //console.log(getUserCurrentLocation());
        getUserCurrentLocation().then(user_location =>{
       if(user_location.user_currentcity!='')
@@ -333,7 +349,7 @@ router.get('/', async (_req, res) => {
        {response.user_currentaddress=user_location.current_address;}
        miles='45';
        
-       getData(query_params_resource,query_params_service,response.user_currentaddress,miles).then(resources=>{response.resources=resources;//console.log(response);
+       getData(query_params_resource,query_params_service,response.user_currentaddress,miles,datafilter).then(resources=>{response.resources=resources;//console.log(response);
         res.send(response);})
         .catch(e=>{console.log(e);});
        })
@@ -375,7 +391,7 @@ router.get('/', async (_req, res) => {
     city='';
     miles = '';
    }
-   getData(query_params_resource,query_params_service,user_loc,miles).then(resources=>{response.resources=resources;console.log(response);
+   getData(query_params_resource,query_params_service,user_loc,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
 
     res.send(response);})
     .catch(e=>{console.log(e);});  
@@ -386,7 +402,7 @@ else{
     miles = '';
     const user_address=await getUserCurrentLocation();
     let user_loc=await user_address.current_address;
-    getData(query_params_resource,query_params_service,user_locs,miles).then(resources=>{response.resources=resources;console.log(response);
+    getData(query_params_resource,query_params_service,user_locs,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
         res.send(response);})
         .catch(e=>{console.log(e);});
    }

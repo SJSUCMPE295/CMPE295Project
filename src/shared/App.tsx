@@ -25,8 +25,11 @@ import DashboardLayout from './components/DashboardLayout';
 import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
+
+
 import './styles.css';
 const App: React.FC<any> = () => {
+   
     return (
         <AuthContextProvider>
             <StyledEngineProvider injectFirst>
@@ -37,8 +40,7 @@ const App: React.FC<any> = () => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                        <Route path={'/app/gethelp/:id'} component={GetHelpItem} />
-                                        <Route path={'/app/gethelp'} component={GetHelp} />
+                                       <Route path={'/app/gethelp/:datafilter'} component={GetHelp} /> 
                                         <Route path={'/app/dashboard'} component={Dashboard} />
                                         <Route
                                             path={'/app/medicalAssistance'}

@@ -17,10 +17,10 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
-import userProfileReducer from '../store/reducers/userProfileReducer';
+//import userProfileReducer from '../store/reducers/userProfileReducer';
 const user = {
-    avatar: '/static/images/avatars/avatar_2.png',
-    jobTitle: 'San Jose,CA',
+    avatar: '/static/images/avatars/avatar_2.png',//userProfileReducer.profile.profilePic,
+    jobTitle: 'San Jose,CA',//userProfileReducer.address,
     name: 'Katarina Smith',
 };
 
@@ -31,7 +31,7 @@ const items = [
         title: 'Dashboard',
     },
     {
-        href: '/app/gethelp',
+        href: '/app/gethelp/:all',
         icon: PackageIcon,
         title: 'Get Help',
     },
@@ -73,7 +73,7 @@ const items = [
     },*/
 ];
 
-export const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
     const location = useLocation();
 
     React.useEffect(() => {
