@@ -148,7 +148,7 @@ const Statistics: FunctionComponent<any> = (props) => {
         maintainAspectRatio: false,
         responsive: true,
         scales: {
-            xAxes: [
+            xAxes: 
                 {
                     ticks: {
                         Color: theme.palette.text.secondary,
@@ -158,8 +158,8 @@ const Statistics: FunctionComponent<any> = (props) => {
                         drawBorder: false,
                     },
                 },
-            ],
-            yAxes: [
+            
+            yAxes: 
                 {
                     ticks: {
                         fontColor: theme.palette.text.secondary,
@@ -176,7 +176,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                         zeroLineColor: theme.palette.divider,
                     },
                 },
-            ],
+            
         },
         tooltips: {
             backgroundColor: theme.palette.background.paper,
@@ -488,10 +488,11 @@ const Statistics: FunctionComponent<any> = (props) => {
                                                     ({
                                                         doctor_name: doctor_name,
                                                         AppointmentDetails: AppointmentDetails,
+                                                        _id:_id
                                                     }) => (
                                                         <Typography
                                                             color="textPrimary"
-                                                            variant="text"
+                                                            variant="text" key={_id}
                                                         >
                                                             You have an appointment with{' '}
                                                             {doctor_name} at {AppointmentDetails}
