@@ -14,9 +14,9 @@ import Checkbox from '@mui/material/Checkbox';
 import { useState, FunctionComponent} from 'react';
 import { connect} from 'react-redux';
 
-const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},user,...props }) => {
+const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = user._id;
+    const userId = userProfileReducer.id;
     const [resourceName, setResourceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
@@ -308,9 +308,8 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},user,..
         </Box>
     );
 };
-const mapStateToProps = ({ userProfileReducer,user }) => ({
+const mapStateToProps = ({ userProfileReducer }) => ({
     userProfileReducer,
-    user,
 });
 const mapDispatchToProps = {};
 

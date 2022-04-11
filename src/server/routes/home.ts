@@ -50,7 +50,8 @@ router.get('/', async (_req, res) => {
                                     doctorObjId: { $toObjectId: '$DoctorId' },
                                     UserId: 1,
                                     AppointmentDetails: 1,
-                                    Status: 1
+                                    Status: 1,
+                                    _id:1
                                 },
                             },
                             {
@@ -70,6 +71,7 @@ router.get('/', async (_req, res) => {
                             {
                                 $project: {
                                     UserId: 1,
+                                    _id:1,
                                     doctor_name: {$concat: [
                                         '$doctor_appointments.firstName',
                                         ' ',

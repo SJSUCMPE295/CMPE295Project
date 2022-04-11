@@ -27,13 +27,23 @@ import {
     Star as FavouriteIcon
 } from 'react-feather';
 import axios from 'axios';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker,DirectionsRenderer,InfoWindow  } from "react-google-maps";
-
+// { withScriptjs, withGoogleMap, GoogleMap, Marker,DirectionsRenderer,InfoWindow  } from "react-google-maps";
+import emailjs from '@emailjs/browser';
 import{ init } from '@emailjs/browser';
 init("Tf7lGE0yewFvOLxah");
 
+//import GoogleMapComponent from '../../components/gethelp/GoogleMapComponent'
 
-
+import { GoogleMap, useJsApiLoader,Marker ,DirectionsRenderer } from '@react-google-maps/api';
+const containerStyle = {
+    width: '500px',
+    height: '900px'
+  };
+  
+  const center = {
+    lat: 37.318400,
+    lng: -121.8381589
+  };
 const GetHelp : FunctionComponent<any> = (props) => {
     
     const [error, setError] = useState(null);
@@ -116,31 +126,24 @@ const GetHelp : FunctionComponent<any> = (props) => {
             }
         );
     };
-    //const defaultLocation = { lat: 40.756795, lng: -73.954298 };
-
-   /* const loadData=() =>{
-        console.log(datafilter);
-        console.log(allData);
-        if (allData!=null){
-            console.log(datafilter);
-        if(datafilter=="resource"){
-            var resourceData = allData.filter(function(i) {
-                return i.type === "resource";
-              });
-            setData(resourceData);
-            }
-          else if(datafilter=="service"){
-            var serviceData = allData.filter(function(i) {
-                return i.type === "service";
-              });
-            setData(serviceData);
-            }
-          else{
-            setData(allData);
-            }
-        }
-    }*/
     
+
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: "AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw"
+      })
+    
+      const [map, setMap] = React.useState(null)
+    
+      const onLoad = React.useCallback(function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds();
+        map.fitBounds(bounds);
+        setMap(map)
+      }, [])
+    
+      const onUnmount = React.useCallback(function callback(map) {
+        setMap(null)
+      }, [])
     
       //function that is calling the directions service
      const getDirections = (resource) => {
@@ -170,25 +173,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
     }
       };
           
-        const GoogleMapExample = withScriptjs(withGoogleMap(props => (
-           <GoogleMap defaultCenter={{ lat: 37.318400, lng:  -121.8381589 }} defaultZoom={10}>
-              
-              {currentloc !== null && (<Marker  title="Your current location" key="marker_1" position={currentloc}/>)}
-             
-              {data != null ? (data.map((resource) => (<Marker title={resource.Name} key={resource._id} position={resource.location} />))):null}
-             
-             {directions !== null && (
-                <DirectionsRenderer
-                  directions={directions}
-                  defaultOptions={{
-                    suppressMarkers: true
-                  }}
-                />
-                
-              )}
-
-            </GoogleMap>
-         ) ))
+       
 
          const handleClose = () => {
             setOpen(false);
@@ -206,7 +191,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
            
          }   
 
-         let state = { feedback: '', name: 'Name', email: 'email@example.com' };
+         let state = { feedback: '', name: 'Name',to_email:"sneha.thomas@sjsu.edu"};
   
     
       
@@ -215,7 +200,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
     
       const sendEmail = (templateId, variables) => {
         emailjs.send(
-          'gmail', templateId,
+          'service_wgfnh0b', templateId,
           variables
           ).then(res => {
             console.log('Email successfully sent!')
@@ -230,7 +215,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
           // console.log(resource);
           const templateId = 'template_v9fkqmy';
     
-        sendEmail(templateId, {message_html: "email body", from_name: state.name, reply_to: state.email})
+        sendEmail(templateId, {message_html: "email body", from_name: state.name})
            
            axios
            .post('/api/gethelp', {resource:resource,user_id:"test"}) //change later
@@ -266,18 +251,7 @@ const GetHelp : FunctionComponent<any> = (props) => {
         >
             <Container maxWidth={false}>
     <Box {...props}>
-        {/* <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-            }}
-        >
-            <Button>Import</Button>
-            <Button sx={{ mx: 1 }}>Export</Button>
-            <Button color="primary" variant="contained">
-                Add customer
-            </Button>
-        </Box>*/}
+       
         <Box sx={{ mt: 3 }}>
             <Card>
                 <CardContent>
@@ -392,18 +366,18 @@ onChange={handleRadioChange}
         alt={resource.Name}
       />
                 <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography  gutterBottom variant="h5" component="div">
         {resource.Name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography  variant="body2" color="text.secondary">
         {resource.Description}
         </Typography> 
         <Typography variant="body2" color="text.secondary">
         {resource.type != "resource" ? ("Available on " +resource.availableDate) :(resource.SKU)+" item(s) available"}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography   variant="body2" color="text.secondary">
             {resource.distance+"miles"}</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography  variant="body2" color="text.secondary">
         {resource.address}
         <Button style={{ marginLeft: "none",textTransform: 'none' }} onClick={() => getDirections(resource)}>Show Direction</Button></Typography>
         
@@ -424,56 +398,103 @@ onChange={handleRadioChange}
                 <Grid item xs={6}>
                 <Box paddingTop={3}>
                 
-           
-          
-        <GoogleMapExample
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw&v=3.exp&libraries=geometry,drawing,places"
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `800px` }} />}
-   mapElement={<div style={{ height: `100%` }} />}/>
+               { isLoaded ? (
+
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+          {currentloc !== null && (<Marker  title="Your current location" key="marker_1" position={currentloc} />)}
+          {data != null ? (data.map((resource) => (<Marker title={resource.Name} key={resource._id} position={resource.location} />))):null}
+        { /* Child components, such as markers, info windows, etc. */ }
+        {directions !== null && (
+                <DirectionsRenderer
+                  directions={directions}
+                  defaultOptions={{
+                    suppressMarkers: true
+                  }}
+                />
+                
+              )}
+        <></>
+      </GoogleMap>
+  ) : <></>}
+              
           </Box>
-          </Grid></Grid><Dialog open={open} onClose={handleClose} >
-        <DialogTitle variant="h3">GetHelp:Confirmation</DialogTitle>
+          </Grid></Grid><Dialog open={open} onClose={handleClose}  
+  maxWidth="lg">
+        <DialogTitle variant="h3" color=" darkblue">GetHelp:Confirmation</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText component="span">
           <div>&nbsp; <br/> </div>
           {resource != null ? (
             <Card sx={{ display: 'flex' }} style={{ border: "none", boxShadow: "none" }}>
             <CardMedia
         component="img"
-        height="140" 
-        sx={{ width:140 }}
+        height="300" 
+        sx={{ width:300 }}
         image="/static/images/avatars/resource.jpg"
         alt={resource.Name}
       />
                 <CardContent>
-                    <Box> 
-                    <Typography variant="body1"><b>Name: </b>{resource.Name}</Typography>
-               {/* <div>&nbsp; <br/> </div>
-              <DropDownMenu 
-          value={resource.SKU} 
-        //  onChange={this.handleChange}   
-         >
-          <MenuItem value={1} primaryText="English"  />
-          <MenuItem value={2} primaryText="Spanish" />
-          <MenuItem value={3} primaryText="French" />
-
-          </DropDownMenu>*/}
-        
-        <Typography variant="body2" color="text.secondary">
-        <b>Description: </b>{resource.Description}
-        </Typography> 
-       <Typography variant="body2" color="text.secondary" >
-        {resource.type != "resource" ? ("Available on " +resource.availableDate) :("Quantity: "+resource.SKU)}
-          </Typography>
-         
-        <Typography variant="body2" color="text.secondary">
-        <b>Address: </b>{resource.address}</Typography>
-        </Box>
+                   
+                  
+        <TextField
+           InputLabelProps={{style : {color : 'blue'} }}
+           id="standard-read-only-input"
+           label="Name"
+           InputProps={{
+             readOnly: true,
+           }}
+           variant="standard"
+          defaultValue= {resource.Name}
+          sx={{  width: '41ch' }}
+        />
+        <br /><br />
+       <TextField
+          id="standard-number"
+          label="Quantity"
+          type="number"
+          InputLabelProps={{
+            shrink: true,style : {color : 'blue'},
+          }}
+          variant="standard"
+          defaultValue= {resource.type != "resource" ? resource.availableDate:resource.SKU}
+          helperText="Update required quantity"
+          sx={{  width: '41ch' }}
+        />
+        <br /><br />
+        <TextField
+        InputLabelProps={{style : {color : 'blue'} }}
+            id="standard-read-only-input"
+            label="Description"
+            InputProps={{
+              readOnly: true,
+            }}
+            variant="standard"
+          defaultValue= {resource.Description}
+          sx={{  width: '41ch' }}
+        />
+        <br /><br />
+        <TextField
+        InputLabelProps={{style : {color : 'blue'} }}
+          id="standard-read-only-input"
+          label="Address"
+          defaultValue={resource.address}
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+          sx={{  width: '41ch' }}
+        />
+       
       </CardContent>
      
                     </Card>):null}
-                    <div>&nbsp; <br/> </div>
+                    <br/>
 An email notification with further details will be send to {"abc@gmail.com"} once you confirm the reservation.
           </DialogContentText>
           
