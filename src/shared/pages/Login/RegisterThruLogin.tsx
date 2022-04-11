@@ -44,16 +44,22 @@ const RegisterSecondPage = () => {
     })
     const [user, setUser] = React.useState(useSelector((state: any) => state.loginReducer.email));
     const genderOptions = [
-        "Female",
-        "Male",
-        "Do not want to specify"
-    ]
+        {      
+           key: 1,
+           value: "Female"
+        },
+        {      
+            key: 1,
+            value: "Male"
+         },
+         {      
+            key: 1,
+            value: "Do not want to specify"
+         }
+        ];
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
     const [speciality, setSpeciality] = React.useState('');
-    const [gender, setGender] = React.useState('');
-    const [country, setCountry] = React.useState('');
-    const [state, setState] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
     useEffect(() => {
         // set the with credentials to true
@@ -66,11 +72,6 @@ const RegisterSecondPage = () => {
                 console.log("updated successfully", response.data[0].name);
                 setSpecialityOptions(response.data[0].name);
                 setLoading(false);
-                //history.push('app/dashboard', { replace: true });
-              // this.setState({
-              //   errorMessage: response.data,
-              //   signupSuccess: true,
-              // });
             }
           },
           (error) => {
@@ -83,32 +84,32 @@ const RegisterSecondPage = () => {
         );
       },[1]);
    
-    const handleSubmit = (firstName, lastName, address1, city, zipCode, phoneNumber, gender) => {
+    const handleSubmit = (values) => {
         console.log('inside submit');
         console.log("first page data",  user);
         const isDoctor = checked;
         const payload = {
             userName: user,
             //password = 005',
-            firstName: firstName,
-            lastName: lastName,
+            firstName: values.firstName,
+            lastName: values.lastName,
             userMetaData: {
                 isDoctor: checked,
-                gender: gender,
+                gender: values.gender,
             },
             profile: {
-                phoneNumber: phoneNumber,
+                phoneNumber: values.phoneNumber,
                 profileActive: true,
                 profilePic: '',
             },
             address: 
                 {
-                    location: address1,
+                    location: values.address1,
                     // address2: address2,
-                    city: city,
-                    state: state,
-                    country: country,
-                    zipCode: zipCode,
+                    city: values.city,
+                    state: values.state,
+                    country: values.country,
+                    zipCode: values.zipCode,
                 },
         };
         console.log("payload", payload);
@@ -203,21 +204,13 @@ const RegisterSecondPage = () => {
                             zipcode: Yup.string().max(255).required('Zipcode is required'),
                             gender: Yup.string().max(255).required('Gender is required'),
                             phonenumber: Yup.string().required('Phone Number is required')
-                                        .test('len', 'Phone Number should be 10 digits', (val) => val.length === 10),
+                                        .test('len', 'Phone Number should be 10 digits', (val) => val.length === 10)
                             // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={(values) => {
                             console.log("insde submit");
                             values.isSubmitting = true;
-                            handleSubmit(
-                                values.firstName,
-                                values.lastName,
-                                values.address1,
-                                values.city,
-                                values.zipcode,
-                                values.phonenumber,
-                                values.gender
-                            );
+                            handleSubmit(values);
                         }}
                     >
                         {({
@@ -350,7 +343,7 @@ const RegisterSecondPage = () => {
                                             <em>None</em>
                                         </MenuItem>
                                         {genderOptions.map((state) => (
-                                            <MenuItem value={state}>{state}</MenuItem>
+                                            <MenuItem key={state.key} value={state.value}>{state.value}</MenuItem>
                                         ))}
                                     </TextField>
                                     </div>
@@ -423,49 +416,9 @@ const RegisterSecondPage = () => {
                                             <em>None</em>
                                         </MenuItem>
                                         {countryArray.map((state) => (
-                                            <MenuItem value={state.value}>{state.value}</MenuItem>
+                                            <MenuItem key={state.label} value={state.value}>{state.value}</MenuItem>
                                         ))}
                                     </TextField>
-                                    {/* <FormControl variant="outlined" sx={{ minWidth: 200 }}>
-                                        <InputLabel id="demo-simple-select-standard-label">
-                                            Country
-                                        </InputLabel>
-                                     <CountryDropdown
-                                        value={country}
-                                        onChange={(val) => selectCountry(val)}
-                                        style={{
-                                            width:"250px",
-                                            height:"60px",
-                                            borderRadius: "4px",
-                                            // fontSize: 15,
-                                            borderColor: "grey",
-                                            color:"grey",
-                                            fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
-                                            fontWeight: 400,
-                                            fontSize: "1rem"
-                                        }}
-                                          tabIndex={1000}
-                                        />
-                                        </FormControl> */}
-                                    {/* <FormControl variant="outlined" sx={{ minWidth: 190 }}>
-                                        <InputLabel id="demo-simple-select-standard-label">
-                                            Country
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
-                                            value={country}
-                                            onChange={handleChangeCountry}
-                                            label="Country"
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            {countryOptions.map((state) => (
-                                          <MenuItem value={state}>{state}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl> */}
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -483,48 +436,6 @@ const RegisterSecondPage = () => {
                                                 width:"250px"
                                             }}
                                         />
-                                {/* <FormControl variant="outlined" sx={{ minWidth: 190, marginTop:"15px" }}>
-                                        <InputLabel id="demo-simple-select-standard-label">
-                                            Select State
-                                        </InputLabel>
-                                <RegionDropdown
-                                    country={country}
-                                    value={state}
-                                    onChange={(val) => selectState(val)}
-                                    blankOptionLabel={"Select State"}
-                                    defaultOptionLabel={"Select State"}
-                                    style={{
-                                        width:"250px",
-                                        height:"60px",
-                                        borderRadius: "4px",
-                                        // fontSize: 15,
-                                        borderColor: "grey",
-                                        color:"grey",
-                                        fontFamily: "'Roboto','Helvetica','Arial',sans-serif",
-                                        fontWeight: 400,
-                                        fontSize: "1rem"
-                                    }}
-                                      tabIndex={1000} />
-                                      </FormControl> */}
-                                {/* <FormControl variant="outlined" sx={{ minWidth: 190 }}>
-                                        <InputLabel id="demo-simple-select-standard-label">
-                                            State
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-standard-label"
-                                            id="demo-simple-select-standard"
-                                            value={state}
-                                            onChange={handleChangeState}
-                                            label="State"
-                                        >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            {statesOptions.map((state) => (
-                                          <MenuItem value={state}>{state}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl> */}
                                     <TextField
                                         error={Boolean(touched.zipcode && errors.zipcode)}
                                         helperText={touched.zipcode && errors.zipcode}

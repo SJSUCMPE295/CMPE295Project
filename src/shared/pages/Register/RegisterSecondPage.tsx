@@ -199,7 +199,7 @@ const RegisterSecondPage = () => {
                             state: Yup.string().max(255).required('State is required'),
                             zipcode: Yup.string().max(255).required('Zipcode is required'),
                             gender: Yup.string().max(255).required('Gender is required'),
-                            phonenumber: Yup.number().required('Phone Number is required')
+                            phonenumber: Yup.string().required('Phone Number is required')
                                         .test('len', 'Phone Number should be 10 digits', (val) => val.length === 10)
                             // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
