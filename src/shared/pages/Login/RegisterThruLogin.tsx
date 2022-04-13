@@ -203,7 +203,7 @@ const RegisterSecondPage = () => {
                             state: Yup.string().max(255).required('State is required'),
                             zipcode: Yup.string().max(255).required('Zipcode is required'),
                             gender: Yup.string().max(255).required('Gender is required'),
-                            phonenumber: Yup.string().required('Phone Number is required')
+                            phonenumber: Yup.string()
                                         .test('len', 'Phone Number should be 10 digits', (val) => val.length === 10)
                             // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
@@ -245,6 +245,7 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.firstName}
                                         variant="outlined"
+                                        required
                                         style={{
                                             width:"250px"
                                         }}
@@ -259,6 +260,7 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.lastName}
                                         variant="outlined"
+                                        required
                                         style={{
                                             width:"250px"
                                         }}
@@ -338,6 +340,7 @@ const RegisterSecondPage = () => {
                                         value={values.gender}
                                         variant="outlined"
                                         fullWidth
+                                        required
                                     >
                                         <MenuItem value="">
                                             <em>None</em>
@@ -381,6 +384,7 @@ const RegisterSecondPage = () => {
                                         value={values.address1}
                                         variant="outlined"
                                         fullWidth
+                                        required
                                     />
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -394,6 +398,7 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.city}
                                         variant="outlined"
+                                        required
                                         style={{
                                             width:"250px"
                                         }}
@@ -411,6 +416,7 @@ const RegisterSecondPage = () => {
                                         value={values.country}
                                         variant="outlined"
                                         fullWidth
+                                        required
                                     >
                                         <MenuItem value="">
                                             <em>None</em>
@@ -432,6 +438,7 @@ const RegisterSecondPage = () => {
                                             onChange={handleChange}
                                             value={values.state}
                                             variant="outlined"
+                                            required
                                             style={{
                                                 width:"250px"
                                             }}
@@ -446,6 +453,7 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.zipcode}
                                         variant="outlined"
+                                        required
                                         style={{
                                             width:"250px"
                                         }}

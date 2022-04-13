@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import Alert from '@mui/material/Alert';
 import {
     Box,
     Button,
@@ -9,39 +11,111 @@ import {
     Grid,
     TextField,
 } from '@material-ui/core';
+import countries from "i18n-iso-countries";
 import { connect } from 'react-redux';
-
-const states = [
-    {
-        value: 'alabama',
-        label: 'Alabama',
-    },
-    {
-        value: 'new-york',
-        label: 'New York',
-    },
-    {
-        value: 'san-francisco',
-        label: 'San Francisco',
-    },
-];
+import axios from 'axios';
+import serverUrl from '../../utils/config';
+import {  useDispatch } from 'react-redux';
+import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 
 const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
     const [values, setValues] = React.useState({
         firstName: userProfileReducer.firstName,
         lastName: userProfileReducer.lastName,
-        email: userProfileReducer.userName,
+        userName: userProfileReducer.userName,
         phone: userProfileReducer.profile.phoneNumber,
+        address: userProfileReducer.address.location,
+        zipCode: userProfileReducer.address.zipCode,
+        city: userProfileReducer.address.city,
         state: userProfileReducer.address.state,
         country: userProfileReducer.address.country,
+        userMetaData : userProfileReducer.userMetaData,
+        profileActive : userProfileReducer.profile.profileActive,
+        profilePic: userProfileReducer.profile.profilePic
     });
-
+    console.log('Values', values);
+    const dispatch = useDispatch();
+    const[saveMsg, setSaveMsg] = useState('');
+    countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+    const countryObj = countries.getNames("en",{select:"official"});
+    const countryArray = Object.entries(countryObj).map(([key, value]) =>{
+        return {
+            label: key,
+            value: value
+        }
+    })
     const handleChange = (event) => {
         setValues({
             ...values,
             [event.target.name]: event.target.value,
         });
     };
+
+    // const handleChangePhone = (event) => {
+    //     setValues({
+    //         ...values,
+    //         [event.target.name]: event.target.value,
+    //     });
+    //     if(values.phone)
+    // };
+
+    const handleSave = () => {
+        const payload = {
+            userName: values.userName,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            userMetaData: values.userMetaData,
+            profile: {
+                phoneNumber: values.phone,
+                profileActive: values.profileActive,
+                profilePic: values.profilePic,
+            },
+            address: 
+                {
+                    location: values.address,
+                    city: values.city,
+                    state: values.state,
+                    country: values.country,
+                    zipCode: values.zipCode,
+                },
+        };
+
+           // set the with credentials to true
+           axios.defaults.withCredentials = true;
+           // make a post request with the user data
+           axios.post(serverUrl + 'user/profileUpdate', payload).then(
+               (response) => {
+                   console.log("axios call", response);
+               if (response.status === 200) {
+                   console.log("updated successfully");
+                   dispatch({
+                       type: saveUserName,
+                       firstName: response.data.data.firstName,
+                       lastName: response.data.data.lastName,
+                       userName: response.data.data.userName,
+                   });
+                   dispatch({
+                       type: createUserProfile,
+                       userMetaData: response.data.data.userMetaData,
+                       profile: response.data.data.profile,
+                       address: response.data.data.address,
+                   });
+                   setSaveMsg("Yes");
+               }
+               if(response.status === 401) {
+                setSaveMsg("No");
+               }
+            },
+               (error) => {
+                   console.log("register error")
+                   setSaveMsg("No");
+               //   this.setState({
+               //     errorMessage: error.response.data,
+               //     signupFailed: true,
+               //   });
+               }
+           );
+    }
 
     return (
         <form autoComplete="off" noValidate {...props}>
@@ -73,7 +147,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item md={6} xs={12}>
+                        {/* <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
                                 label="Email Address"
@@ -83,7 +157,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 value={values.email}
                                 variant="outlined"
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
@@ -91,6 +165,11 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 name="phone"
                                 onChange={handleChange}
                                 type="number"
+                                InputProps={{
+                                    inputProps: { 
+                                        max: 10, min: 10 
+                                    }
+                                }}
                                 value={values.phone}
                                 variant="outlined"
                             />
@@ -98,29 +177,60 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                         <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
-                                label="Country"
-                                name="country"
+                                label="Address"
+                                name="address"
                                 onChange={handleChange}
-                                required
-                                value={values.country}
+                                value={values.address}
                                 variant="outlined"
                             />
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
-                                label="Select State"
+                                label="City"
+                                name="city"
+                                onChange={handleChange}
+                                value={values.city}
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item md={6} xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Zipcode"
+                                name="zipcode"
+                                onChange={handleChange}
+                                type="number"
+                                value={values.zipCode}
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item md={6} xs={12}>
+                            <TextField
+                                fullWidth
+                                label="State"
                                 name="state"
+                                onChange={handleChange}
+                                required
+                                value={values.state}
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item md={6} xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Select Country"
+                                name="country"
                                 onChange={handleChange}
                                 required
                                 select
                                 SelectProps={{ native: true }}
-                                value={values.state}
+                                value={values.country}
                                 variant="outlined"
                             >
-                                {states.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
+                                {countryArray.map((option) => (
+                                    <option key={option.label} value={option.value}>
+                                        {option.value}
                                     </option>
                                 ))}
                             </TextField>
@@ -128,16 +238,21 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                     </Grid>
                 </CardContent>
                 <Divider />
+                
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'flex-end',
+                        justifyContent: 'space-between',
                         p: 2,
                     }}
                 >
-                    <Button color="primary" variant="contained">
-                        Save details
+                    <Button color="primary" variant="contained" onClick={handleSave}>
+                            Save details
                     </Button>
+                    {saveMsg == "Yes" && 
+                    <Alert severity="success">Profile is updated!</Alert>}
+                    {saveMsg === "No" &&
+                    <Alert severity="error">Error updating your profile.</Alert>}
                 </Box>
             </Card>
         </form>
