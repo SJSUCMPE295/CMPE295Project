@@ -189,10 +189,16 @@ const AccountProfile = ({userProfileReducer, ...props}) => {
             {/* {showErrorMsg? (
                 <Alert severity="error">This is an error message!</Alert>
             ): ''} */}
-            {saveMsg == "Yes" && 
-            <Alert severity="success">Profile Pic is updated!</Alert>}
-            {saveMsg === "No" &&
-            <Alert severity="error">Error updating your profile pic.</Alert>}
+            <div style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+                {saveMsg == "Yes" && 
+                <Alert severity="success">Profile Pic is updated!</Alert>}
+                {saveMsg === "No" &&
+                <Alert severity="error">Error updating your profile pic.</Alert>}
+            </div>
     </Card>
 )};
 //`${moment().format('hh:mm A')} ${user.timezone}`
