@@ -7,7 +7,6 @@ import loginReducer from './reducers/loginReducer';
 const appReducer = 
     combineReducers({
         user,
-        //app,
         userProfileReducer,
         loginReducer,
     });
