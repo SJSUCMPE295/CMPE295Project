@@ -14,6 +14,7 @@ export const Service = new Schema2(
         Phone_Number: { type: Number, required: true },
         Description: { type: String, required: true },
         availableDate: { type: Date, required: true },
+        ImageUrl: { type: String, required: true }
     },
     { collection: 'Services' },
     {

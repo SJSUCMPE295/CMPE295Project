@@ -14,6 +14,7 @@ export const Resource = new Schema1(
         State: { type: String, required: true },
         Country: { type: String, required: true },
         Zipcode: { type: Number, required: true },
+        ImageUrl: {type: String, required: true}
     },
     { collection: 'Resource' },
     {

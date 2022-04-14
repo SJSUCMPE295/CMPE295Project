@@ -1,11 +1,8 @@
 import { Router } from 'express';
 import serviceModel from '../models/services';
 import resourceModel from '../models/resources';
-import userModel from '../models/user';
-import { json } from 'stream/consumers';
 const router = Router();
-// const auth = require('../middleware/auth');
-// const fetchController = require('../controller/fetch');
+
 // API to post resource
 router.post('/resource', async (req, res) => {
     const UserId=req.body.UserId;
@@ -19,18 +16,8 @@ router.post('/resource', async (req, res) => {
     const Zipcode=req.body.Zipcode;
     const Country=req.body.Country;
     const SKU=req.body.SKU;
-    // var id=null;
-
-    // userModel.find({userName:UserName}, (err, user) => {
-    //     if(err){
-    //         console.log(err);
-    //     }else{
-    //     console.log("Inside function")
-    //     console.log(user)
-    //     }
-    // });
-    // const UserId=id;
-    // console.log(id);
+    const ImageUrl=req.body.ImageUrl;
+    
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,
@@ -43,6 +30,7 @@ router.post('/resource', async (req, res) => {
         Zipcode,
         Country,
         SKU,
+        ImageUrl,
     });
     try {
         await resourcedata.save((error, data) => {
@@ -72,6 +60,8 @@ router.post('/service', async (req, res) => {
     const Zipcode=req.body.Zipcode;
     const Country=req.body.Country;
     const availableDate=req.body.availableDate;
+    const ImageUrl=req.body.ImageUrl;
+
     const servicedata = new serviceModel({
         UserId,
         Service_Name,
@@ -84,6 +74,7 @@ router.post('/service', async (req, res) => {
         Zipcode,
         Country,
         availableDate,
+        ImageUrl,
     });
     try {
         await servicedata.save((error, data) => {

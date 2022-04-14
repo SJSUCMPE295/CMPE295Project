@@ -9,10 +9,26 @@ import {
     Divider,
     FormControlLabel,
     FormGroup,
+    Grid
 } from '@material-ui/core';
 import Checkbox from '@mui/material/Checkbox';
 import { useState, FunctionComponent} from 'react';
 import { connect} from 'react-redux';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+// const Input = styled('input')({
+//     display: 'none',
+//   });
+
+
+// const Alert = React.forwardRef(function Alert(props, ref) {
+//     return <MuiAlert elevation={6}  ref={ref} variant="filled" {...props} />;
+//   });
+
+
+const metadata = {
+contentType: 'image/jpeg'
+};
 
 const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
     const [check, setCheck] = useState(false);
@@ -27,10 +43,64 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
     const [country, setCountry] = useState("");
+    const [showErrorMsg, setShowErrorMsg] = React.useState("");
+    const storage = getStorage();
+    const [image,setImage] = useState(null);
+    const [url, setUrl] = useState("");
+    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Resource Pic');
+    const [findImage, setFindImage] = React.useState(false);
+    
 
     const handleNameChange = (e) => {
         setResourceName(e.target.value)
     };
+
+    const handleImageUpload = (event) => {
+        console.log("Reached upload image task");
+        var file = event.target.files[0];
+        if(file==null || !file){
+            console.log("No image")
+            setShowErrorMsg("Error: No image available");
+        } else 
+            {
+                setImage(file)
+                console.log(file)
+                const storageRef = ref(storage, `/${userProfileReducer.userName}/resources/${file.name}`);
+                uploadBytes(storageRef, file).then((snapshot) => {
+                    console.log('Uploaded a blob or file!', snapshot.metadata);
+                    setFileUploadTitle(snapshot.metadata.name);
+                    setFindImage(true);
+                    setShowErrorMsg("Image Uploaded successfully to firebase!")
+                    getDownloadURL(storageRef)
+                    .then((url) => {
+                        console.log(url);
+                        setUrl(url);
+                        console.log('url', url);
+                        setFindImage(true);
+                    })
+                    .catch((error) => {
+                        switch (error.code) {
+                        case 'storage/object-not-found':
+                            setUrl("");
+                            setFindImage(false);
+                            break;
+                        }
+                    });
+                });
+            }
+    }
+
+    const handleImageChange = (e) => {
+        console.log("Reached image change")
+        if(findImage){
+            console.log("Image uploaded successfully to firebase!")
+            alert("Image uploaded successfully to firebase!")
+        }else
+            {
+                console.log("Image upload failed!")
+                alert("Image upload failed!")
+            }
+    }
 
     const handleSetCheck = (e) => {
         setCheck(!check)
@@ -99,7 +169,7 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
                     },
                     body: JSON.stringify({
                     UserId:userId, Resource_Name:resourceName, Category:category, Description:description, Phone_Number:phoneNum, Address:address, SKU:sku, 
-                    City:city, State:state, Zipcode:zipcode, Country:country 
+                    City:city, State:state, Zipcode:zipcode, Country:country, ImageUrl:url, 
                     })
                 })
         
@@ -109,13 +179,14 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
                 if (res.status === 200){
                     window.alert("Resource added!");
                     console.log("Resource added!");
+                    window.location.reload();
                 } else {
                     window.alert("Failed to upload resource data!");
                     console.log("Failed to upload resource data!");
+                    window.location.reload();
                 }
             }
     
-   
 
     return (
         <Box {...props}>
@@ -131,7 +202,7 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
             <form autoComplete="off" noValidate {...props} method="POST">
                 <Card 
                     sx={{
-                    height: 700,
+                    height: 750,
                     width:900,
                     justifyContent:'center',
                     }}
@@ -289,18 +360,29 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
                                     
                                 />
                             </Box>
-                            <Divider sx={{ pt: 2 }} />
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    p: 1,
-                                }}
-                            >
-                                <Button color="primary" variant="contained" onClick={handleSubmit}>
-                                    Save details
-                                </Button>
-                            </Box>
+                            <Divider sx={{ pt: 1 }} />
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 3, md: 3 }} zIndex={1} paddingTop={3}>
+                                <Grid item xs={3}>                                   
+                                    <input type="file" onChange={handleImageUpload} />
+                                    <Button color="primary" variant="contained" size="medium" onClick={handleImageChange}>                            
+                                        Upload Image
+                                    </Button>
+                                    {/* {showErrorMsg? (
+                                        <Alert severity="error">This is an error message!</Alert>
+                                    ): ''} */}
+                                    {/* <Modal setOpenModal={showModal} onClose={() => setShowModal(false)} /> */}
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Button color="primary" variant="contained" onClick={handleSubmit} size="medium">
+                                        Save details
+                                    </Button> 
+                                </Grid>
+                            </Grid>
+                            
                         </CardContent>
                     </Card>
                 </form>
