@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
@@ -13,11 +13,9 @@ import {
     Button,
     Checkbox,
     Container,
-    FormHelperText,
     Link,
     TextField,
     Typography,
-    Grid,
     FormControlLabel,
     FormControl,
     InputLabel,
@@ -27,12 +25,11 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 // import {storage} from '../../utils/firebase';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+// import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(true);
     const [user, setUser] = React.useState(useSelector((state: any) => state.userProfileReducer.userName));
     countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
     const countryObj = countries.getNames("en",{select:"official"});
@@ -48,32 +45,9 @@ const RegisterSecondPage = () => {
         "Do not want to specify"
     ]
 
-    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
+    // const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
     const [speciality, setSpeciality] = React.useState('');
-    const [specialityOptions, setSpecialityOptions] = React.useState([]);
-    useEffect(() => {
-        // set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.get(serverUrl + 'static/speciality').then(
-          (response) => {
-              console.log("axios call")
-            if (response.status === 200) {
-                console.log("updated successfully", response.data[0].name);
-                setSpecialityOptions(response.data[0].name);
-                setLoading(false);
-            }
-          },
-          (error) => {
-              console.log("register error")
-          //   this.setState({
-          //     errorMessage: error.response.data,
-          //     signupFailed: true,
-          //   });
-          }
-        );
-      },[1]);
    
     const handleSubmit = (address1, city, zipCode, phoneNumber, state, gender, country) => {
         const payload = {
@@ -135,20 +109,20 @@ const RegisterSecondPage = () => {
         setSpeciality(event.target.value);
     };
 
-    const saveFile = (event) => {
-        if (event.target.files[0] === null) {
-            return;
-        }
-        const fileName = event.target.files[0].name;
-        const storage = getStorage();
-        const storageRef = ref(storage, `/${user}/${fileName}`);
+    // const saveFile = (event) => {
+    //     if (event.target.files[0] === null) {
+    //         return;
+    //     }
+    //     const fileName = event.target.files[0].name;
+    //     const storage = getStorage();
+    //     const storageRef = ref(storage, `/${user}/${fileName}`);
 
-        const file = event.target.files[0];
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot);
-            setFileUploadTitle(snapshot.metadata.name);
-        });
-    };
+    //     const file = event.target.files[0];
+    //     uploadBytes(storageRef, file).then((snapshot) => {
+    //         console.log('Uploaded a blob or file!', snapshot);
+    //         setFileUploadTitle(snapshot.metadata.name);
+    //     });
+    // };
     return (
         <>
             <Helmet>
@@ -234,51 +208,6 @@ const RegisterSecondPage = () => {
                                         }
                                     />
                                 </div>
-                                {checked ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            
-                                        }}
-                                    >
-                                        <FormControl
-                                            variant="standard"
-                                            sx={{ m: 1, minWidth: 120 }}
-                                        >
-                                            <InputLabel id="demo-simple-select-standard-label" >
-                                                Speciality
-                                            </InputLabel>
-                                            
-                                            <Select
-                                                labelId="demo-simple-select-standard-label"
-                                                id="demo-simple-select-standard"
-                                                value={speciality}
-                                                onChange={handleChangeSpeciality}
-                                                label="Speciality"
-                                                style={{width:"250px"}}
-                                            > 
-                                            
-                                                isLoading ? (<div>Loading ...</div>) :
-                                        ({specialityOptions.map((speciality) => (
-                                          <MenuItem key={speciality} value={speciality}>{speciality}</MenuItem>
-                                        ))})
-                                            </Select>
-                                          
-                                        </FormControl>
-                                        <Button
-                                            variant="text"
-                                            component="label"
-                                            size="small"
-                                            style={{ marginRight: '50px' }}
-                                        >
-                                            {fileUploadTitle}
-                                            <input type="file" hidden onChange={saveFile} />
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    ''
-                                )}
                                 <div style={{  display: 'flex', justifyContent: 'flex-start' }}>
                                     <div style={{
                                             width:"250px"

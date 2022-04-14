@@ -22,6 +22,7 @@ import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
+import RegisterDoctorModal from './components/RegisterDoctorModal';
 import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
@@ -57,6 +58,10 @@ const App: React.FC<any> = () => {
                                         <Route
                                             path={'/app/givehelp/addresource'}
                                             component={AddResourceScreen}
+                                        />
+                                        <Route
+                                            path={'/app/registerdoctor'}
+                                            component={RegisterDoctorModal}
                                         />
                                         <Route path={'/app/givehelp'} component={GiveHelpScreen} />
                                         <Route path={'/app/settings'} component={Settings} />

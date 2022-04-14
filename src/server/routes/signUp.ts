@@ -98,36 +98,24 @@ router.post('/user/register', async (req, res) => {
 //API for doctor signup
 router.post('/doctor', async (req, res) => {
     //userId:req.query.user_id
-    const {
-        userId = '618843d8e3e166eb4f2d41e2',
-        speciality = 'Child Specialist',
-        license = '11009067DOC',
-        qualification = 'MBBS',
-        experience = '4 YRS 6 months',
-        gender = 'Male',
-        availability = 12 / 9 / 2021,
-        description = '',
-    } = req.body;
-    console.log('create', req);
-    const docdata = new doctorModel({
-        userId,
-        speciality,
-        license,
-        qualification,
-        experience,
-        gender,
-        availability,
-        description,
+    console.log('create', req.body);
+    const doctorData = new doctorModel({
+        userId: req.body.userId,
+        speciality: req.body.speciality,
+        license: req.body.license,
+        qualification: req.body.qualification,
+        experience: req.body.experience,
+        description: req.body.description,
     });
     try {
-        console.log('data', docdata);
-        await docdata.save((error, data) => {
+        console.log('data', doctorData);
+        await doctorData.save((error, data) => {
             if (error) {
                 console.log('System Error', error);
                 return res.json(500).send('System Error');
             } else {
                 console.log('success');
-                return res.json(200).send('Doctor data captured successfully!');
+                return res.json(200).send(data);
             }
         });
     } catch (err) {

@@ -16,6 +16,7 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
+import RegisterDoctorModal from './RegisterDoctorModal';
 
 //import userProfileReducer from '../store/reducers/userProfileReducer';
 const user = {
@@ -75,12 +76,16 @@ const items = [
 
 export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
     const location = useLocation();
-
+    const [open, setOpen] = React.useState(false);
     React.useEffect(() => {
         if (openMobile && onMobileClose) {
             onMobileClose();
         }
     }, [location.pathname]);
+
+    const registerDoctor = () => {
+        setOpen(true);
+    }
 
     const content = (
         <Box
@@ -152,8 +157,9 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
                     <Button
                         color="primary"
                         component="a"
-                        href="https://react-material-kit.devias.io"
+                        // href="/app/registerdoctor"
                         variant="contained"
+                        onClick={registerDoctor}
                     >
                         Register as Doctor
                     </Button>
@@ -164,6 +170,7 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
 
     return (
         <>
+        {open && <RegisterDoctorModal open={open}/> }
             <Hidden mdUp>
                 <Drawer
                     anchor="left"
@@ -176,6 +183,7 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
                         },
                     }}
                 >
+                    
                     {content}
                 </Drawer>
             </Hidden>
