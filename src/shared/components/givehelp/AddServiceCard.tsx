@@ -16,7 +16,11 @@ import { useState, FunctionComponent, forwardRef} from 'react';
 import { connect} from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+const metadata = {
+    contentType: 'image/jpeg'
+    };
 
 
 const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props }) => {
@@ -33,7 +37,59 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
     const [country, setCountry] = useState("");
     const [availability, setAvailability] = useState(new Date());
     const [datePickerIsOpen,togglePicker] = useState(false);
-    
+    const [showErrorMsg, setShowErrorMsg] = React.useState("");
+    const storage = getStorage();
+    const [image,setImage] = useState(null);
+    const [url, setUrl] = useState("");
+    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Resource Pic');
+    const [findImage, setFindImage] = React.useState(false);
+
+    const handleImageUpload = (event) => {
+        console.log("Reached upload image task");
+        var file = event.target.files[0];
+        if(file==null || !file){
+            console.log("No image")
+            setShowErrorMsg("Error: No image available");
+        } else 
+            {
+                setImage(file)
+                console.log(file)
+                const storageRef = ref(storage, `/${userProfileReducer.userName}/services/${file.name}`);
+                uploadBytes(storageRef, file).then((snapshot) => {
+                    console.log('Uploaded a blob or file!', snapshot.metadata);
+                    setFileUploadTitle(snapshot.metadata.name);
+                    setFindImage(true);
+                    setShowErrorMsg("Image Uploaded successfully to firebase!")
+                    getDownloadURL(storageRef)
+                    .then((url) => {
+                        console.log(url);
+                        setUrl(url);
+                        console.log('url', url);
+                        setFindImage(true);
+                    })
+                    .catch((error) => {
+                        switch (error.code) {
+                        case 'storage/object-not-found':
+                            setUrl("");
+                            setFindImage(false);
+                            break;
+                        }
+                    });
+                });
+            }
+    }
+
+    const handleImageChange = (e) => {
+        console.log("Reached image change")
+        if(findImage){
+            console.log("Image uploaded successfully to firebase!")
+            alert("Image uploaded successfully to firebase!")
+        }else
+            {
+                console.log("Image upload failed!")
+                alert("Image upload failed! Please try again")
+            }
+    }
 
     const handleNameChange = (e) => {
         setServiceName(e.target.value)
@@ -109,7 +165,7 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
             },
             body: JSON.stringify({
             UserId:userId, Service_Name:serviceName, Category:category, Description:description, Phone_Number:phoneNum, Address:address, availableDate:availability, 
-            City:city, State:state, Zipcode:zipcode, Country:country 
+            City:city, State:state, Zipcode:zipcode, Country:country, ImageUrl:url, 
             })
         })
 
@@ -119,9 +175,11 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
         if (res.status === 200){
             window.alert("Service added!");
             console.log("Service added!");
+            window.location.reload();
         } else {
             window.alert("Failed to upload service data!");
             console.log("Failed to upload service data!");
+            window.location.reload();
         }
     }
 
@@ -326,7 +384,8 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
                             <Divider sx={{ pt: 2 }} />
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 3, md: 3 }} zIndex={1} paddingTop={3}>
                                 <Grid item xs={3}>
-                                    <Button color="primary" variant="contained" size="large" fullWidth>
+                                    <input type="file" onChange={handleImageUpload} />
+                                    <Button color="primary" variant="contained" size="medium" onClick={handleImageChange}>
                                         Upload Image
                                     </Button>
                                 </Grid>
@@ -340,28 +399,6 @@ const AddServiceCard : FunctionComponent<any> = ({userProfileReducer={},...props
                                     </Button> 
                                 </Grid>
                             </Grid>
-                            {/* <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    alignItems: "flex-start"
-                                }}
-                            >
-                                <Button color="primary" variant="contained">
-                                    Upload Image
-                                </Button>
-                            </Box>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    p: 1,
-                                }}
-                            >
-                                <Button color="primary" variant="contained" onClick={handleSubmit}>
-                                    Save details
-                                </Button>
-                            </Box> */}
                         </CardContent>
                     </Card>
                 </form>
