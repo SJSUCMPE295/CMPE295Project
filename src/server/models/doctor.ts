@@ -6,6 +6,7 @@ export const DoctorModel = new Schema(
         license: { type: String, required: true },
         qualification: { type: String, required: true },
         experience: { type: String, required: true },
+        licenseUrl: { type: String, required: true },
         // gender: { type: String, required: false },
         // availability: { type: Date, required: false },
         description: { type: String, required: false },

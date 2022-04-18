@@ -97,27 +97,30 @@ router.post('/user/register', async (req, res) => {
 
 //API for doctor signup
 router.post('/doctor', async (req, res) => {
-    //userId:req.query.user_id
-    console.log('create', req.body);
-    const doctorData = new doctorModel({
-        userId: req.body.userId,
-        speciality: req.body.speciality,
-        license: req.body.license,
-        qualification: req.body.qualification,
-        experience: req.body.experience,
+    const query = { userId: req.body.userId}
+    const update = {
+        speciality: req.body.speciality, 
+        license: req.body.license, 
+        qualification: req.body.qualification, 
+        experience: req.body.experience, 
         description: req.body.description,
-    });
+        licenseUrl: req.body.licenseUrl
+    }
+    const options = {
+        upsert: true, new: true, setDefaultsOnInsert: true
+    }
     try {
-        console.log('data', doctorData);
-        await doctorData.save((error, data) => {
+        doctorModel.findOneAndUpdate(query, update, options,(error, data) => {
             if (error) {
                 console.log('System Error', error);
                 return res.json(500).send('System Error');
             } else {
-                console.log('success');
-                return res.json(200).send(data);
+                res.writeHead(200, {
+                    'Content-Type': 'text/plain',
+                  });
+                res.end(JSON.stringify({data: data, message: "Doctor information is added!"}));
             }
-        });
+        });                                
     } catch (err) {
         console.log('Exception Error', err);
         res.json({ message: err });

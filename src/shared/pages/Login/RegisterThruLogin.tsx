@@ -30,7 +30,7 @@ import { createUserProfile, saveUserName } from '../../store/constants/action-ty
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 // import RootState from '../../store/rootReducer';
 
-const RegisterSecondPage = () => {
+const RegisterThruLogin = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
@@ -559,4 +559,4 @@ const RegisterSecondPage = () => {
     );
 };
 
-export default RegisterSecondPage;
+export default RegisterThruLogin;

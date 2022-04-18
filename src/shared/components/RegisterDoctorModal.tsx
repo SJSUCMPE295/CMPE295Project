@@ -10,13 +10,14 @@ import {
     Divider,
     Grid,
     TextField,
-    MenuItem
+    MenuItem,
+    Link
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
 import axios from 'axios';
 import serverUrl from '../utils/config';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 function getModalStyle() {
     // const top = 50 + rand();
@@ -36,12 +37,12 @@ function getModalStyle() {
         // transform: `translate(-${top}%, -${left}%)`,
     };
 }
-export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
+export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...props }) => {
     // const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch();
     const [modalStyle] = React.useState(getModalStyle);
     const [isLoading, setLoading] = useState(true);
     const[saveMsg, setSaveMsg] = useState('');
+    const dispatch = useDispatch();
     const [values, setValues] = React.useState({
         firstName: userProfileReducer.firstName,
         userId: userProfileReducer.id,
@@ -54,7 +55,9 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
         licenseUrl: ''
 
     });
-
+    const [fileUrl, setFileUrl] = useState('');
+    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
+    const [fileLink, setFileLink] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
     useEffect(() => {
         // set the with credentials to true
@@ -84,9 +87,6 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
             [event.target.name]: event.target.value,
         });
     };
-    const handleClose = () => {
-        open = false;
-    };
 
     const saveFile = (event) => {
         if (event.target.files[0] === null) {
@@ -99,7 +99,18 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
         const file = event.target.files[0];
         uploadBytes(storageRef, file).then((snapshot) => {
             console.log('Uploaded a blob or file!', snapshot);
-            setFileUploadTitle(snapshot.metadata.name);
+            setFileLink(snapshot.metadata.name);
+            getDownloadURL(storageRef).then((url) => {
+                    console.log('fileurl', url);
+                    setFileUrl(url);
+            })
+            .catch((error) => {
+                switch (error.code) {
+                case 'storage/object-not-found':
+                    setFileUrl('');
+                    break;
+                }
+            });
         });
     };
 
@@ -111,7 +122,7 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
             qualification: values.qualification,
             experience: values.experience,
             description: values.description,
-            // licenseUrl: values.licenseUrl
+            licenseUrl: fileUrl
         };
            // set the with credentials to true
            axios.defaults.withCredentials = true;
@@ -122,6 +133,7 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
                if (response.status === 200) {
                    console.log("updated successfully");
                    setSaveMsg("Yes");
+                   closeModal();
                }
                if(response.status === 401) {
                 setSaveMsg("No");
@@ -137,18 +149,17 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
                }
            );
     }
-    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     return (
         <>
              <Modal
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 open={open}
-                onClose={handleClose}
+                onClose={closeModal}
             >
                 <form autoComplete="off" noValidate {...props} style={modalStyle}>
             <Card>
-                <CardHeader subheader="The information can be edited" title="Register As a Doctor" />
+                <CardHeader subheader="The information will be edited if already exists" title="Register As a Doctor" />
                 <Divider />
                 <CardContent>
                     <Grid container spacing={3}>
@@ -215,6 +226,7 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
                             />
                         </Grid>
                         <Grid item md={6} xs={12}>
+                            {!fileLink &&
                             <Button
                                 variant="outlined"
                                 component="label"
@@ -224,6 +236,13 @@ export const RegisterDoctorModal = ({open, userProfileReducer, ...props }) => {
                                 {fileUploadTitle}
                             <input type="file" hidden onChange={saveFile} />
                         </Button>
+                        }
+                        {fileLink && 
+                        <Link href={fileUrl} 
+                              variant="body2"
+                              rel="noopener noreferrer"  
+                              target="_blank"
+                        > {fileLink}</Link> }
                         </Grid>
                         {/* <Grid item md={6} xs={12}>
                             <TextField

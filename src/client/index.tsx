@@ -25,15 +25,13 @@ const { persistor, store } = configureStore(preloadedState);
 
 hydrate(
     <Provider store={store}>
-       
         <BrowserRouter>
             <HelmetProvider>
             <PersistGate loading={null} persistor={persistor}>
                     <App />
             </PersistGate>
             </HelmetProvider>
-        </BrowserRouter>
-        
+        </BrowserRouter>  
     </Provider>,
     document.getElementById('app')
 );

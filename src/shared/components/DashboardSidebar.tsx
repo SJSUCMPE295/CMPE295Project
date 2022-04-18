@@ -74,7 +74,7 @@ const items = [
     },*/
 ];
 
-export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
+export const DashboardSidebar = ({ onMobileClose, openMobile}) => {
     const location = useLocation();
     const [open, setOpen] = React.useState(false);
     React.useEffect(() => {
@@ -85,6 +85,10 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
 
     const registerDoctor = () => {
         setOpen(true);
+    }
+
+    const closeModal = () => {
+        setOpen(false);
     }
 
     const content = (
@@ -170,7 +174,7 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
 
     return (
         <>
-        {open && <RegisterDoctorModal open={open}/> }
+        {open && <RegisterDoctorModal closeModal={closeModal} open={open}/> }
             <Hidden mdUp>
                 <Drawer
                     anchor="left"
@@ -216,5 +220,4 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
 //     onMobileClose: () => {},
 //     openMobile: false,
 // };
-
 export default DashboardSidebar;
