@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const DoctorAppointment = new Schema(
     {
-        userId: { type: Object, required: true },
+        UserId: { type: Object, required: true },
         doctorId: { type: Object, required: true },
         appointmentDetails: { type: String, required: true },
         status: { type: String, required: true },

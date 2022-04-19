@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-export const TransactionLogger = new Schema(
+export const Transaction_Logger = new Schema(
     {
-        userId: { type: Object, required: true },
+        UserId: { type: Object, required: true },
         ResourceId: { type: Object, required: true },
         ServiceId: { type: Object, required: true },
         Date: { type: Date, required: true },
@@ -14,5 +14,5 @@ export const TransactionLogger = new Schema(
     { collection: 'Transaction_Logger', versionKey: false }
 );
 
-export const transactionLoggerModel = mongoose.model('transaction_logger', TransactionLogger);
+export const transactionLoggerModel = mongoose.model('transaction_logger', Transaction_Logger);
 export default transactionLoggerModel;

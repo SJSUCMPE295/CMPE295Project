@@ -3,7 +3,7 @@ import { Client } from '@googlemaps/google-maps-services-js';
 import Services from '../models/services';
 import Resources from '../models/resources';
 import Category from '../models/category';
-import TransactionLogger from '../models/transactionLogger';
+import Transaction_Logger from '../models/transactionLogger';
 import User from '../models/user';
 import { isNull } from 'lodash';
 const router = Router();
@@ -43,23 +43,25 @@ const getUserCurrentLocation= async () => {
 
 const getData= async (query_params_resource,query_params_service,user_location,miles,datafilter)=>{
    console.log("inside getdata");
-   console.log(datafilter);
+   console.log(query_params_resource);
+   //console.log(datafilter);
     const resource_pipeline = [
         { $match: query_params_resource },
             { $project: {
                     resourceuserId: { $toObjectId: '$UserId' },
                     _id: 1,
                     Resource_Name: 1,
-                    userId: 1,
+                    UserId: 1,
                     Category: 1,
-                    Phone_number: 1,
+                    Phone_Number: 1,
                     Description: 1,
                     SKU:1,
                     Address:1,
                     City:1,
                     State:1,
                     Zipcode:1,
-                    Country:1
+                    Country:1,
+                    ImageUrl:{ $ifNull: [ "$ImageUrl", "" ] }
 
                 },
         
@@ -73,17 +75,22 @@ const getData= async (query_params_resource,query_params_service,user_location,m
                 },
             },
          { "$unwind": "$addresses" },
-            /*  { "$unwind": "$addresses.address" },
-           { $match: { $expr: { $eq: [{ $toObjectId: '$AddressId' }, '$addresses.address._id'] } } },*/
             {
                 $project: {
                     _id: 1,
                     Name: '$Resource_Name',
-                    userId: 1,
+                    UserId: 1,
                     Category: 1,
-                    Phone_number: 1,
+                    Phone_Number: 1,
                     Description: 1,
                     SKU: 1,
+                    owner_name: {
+                        $concat: ['$addresses.firstName',
+                        ',',
+                          '$addresses.lastName'
+                         
+                       ],
+                   },
                     address: {
                         $concat: ['$Address',
                         ',',
@@ -98,12 +105,13 @@ const getData= async (query_params_resource,query_params_service,user_location,m
                   distance: '40',
                   availableDate:'',
                   Availability:'',
-                  type:'resource'
+                  type:'resource',
+                  ImageUrl:1
                 },
             },
             
         ]
-        
+      
     const service_pipeline = 
         [
         { $match: query_params_service },
@@ -111,9 +119,9 @@ const getData= async (query_params_resource,query_params_service,user_location,m
                 serviceuserId: { $toObjectId: '$UserId' },
                 _id: 1,
                 Service_Name: 1,
-                userId: 1,
+                UserId: 1,
                 Category: 1,
-                Phone_number: 1,
+                Phone_Number: 1,
                 Description: 1,
                 availableDate:1,
                 Availability:1,
@@ -121,7 +129,8 @@ const getData= async (query_params_resource,query_params_service,user_location,m
                 City:1,
                 State:1,
                 Zipcode:1,
-                Country:1
+                Country:1,
+                ImageUrl:{ $ifNull: [ "$ImageUrl", "" ] }
             },
     
         },
@@ -145,11 +154,18 @@ const getData= async (query_params_resource,query_params_service,user_location,m
             $project: {
                 _id: 1,
                 Name: '$Service_Name',
-                userId: 1,
+                UserId: 1,
                 Category: 1,
-                Phone_number: 1,
+                Phone_Number: 1,
                 Description: 1,
                 SKU: '0',
+                owner_name: {
+                    $concat: ['$addresses.firstName',
+                    ',',
+                      '$addresses.lastName'
+                     
+                   ],
+               },
                 address: {
                     $concat: ['$Address',
                     ', ',
@@ -163,7 +179,8 @@ const getData= async (query_params_resource,query_params_service,user_location,m
               distance: '40',
               availableDate:1,
               Availability:1,
-              type:'service'
+              type:'service',
+              ImageUrl:1
             },
         },
         ]
@@ -184,7 +201,7 @@ if (datafilter ==="resources")
  
    }
 
-
+   console.log(resources);  
 
 
     let destinations=[];
@@ -192,7 +209,7 @@ if (datafilter ==="resources")
     
     destinations.push(resources[k].address);
    }
-   let destination=new Set(destinations);
+   //let destination=new Set(destinations);
    destinations=Array.from(new Set(destinations));
    const client = new Client({});
    const geocodedaddress=await client.geocode({
@@ -202,10 +219,10 @@ if (datafilter ==="resources")
     },
     timeout: 1000, // milliseconds
     })
-    //console.log(await geocodedaddress.data.results[0].geometry.location);
-   
+    //console.log(await geocodedaddress.data.results);
+   //console.log(destinations);
    //calculate distance and direction
-   
+   if (await geocodedaddress.data.results.length > 0) {
  const distance_matrix = await client
         .distancematrix({
             params: {
@@ -215,6 +232,9 @@ if (datafilter ==="resources")
             },
             timeout: 1000, // milliseconds
         })
+        //console.log(distance_matrix.data.rows[0]);
+        if (await distance_matrix.data.rows.length > 0) {
+            console.log("inside distance");
        for (var j=0;j< resources.length;j++) {
             for (var i = 0; i < destinations.length; i++) {
                 if (resources[j]['address'] == destinations[i]) {
@@ -222,6 +242,7 @@ if (datafilter ==="resources")
                     resources[j]['location'] = await geocodedaddress.data.results[i].geometry.location;
                 }
             }}
+   }}
     if(miles!='')
         {
             //console.log(resources);
@@ -255,13 +276,14 @@ if (datafilter ==="resources")
 router.post('/', async (_req, res) => {
     //console.log(_req.body.resource)
     const userid = _req.body.user_id;
-    //console.log(userid);
+    console.log(userid);
     const data= _req.body.resource;
     //console.log(data);
     const resource_service =data.type;
     const id = data._id;
     
     var resource_sku = 0;
+    var quantity=0;
     var category_name;
     var category_id;
     var query_params = {
@@ -272,14 +294,15 @@ router.post('/', async (_req, res) => {
 
     var transaction_sku = 0;
     if (resource_service == 'resource') {
+        quantity=_req.body.quantity;
         resource_Id = id;
-        transaction_sku = data.SKU;
-        resource_sku = Number(data.SKU) * -1;
+        transaction_sku = quantity;
+        resource_sku = Number(quantity) * -1;
         query_params._id = id;
         const update = { $inc: { SKU: resource_sku } };
         const resource = await Resources.findById(id);
         category_name = await resource.Resource_Name;
-        var remaining_resource = await resource.SKU - data.SKU;
+        var remaining_resource = await resource.SKU - quantity;
         //console.log(await remaining_resource);
         if (await remaining_resource == 0) {
             Resources.deleteOne(query_params, function (error) {
@@ -300,8 +323,8 @@ router.post('/', async (_req, res) => {
     {category_id = await category._id;}
     else{category_id=0;}
     var currentDate = new Date();
-    const transaction = await new TransactionLogger({
-        userId: userid,
+    const transaction = await new Transaction_Logger({
+        UserId: userid,
         ResourceId: resource_Id,
         ServiceId: service_Id,
         Date: currentDate,
@@ -402,11 +425,163 @@ else{
     miles = '';
     const user_address=await getUserCurrentLocation();
     let user_loc=await user_address.current_address;
-    getData(query_params_resource,query_params_service,user_locs,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
+    getData(query_params_resource,query_params_service,user_loc,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
         res.send(response);})
         .catch(e=>{console.log(e);});
    }
    
 });
+//get item by id
+router.get('/search', async (_req, res) => {
+    console.log("inside gethelpsearch");
+    var ObjectId = require('mongodb').ObjectID;
+    const id = _req.query.id;
+    const response = {
+        resources:[{}],
+        user_currentaddress:''
+    };
+    let miles='';
+    let datafilter=_req.query.item_type;
+    let query_params_resource={};
+    let query_params_service={};
+    getUserCurrentLocation().then(user_location =>{
+                if(user_location.user_currentcity!='')
+                 {
+                if (datafilter == 'resources') {
+                 query_params_resource = { "_id": new ObjectId(id) };query_params_service ={};
+                }
+                else {
+                    query_params_service = { "_id": new ObjectId(id) };query_params_resource ={};
+                   }
+              }
+                 if(user_location.current_address!='')
+                 {response.user_currentaddress=user_location.current_address;}
+                  getData(query_params_resource,query_params_service,response.user_currentaddress,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
+                    res.send(response);})
+                    .catch(e=>{console.log(e);});
+               })
+    
+               .catch(e=>{console.log(e);});
+
+                });
+        
+
+
+/*const getDatabyId= async (query_params_resource,query_params_service,user_location,miles,datafilter)=>{
+    const resource_pipeline = [
+        { $match: query_params_resource },
+            { $project: {
+                    resourceuserId: { $toObjectId: '$UserId' },
+                    _id: 1,
+                    Resource_Name: 1,
+                    UserId: 1,
+                    Category: 1,
+                    Phone_Number: 1,
+                    Description: 1,
+                    SKU:1,
+                    Address:1,
+                    City:1,
+                    State:1,
+                    Zipcode:1,
+                    Country:1,
+                    ImageUrl:{ $ifNull: [ "$ImageUrl", "" ] }
+
+                },
+        
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'resourceuserId',
+                    foreignField: '_id',
+                    as: 'addresses',
+                },
+            },
+         { "$unwind": "$addresses" },
+            /*  { "$unwind": "$addresses.address" },
+           { $match: { $expr: { $eq: [{ $toObjectId: '$AddressId' }, '$addresses.address._id'] } } },
+            {
+                $project: {
+                    _id: 1,
+                    Name: '$Resource_Name',
+                    UserId: 1,
+                    Category: 1,
+                    Phone_Number: 1,
+                    Description: 1,
+                    SKU: 1,
+                    owner_name: {
+                        $concat: ['$addresses.firstName',
+                        ',',
+                          '$addresses.lastName'
+                         
+                       ],
+                   },
+                    address: {
+                        $concat: ['$Address',
+                        ',',
+                          '$City',
+                          ',',
+                            '$State',
+                         
+                            ',',
+                            { $toString: '$Zipcode' }
+                       ],
+                   },
+                  distance: '40',
+                  availableDate:'',
+                  Availability:'',
+                  type:'resource',
+                  ImageUrl:1
+                },
+            },
+            
+        ];
+            let resources=await (Resources.aggregate(resource_pipeline).exec());
+            let destinations=[];
+   for (var k = 0; k < resources.length; k++) {
+    
+    destinations.push(resources[k].address);
+   }
+   //let destination=new Set(destinations);
+   destinations=Array.from(new Set(destinations));
+   const client = new Client({});
+   const geocodedaddress=await client.geocode({
+    params: {
+        address: destinations,
+        key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+    },
+    timeout: 1000, // milliseconds
+    })
+   // console.log(await geocodedaddress.data.results);
+   //console.log(destinations);
+
+   if (await geocodedaddress.data.results.length > 0) {
+ const distance_matrix = await client
+        .distancematrix({
+            params: {
+                destinations: destinations,// ["San Francisco, CA, USA","Victoria, BC, Canada"],
+                origins: [user_location],//["San Jose, CA"],
+                key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+            },
+            timeout: 1000, // milliseconds
+        })
+        //console.log(distance_matrix.data.rows[0]);
+        if (await distance_matrix.data.rows.length > 0) {
+            console.log("inside distance");
+       for (var j=0;j< resources.length;j++) {
+            for (var i = 0; i < destinations.length; i++) {
+                if (resources[j]['address'] == destinations[i]) {
+                    resources[j]['distance'] = calculateMiles(await distance_matrix.data.rows[0].elements[i].distance.text);
+                    resources[j]['location'] = await geocodedaddress.data.results[i].geometry.location;
+                }
+            }}
+   }}
+    if(miles!='')
+        {
+            //console.log(resources);
+        resources = await resources.filter((m) => parseFloat(m['distance']) <= miles);
+        }
+           return await resources ;
+}*/
 
 export default router;
