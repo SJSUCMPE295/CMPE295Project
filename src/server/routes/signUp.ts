@@ -23,14 +23,13 @@ router.post('/user', async (req, res) => {
             profileActive: false,
             profilePic: '',
         },
-        address = 
-            {
-                location: '',
-                city: '',
-                state: '',
-                country: '',
-                zipCode: '',
-            },
+        address = {
+            location: '',
+            city: '',
+            state: '',
+            country: '',
+            zipCode: '',
+        },
     } = req.body;
     // console.log('create', req);
     const userdata = new userModel({
@@ -48,47 +47,50 @@ router.post('/user', async (req, res) => {
         userdata.save((error, data) => {
             if (data) {
                 console.log('success', data);
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain',
-                      });
-                      res.end(JSON.stringify({message:'Signup Successful', data: data}));
-                
-                } else {
-                    console.log('System Error', error);
+                res.writeHead(200, {
+                    'Content-Type': 'text/plain',
+                });
+                res.end(JSON.stringify({ message: 'Signup Successful', data: data }));
+            } else {
+                console.log('System Error', error);
                 res.writeHead(404, {
                     'Content-Type': 'text/plain',
-                  });
-                  res.end('UserName does not exists');
-                }
-            });
-        } catch (err) {
-            console.log('Exception Error', err);
-            res.json({ message: err });
-        }
+                });
+                res.end('UserName does not exists');
+            }
+        });
+    } catch (err) {
+        console.log('Exception Error', err);
+        res.json({ message: err });
+    }
 });
 
 ///API for user register
 router.post('/user/register', async (req, res) => {
-    console.log("req.body : ",req.body);
-    const{userName, userMetaData, profile, address} = req.body;
-    console.log("address", address);
+    console.log('req.body : ', req.body);
+    const { userName, userMetaData, profile, address } = req.body;
+    console.log('address', address);
     try {
         // console.log('data', userdata);
-        userModel.findOneAndUpdate({userName}, {userMetaData, profile, address}, {new:true},(error, user) => {
-            if (user) {
-                console.log('success', user);
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                  });
-                  res.end(JSON.stringify({message: 'Register successful', data: user}));
-                
-            } else {
-                res.writeHead(404, {
-                    'Content-Type': 'text/plain',
-                  });
-                  res.end('UserName does not exists');        
+        userModel.findOneAndUpdate(
+            { userName },
+            { userMetaData, profile, address },
+            { new: true },
+            (error, user) => {
+                if (user) {
+                    console.log('success', user);
+                    res.writeHead(200, {
+                        'Content-Type': 'text/plain',
+                    });
+                    res.end(JSON.stringify({ message: 'Register successful', data: user }));
+                } else {
+                    res.writeHead(404, {
+                        'Content-Type': 'text/plain',
+                    });
+                    res.end('UserName does not exists');
+                }
             }
-        })
+        );
     } catch (err) {
         console.log('Exception Error', err);
         res.json({ message: err });

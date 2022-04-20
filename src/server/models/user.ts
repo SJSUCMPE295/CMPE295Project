@@ -16,14 +16,13 @@ const UserModel = new Schema(
             profileActive: { type: Boolean, required: true },
             profilePic: { type: String, required: false },
         },
-        address: 
-            {
-                location: { type: String, required: false },
-                city: { type: String, required: false },
-                state: { type: String, required: false },
-                country: { type: String, required: false },
-                zipCode: { type: Number, required: false },
-            },
+        address: {
+            location: { type: String, required: false },
+            city: { type: String, required: false },
+            state: { type: String, required: false },
+            country: { type: String, required: false },
+            zipCode: { type: Number, required: false },
+        },
     },
     { collection: 'User' },
     {

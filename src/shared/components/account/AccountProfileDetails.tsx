@@ -11,11 +11,11 @@ import {
     Grid,
     TextField,
 } from '@material-ui/core';
-import countries from "i18n-iso-countries";
+import countries from 'i18n-iso-countries';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 
 const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
@@ -23,27 +23,27 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
         firstName: userProfileReducer.firstName,
         lastName: userProfileReducer.lastName,
         userName: userProfileReducer.userName,
-        phone: userProfileReducer.profile.phoneNumber,
-        address: userProfileReducer.address.location,
-        zipCode: userProfileReducer.address.zipCode,
-        city: userProfileReducer.address.city,
-        state: userProfileReducer.address.state,
-        country: userProfileReducer.address.country,
-        userMetaData : userProfileReducer.userMetaData,
-        profileActive : userProfileReducer.profile.profileActive,
-        profilePic: userProfileReducer.profile.profilePic
+        phone: userProfileReducer?.profile?.phoneNumber,
+        address: userProfileReducer?.address?.location,
+        zipCode: userProfileReducer?.address?.zipCode,
+        city: userProfileReducer?.address?.city,
+        state: userProfileReducer?.address?.state,
+        country: userProfileReducer?.address?.country,
+        userMetaData: userProfileReducer.userMetaData,
+        profileActive: userProfileReducer?.profile?.profileActive,
+        profilePic: userProfileReducer?.profile?.profilePic,
     });
     console.log('Values', values);
     const dispatch = useDispatch();
-    const[saveMsg, setSaveMsg] = useState('');
-    countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
-    const countryObj = countries.getNames("en",{select:"official"});
-    const countryArray = Object.entries(countryObj).map(([key, value]) =>{
+    const [saveMsg, setSaveMsg] = useState('');
+    countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+    const countryObj = countries.getNames('en', { select: 'official' });
+    const countryArray = Object.entries(countryObj).map(([key, value]) => {
         return {
             label: key,
-            value: value
-        }
-    })
+            value: value,
+        };
+    });
     const handleChange = (event) => {
         setValues({
             ...values,
@@ -67,17 +67,16 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
             userMetaData: values.userMetaData,
             profile: {
                 phoneNumber: values.phone,
-                profileActive: values.profileActive,
-                profilePic: values.profilePic,
+                profileActive: values?.profileActive,
+                profilePic: values?.profilePic,
             },
-            address: 
-                {
-                    location: values.address,
-                    city: values.city,
-                    state: values.state,
-                    country: values.country,
-                    zipCode: values.zipCode,
-                },
+            address: {
+                location: values.address,
+                city: values.city,
+                state: values.state,
+                country: values.country,
+                zipCode: values.zipCode,
+            },
         };
         const token = localStorage.getItem('token');
            // set the with credentials to true
@@ -101,7 +100,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                    dispatch({
                        type: createUserProfile,
                        userMetaData: response.data.data.userMetaData,
-                       profile: response.data.data.profile,
+                       profile: response.data.data?.profile,
                        address: response.data.data.address,
                    });
                    setSaveMsg("Yes");
@@ -110,16 +109,16 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                 setSaveMsg("No");
                }
             },
-               (error) => {
-                   console.log("register error")
-                   setSaveMsg("No");
-               //   this.setState({
-               //     errorMessage: error.response.data,
-               //     signupFailed: true,
-               //   });
-               }
-           );
-    }
+            (error) => {
+                console.log('register error');
+                setSaveMsg('No');
+                //   this.setState({
+                //     errorMessage: error.response.data,
+                //     signupFailed: true,
+                //   });
+            }
+        );
+    };
 
     return (
         <form autoComplete="off" noValidate {...props}>
@@ -170,9 +169,10 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 onChange={handleChange}
                                 type="number"
                                 InputProps={{
-                                    inputProps: { 
-                                        max: 10, min: 10 
-                                    }
+                                    inputProps: {
+                                        max: 10,
+                                        min: 10,
+                                    },
                                 }}
                                 value={values.phone}
                                 variant="outlined"
@@ -242,7 +242,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                     </Grid>
                 </CardContent>
                 <Divider />
-                
+
                 <Box
                     sx={{
                         display: 'flex',
@@ -251,12 +251,12 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                     }}
                 >
                     <Button color="primary" variant="contained" onClick={handleSave}>
-                            Save details
+                        Save details
                     </Button>
-                    {saveMsg == "Yes" && 
-                    <Alert severity="success">Profile is updated!</Alert>}
-                    {saveMsg === "No" &&
-                    <Alert severity="error">Error updating your profile.</Alert>}
+                    {saveMsg == 'Yes' && <Alert severity="success">Profile is updated!</Alert>}
+                    {saveMsg === 'No' && (
+                        <Alert severity="error">Error updating your profile.</Alert>
+                    )}
                 </Box>
             </Card>
         </form>

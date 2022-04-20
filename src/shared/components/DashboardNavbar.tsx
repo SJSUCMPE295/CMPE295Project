@@ -11,7 +11,7 @@ import { logoutAction, resetState } from '../store/constants/action-types';
 import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
-       const { logout } = useAuth();
+    const { logout } = useAuth();
     const dispatch = useDispatch();
     const history = useHistory();
     const [notifications] = React.useState([]);

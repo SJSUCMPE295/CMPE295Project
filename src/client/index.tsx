@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { persistStore } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react'
+import { PersistGate } from 'redux-persist/integration/react';
 import { configureStore } from '../shared/store';
 import App from '../shared/App';
 
@@ -27,9 +27,9 @@ hydrate(
     <Provider store={store}>
         <BrowserRouter>
             <HelmetProvider>
-            <PersistGate loading={null} persistor={persistor}>
+                <PersistGate loading={null} persistor={persistor}>
                     <App />
-            </PersistGate>
+                </PersistGate>
             </HelmetProvider>
         </BrowserRouter>  
     </Provider>,

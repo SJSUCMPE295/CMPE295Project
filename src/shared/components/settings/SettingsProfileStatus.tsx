@@ -11,6 +11,7 @@ import {
     Grid,
     Typography,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
 
 const SettingsProfileStatus = (props) => {
     const handleSubmit = () => {
@@ -96,4 +97,14 @@ const SettingsProfileStatus = (props) => {
     );
 };
 
-export default SettingsProfileStatus;
+const mapStateToProps = ({ user }) => ({
+    user,
+});
+
+const mapDispatchToProps = {};
+
+const ConnectedSettingsProfileStatus = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SettingsProfileStatus);
+export default ConnectedSettingsProfileStatus;

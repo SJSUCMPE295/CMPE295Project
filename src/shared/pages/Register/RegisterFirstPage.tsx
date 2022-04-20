@@ -60,15 +60,7 @@ const RegisterFirstPage = () => {
                 dispatch({ type: saveUserName, firstName, lastName, userName });
                 history.push('/register2', { replace: true });
             }
-          },
-          (error) => {
-              console.log("register error")
-          //   this.setState({
-          //     errorMessage: error.response.data,
-          //     signupFailed: true,
-          //   });
-          }
-        );
+          });
     }
     const handleSubmitWithGoogle = (userName, firstName, lastName, token) => {
         localStorage.setItem('token', token);
@@ -125,8 +117,8 @@ const RegisterFirstPage = () => {
                                     values.isSubmitting = false;
                                     setAlert(true);
                                     switch (error.code) {
-                                        case "auth/email-already-in-use" : {
-                                            setError("User Name already exists");
+                                        case 'auth/email-already-in-use': {
+                                            setError('User Name already exists');
                                             break;
                                         }
                                     }

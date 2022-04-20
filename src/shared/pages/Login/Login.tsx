@@ -19,7 +19,7 @@ import GoogleIcon from '../../icons/Google';
 import { useAuth } from 'contexts/AuthContext';
 import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import {loginAction, createUserProfile, saveUserName} from '../../store/constants/action-types';
+import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
 
@@ -36,20 +36,18 @@ const Login = () => {
         dispatch({type:loginAction, email});
         localStorage.setItem("token", token);
         apiCall(email, token);
-    }
+    };
 
     const handleSubmitWithGoogle = (email, token) => {
         dispatch({type:loginAction, email});
         localStorage.setItem("token", token);
         apiCall(email, token);
-    }
+    };
 
     const apiCall = (email, token) => {
-        // downloadProfilePic(email);
-        console.log('token', token);
         const storage = getStorage();
         const storageRef = ref(storage, `/${email}/profilePic/userPic`);
-        
+
         const payload = {
             userName: email,
         };
@@ -59,77 +57,50 @@ const Login = () => {
               authtoken: token
             }},).then(
             (response) => {
-                console.log("axios call", response);
-                if(response.data.status === 401) {
+                console.log('axios call', response);
+                if (response.data.status === 401) {
                     //redirect to register page
                     history.push('/login2register', { replace: true });
-                  }
-              if (response.status === 200) {
-                  console.log("login successful", response.data.user);
-                //   getDownloadURL(storageRef)
-                //     .then((url) => {
-                //         console.log('url', url);
-                //         // setPicUrl(url);
-                //         response.data.user.profile.profilePic = url;
-                //         console.log('picurl', picUrl);
-                //         console.log('response', response);
-                        dispatch({
-                            type: saveUserName,
-                            firstName: response.data.user.firstName,
-                            lastName: response.data.user.lastName,
-                            userName: response.data.user.userName,
-                        });
-                        dispatch({
-                            type: createUserProfile,
-                            id: response.data.user._id,
-                            userMetaData: response.data.user.userMetaData,
-                            profile: response.data.user.profile,
-                            address: response.data.user.address,
-                        });
-                        history.push('app/dashboard', { replace: true });
-                    }
-                    // )
-                    // .catch((error) => {
-                    //     console.log(error);
-                    //     switch (error.code) {
-                    //     case 'storage/object-not-found':
-                    //         setPicUrl('');
-                    //         break;
-                    //     }
-                    // });
-                  
-            //   }
+                }
+                if (response.status === 200) {
+                    console.log('login successful', response.data.user);
+                    dispatch({
+                        type: saveUserName,
+                        firstName: response.data.user.firstName,
+                        lastName: response.data.user.lastName,
+                        userName: response.data.user.userName,
+                    });
+                    dispatch({
+                        type: createUserProfile,
+                        id: response.data.user._id,
+                        userMetaData: response.data.user.userMetaData,
+                        profile: response.data.user.profile,
+                        address: response.data.user.address,
+                    });
+                    history.push('app/dashboard', { replace: true });
+                }
             },
             (error) => {
-                console.log("login error", error);
-                
+                console.log('login error', error);
             }
-          );
-    }
+        );
+    };
 
     const downloadProfilePic = (email) => {
         const storage = getStorage();
         const storageRef = ref(storage, `/${email}/profilePic/userPic`);
         getDownloadURL(storageRef)
-        .then((url) => {
-            setPicUrl(url);
-            // console.log('user avatar', avatar);
-            // setFindImage(true);
-        })
-        .catch((error) => {
-            switch (error.code) {
-            case 'storage/object-not-found':
-                setPicUrl('');
-                break;
-            // case 'storage/unauthorized':
-            //     // User doesn't have permission to access the object
-            //     break;
-            // case 'storage/canceled':
-            //     // User canceled the upload
-            //     break;
-            }
-        });
-    }
+            .then((url) => {
+                setPicUrl(url);
+            })
+            .catch((error) => {
+                switch (error.code) {
+                    case 'storage/object-not-found':
+                        setPicUrl('');
+                        break;
+                }
+            });
+    };
     return (
         <>
             <Helmet>
@@ -146,9 +117,6 @@ const Login = () => {
                 }}
             >
                 <Container maxWidth="sm" style={{ marginTop: '70px' }}>
-                    {/* <Paper elevation={0}>
-                    <img src={image} height="100" style={{marginLeft:"400"}}/>
-                </Paper> */}
                     <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                         {alert ? <Alert severity="error">{error}</Alert> : <></>}
                     </div>
@@ -170,7 +138,7 @@ const Login = () => {
                             values.isSubmitting = true;
                             setAlert(false);
                             login(values.email, values.password)
-                                .then((response:any) => {
+                                .then((response: any) => {
                                     console.log(response.user);
                                     handleSubmit(values.email, response.user.accessToken);
                                 })
@@ -179,17 +147,16 @@ const Login = () => {
                                     setAlert(true);
                                     values.isSubmitting = false;
                                     switch (error.code) {
-                                        case "auth/wrong-password" : {
-                                            setError("Invalid password");
+                                        case 'auth/wrong-password': {
+                                            setError('Invalid password');
                                             break;
                                         }
-                                        case "auth/user-not-found" : {
-                                            setError("Username does not exists");
+                                        case 'auth/user-not-found': {
+                                            setError('Username does not exists');
                                             break;
                                         }
                                     }
                                     // setError(error.message);
-                                   
                                 })
                                 .finally(() => {
                                     mounted.current && (values.isSubmitting = false);
@@ -213,7 +180,7 @@ const Login = () => {
                                     flexDirection="column"
                                     alignItems="center"
                                     justifyContent="center"
-                                >   
+                                >
                                     <Typography color="textPrimary" variant="h2">
                                         Sign in
                                     </Typography>
