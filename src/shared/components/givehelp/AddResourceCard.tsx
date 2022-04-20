@@ -38,7 +38,7 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
     const [description, setDescription] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
     const [address, setAddress] = useState("");
-    const [sku, setSku] = useState(0);
+    const [sku, setSku] = useState(null);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
@@ -49,9 +49,68 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
     const [url, setUrl] = useState("");
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Resource Pic');
     const [findImage, setFindImage] = React.useState(false);
+
+    const [resourceNameError, setResourceNameError] = useState("");
+    const [categoryError, setCategoryError] = useState("");
+    const [descriptionError, setDescriptionError] = useState("");
+    const [phoneNumError, setPhoneNumError] = useState("");
+    const [addressError, setAddressError] = useState("");
+    const [skuError, setSkuError] = useState("");
+    const [cityError, setCityError] = useState("");
+    const [stateError, setStateError] = useState("");
+    const [zipcodeError, setZipcodeError] = useState("");
+    const [countryError, setCountryError] = useState("");
+
+    let validateForm = () => {
+        if (resourceName === "" || resourceName === null) {
+            setResourceNameError("Please enter resource name");
+            return false;
+        } else if (category === "" || category === null) {
+            setCategoryError("Please enter a category");
+            return false;
+        } else if (sku === 0 || sku === null) {
+            setSkuError("Please enter resource quantity");
+            return false;
+        } else if (sku < 0) {
+            setSkuError("Please enter a valid resource quantity");
+            return false;
+        } else if (description === "" || description === null) {
+            setDescriptionError("Please enter description of resource");
+            return false;
+        } else if (address === "" || address === null) {
+            setAddressError("Please enter a valid address");
+            return false;
+        }  else if (city === "" || city === null) {
+            setCityError("Please enter your city of residence");
+            return false;
+        } else if (state === "" || city === null) {
+            setCityError("Please enter your state of residence");
+            return false;
+        } else if (country === "" || country === null) {
+            setCountryError("Please enter your country of residence");
+            return false;
+        } else if (zipcode === null || zipcode === "") {
+            setZipcodeError("Please enter your zipcode");
+            return false;
+        } else if (zipcode.length != 5) {
+            setZipcodeError("Please enter a valid zipcode!");
+            return false;
+        } else if (phoneNum === "" || phoneNum === null) {
+            setPhoneNumError("Please enter your contact number");
+            return false;
+        } else if (phoneNum.length != 10) {
+            setPhoneNumError("Please enter a valid phone number!");
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+
     
 
     const handleNameChange = (e) => {
+        setResourceNameError("")
         setResourceName(e.target.value)
     };
 
@@ -123,68 +182,81 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
     };
 
     const handleCategoryChange = (e) => {
+        setCategoryError("")
         setCategory(e.target.value)
     };
 
     const handleDescriptionChange = (e) => {
+        setDescriptionError("")
         setDescription(e.target.value)
     };
 
     const handlePhoneNumChange = (e) => {
+        setPhoneNumError("")
         setPhoneNum(e.target.value)
     };
 
     const handleAddressChange = (e) => {
+        setAddressError("")
         setAddress(e.target.value)
     };
 
     const handleSkuChange = (e) => {
+        setSkuError("")
         setSku(e.target.value)
     };
     
     const handleCityChange = (e) => {
+        setCityError("")
         setCity(e.target.value)
     };
 
     const handleStateChange = (e) => {
+        setStateError("")
         setState(e.target.value)
     };
 
     const handleZipcodeChange = (e) => {
+        setZipcodeError("")
         setZipcode(e.target.value)
     };
 
     const handleCountryChange = (e) => {
+        setCountryError("")
         setCountry(e.target.value)
     };
 
     const handleSubmit = async (e) => {
                 e.preventDefault();
-            
-                const res = await fetch("/api/givehelp/resource", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type" : "application/json"
-                        
-                    },
-                    body: JSON.stringify({
-                    UserId:userId, Resource_Name:resourceName, Category:category, Description:description, Phone_Number:phoneNum, Address:address, SKU:sku, 
-                    City:city, State:state, Zipcode:zipcode, Country:country, ImageUrl:url, 
+                const isValid = validateForm();
+
+                if (isValid) {
+                    const res = await fetch("/api/givehelp/resource", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type" : "application/json"
+                            
+                        },
+                        body: JSON.stringify({
+                        UserId:userId, Resource_Name:resourceName, Category:category, Description:description, Phone_Number:phoneNum, Address:address, SKU:sku, 
+                        City:city, State:state, Zipcode:zipcode, Country:country, ImageUrl:url, 
+                        })
                     })
-                })
-        
-                const data = await res.json();
-                console.log(data);
-        
-                if (res.status === 200){
-                    window.alert("Resource added!");
-                    console.log("Resource added!");
-                    window.location.reload();
-                } else {
-                    window.alert("Failed to upload resource data!");
-                    console.log("Failed to upload resource data!");
-                    window.location.reload();
+            
+                    const data = await res.json();
+                    console.log(data);
+            
+                    if (res.status === 200){
+                        window.alert("Resource added!");
+                        console.log("Resource added!");
+                        window.location.reload();
+                    } else {
+                        window.alert("Failed to upload resource data!");
+                        console.log("Failed to upload resource data!");
+                        window.location.reload();
+                    }
                 }
+                
             }
     
 
@@ -216,128 +288,141 @@ const AddResourceCard : FunctionComponent<any> = ({userProfileReducer={},...prop
                         />
                         <Divider />
                         <CardContent>
-                            <Box 
-                            sx={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',       
-                            }}
-                            >
-                                <TextField
-                                    id="filled-basic"
-                                    label="Type"
-                                    variant="filled"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    value="Resource"
-                                />
-                                <TextField
-                                    required
-                                    label="Resource Name"
-                                    defaultValue={resourceName}
-                                    onChange={handleNameChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    helperText="Mask, Oxygen Cylinder, Sanitizer etc."
-                                    
-                                />
-                            </Box>
-                            <Box>
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Category Name"
-                                    defaultValue={category}
-                                    onChange={handleCategoryChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Quantity"
-                                    defaultValue={sku}
-                                    onChange={handleSkuChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                            </Box>
-                            <Box>
-                                <TextField
-                                    id="outlined-decsription-input"
-                                    label="Description"
-                                    value={description}
-                                    onChange={handleDescriptionChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '102ch' }}
-                                    
-                                />
-                            </Box>
-                            <Box sx={{ pt: 2 }}>
-                                <FormGroup>
-                                    <FormControlLabel control={<Checkbox/>} label="Use my profile address" onChange={handleSetCheck} />
-                                </FormGroup>
-                            </Box>
-                            <Box sx={{ pt: 2 }}>
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="Address"
-                                    value={address}
-                                    onChange={handleAddressChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="City"
-                                    value={city}
-                                    onChange={handleCityChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                            </Box>
-                            <Box>
-                                {/* <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Select State"
-                                    variant="outlined"
-                                    //onChange={handleChange}
-                                    select
-                                    SelectProps={{ native: true }}
-                                    sx={{ m: 1, width: '50ch' }}
-                                >
-                                    {states.map((option) => (
-                                        <option key={option.value} value={option.state}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </TextField> */}
-                                <TextField
-                                    required
-                                    id="outlined-required"
-                                    label="State"
-                                    value={state}
-                                    onChange={handleStateChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Country"
-                                    value={country}
-                                    onChange={handleCountryChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                    
-                                />
-                            </Box>
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        id="filled-basic"
+                                        label="Type"
+                                        variant="filled"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        value="Resource"
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{resourceNameError}</div>
+                                    <TextField
+                                        required
+                                        label="Resource Name"
+                                        defaultValue={resourceName}
+                                        onChange={handleNameChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        helperText="Mask, Oxygen Cylinder, Sanitizer etc."
+                                        
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
+                                <Grid item xs={3}>
+                                <div style={{ color: 'red' }}>{categoryError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Category Name"
+                                        defaultValue={category}
+                                        onChange={handleCategoryChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                </Grid>
+                                <Grid item xs={3}>
+                                <div style={{ color: 'red' }}>{skuError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Quantity"
+                                        defaultValue={sku}
+                                        onChange={handleSkuChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
+                                <Grid item xs={4}>
+                                    <div style={{ color: 'red' }}>{descriptionError}</div>
+                                    <TextField
+                                        id="outlined-decsription-input"
+                                        label="Description"
+                                        value={description}
+                                        onChange={handleDescriptionChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '106ch' }}
+                                        
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={6}>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox/>} label="Use my profile address" onChange={handleSetCheck} />
+                                    </FormGroup>
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{addressError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="Address"
+                                        value={address}
+                                        onChange={handleAddressChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{cityError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="City"
+                                        value={city}
+                                        onChange={handleCityChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{stateError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required"
+                                        label="State"
+                                        value={state}
+                                        onChange={handleStateChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{countryError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Country"
+                                        value={country}
+                                        onChange={handleCountryChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        
+                                    />
+                                </Grid>
+                            </Grid>
                             <Box>
                                 <TextField
                                     required

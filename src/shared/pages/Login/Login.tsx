@@ -53,9 +53,20 @@ const Login = () => {
         };
         axios.defaults.withCredentials = true;
           // make a post request with the user data
-          axios.post(serverUrl + 'login', payload).then(
+          axios.post(serverUrl + 'login', payload)
+        //     headers:{
+        //         "Access-Control-Allow-Origin": "Origin",
+        //         "Access-Control-Allow-Credentials": "true",
+        //         "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+        //         "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+        //     },
+        //   })
+          
+          
+          .then(
             (response) => {
                 console.log("axios call", response);
+                
                 if(response.data.status === 401) {
                     //redirect to register page
                     history.push('/login2register', { replace: true });
