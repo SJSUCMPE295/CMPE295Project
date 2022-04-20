@@ -123,3 +123,8 @@ bundle-stats.json
 .vscode
 .idea
 # /dependency-graph.svg
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
