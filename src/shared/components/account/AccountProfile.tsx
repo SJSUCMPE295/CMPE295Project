@@ -158,7 +158,6 @@ const AccountProfile = ({userProfileReducer, ...props}) => {
             {progress==100 &&
                 <Avatar
                     src={avatar}
-                    // src="https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/test114%40gmail.com%2FprofilePic%2FuserPic?alt=media&token=eb7bdbea-70e3-4b32-be11-712b56d56985"
                     sx={{
                         height: 100,
                         width: 100,
