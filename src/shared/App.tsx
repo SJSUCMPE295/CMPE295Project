@@ -17,7 +17,7 @@ import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import AuthContextProvider from 'contexts/AuthContext';
 import GetHelp from 'pages/GetHelp/GetHelp';
-import GetHelpItem from 'pages/GetHelpItem';
+import GetHelpItem from 'pages/GetHelpItem/GetHelpItem';
 import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
@@ -26,10 +26,8 @@ import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
 
-
 import './styles.css';
 const App: React.FC<any> = () => {
-   
     return (
         <AuthContextProvider>
             <StyledEngineProvider injectFirst>
@@ -40,7 +38,11 @@ const App: React.FC<any> = () => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                       <Route path={'/app/gethelp/:datafilter'} component={GetHelp} /> 
+                                        <Route
+                                            path={'/app/gethelp/:id/:type'}
+                                            component={GetHelpItem}
+                                        />
+                                        <Route path={'/app/gethelp'} component={GetHelp} />
                                         <Route path={'/app/dashboard'} component={Dashboard} />
                                         <Route
                                             path={'/app/medicalAssistance'}
@@ -64,45 +66,45 @@ const App: React.FC<any> = () => {
                                 </DashboardLayout>
                             </Route>
 
-                        <Route path={'/login'}>
-                            <MainLayout>
-                                <Login />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/login2register'}>
-                            <MainLayout>
-                                <RegisterThruLogin />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/register1'}>
-                            <MainLayout>
-                                <Register1 />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/register2'}>
-                            <MainLayout>
-                                <Register2 />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/forgot-password'}>
-                            <MainLayout>
-                                <ForgotPassword />
-                            </MainLayout>
-                        </Route>
-                        <Route path={'/reset-password'}>
-                            <MainLayout>
-                                <ResetPassword />
-                            </MainLayout>
-                        </Route>
-                        <Route exact path="/">
-                            <Redirect to="/login" />
-                        </Route>
-                        <Route path={'/404'} component={NotFound} />
-                        <Redirect to="/404" />
-                    </Switch>
-                </div>
-            </ThemeProvider>
-        </StyledEngineProvider>
+                            <Route path={'/login'}>
+                                <MainLayout>
+                                    <Login />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/login2register'}>
+                                <MainLayout>
+                                    <RegisterThruLogin />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/register1'}>
+                                <MainLayout>
+                                    <Register1 />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/register2'}>
+                                <MainLayout>
+                                    <Register2 />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/forgot-password'}>
+                                <MainLayout>
+                                    <ForgotPassword />
+                                </MainLayout>
+                            </Route>
+                            <Route path={'/reset-password'}>
+                                <MainLayout>
+                                    <ResetPassword />
+                                </MainLayout>
+                            </Route>
+                            <Route exact path="/">
+                                <Redirect to="/login" />
+                            </Route>
+                            <Route path={'/404'} component={NotFound} />
+                            <Redirect to="/404" />
+                        </Switch>
+                    </div>
+                </ThemeProvider>
+            </StyledEngineProvider>
         </AuthContextProvider>
     );
 };

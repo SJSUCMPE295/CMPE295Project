@@ -1,20 +1,20 @@
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createRootReducer from './rootReducer';
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from 'redux-persist';
+import localStorage from 'redux-persist/lib/storage';
 
 type StoreParams = {
     initialState?: { [key: string]: any };
     middleware?: any[];
 };
 
-// const persistConfig = {
-//     key: "root",
-//     storage,
-//   };
+const persistConfig = {
+    key: 'root',
+    storage: localStorage,
+};
 
-// const persistedReducer = persistReducer(persistConfig, createRootReducer);
+const persistedReducer = persistReducer(persistConfig, createRootReducer);
 
 export const configureStore = ({ initialState, middleware = [] }: StoreParams) => {
     const devtools =
@@ -25,7 +25,7 @@ export const configureStore = ({ initialState, middleware = [] }: StoreParams) =
     const composeEnhancers = devtools || compose;
 
     const store = createStore(
-        createRootReducer,
+        persistedReducer,
         initialState,
         composeEnhancers(applyMiddleware(...[thunk].concat(...middleware)))
     );
@@ -37,8 +37,13 @@ export const configureStore = ({ initialState, middleware = [] }: StoreParams) =
             );
         }
     }
-    
-    return store;
+
+    let persistor = persistStore(store);
+    if (typeof window !== `undefined`) {
+        window.persistor = persistor;
+    }
+
+    return { store, persistor };
 };
 
 export default configureStore;

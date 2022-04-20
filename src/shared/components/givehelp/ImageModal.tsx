@@ -1,10 +1,7 @@
-
-
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { styled, Box } from '@mui/system';
 //import ModalUnstyled from '@mui/base/ModalUnstyled';
-
 
 // const StyledModal = styled(ModalUnstyled)`
 //   position: fixed;
@@ -39,22 +36,29 @@ import { styled, Box } from '@mui/system';
 // };
 
 export default function ImageModal({ setOpenModal, onClose }) {
-return (
-    <>
-        <Modal fullscreen={true} aria-labelledby="contained-modal-title-vcenter" centered show={setOpenModal} onHide={onClose} animation={true}>
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">Modal heading</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={onClose}>
-                    Save Changes
-                </Button>
-            </Modal.Footer>
-        </Modal>
-    </>
-)
+    return (
+        <>
+            <Modal
+                fullscreen={true}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                show={setOpenModal}
+                onHide={onClose}
+                animation={true}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={onClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={onClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
 }

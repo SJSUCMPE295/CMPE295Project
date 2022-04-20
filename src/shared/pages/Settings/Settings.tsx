@@ -1,18 +1,6 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import {
-    Box,
-    Button,
-    Container,
-    Card,
-    CardContent,
-    CardHeader,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    Grid,
-    Typography,
-} from '@material-ui/core';
+import { Box, Container } from '@material-ui/core';
 import SettingsProfileStatus from '../../components/settings/SettingsProfileStatus';
 import SettingsDoctor from '../../components/settings/SettingsDoctor';
 import SettingsPassword from '../../components/settings/SettingsPassword';
@@ -20,7 +8,7 @@ import SettingsPassword from '../../components/settings/SettingsPassword';
 const SettingsView = () => (
     <>
         <Helmet>
-            <title>Settings | Material Kit</title>
+            <title>Settings</title>
         </Helmet>
         <Box
             sx={{

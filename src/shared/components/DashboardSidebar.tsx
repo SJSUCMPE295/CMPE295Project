@@ -16,13 +16,7 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
-
-//import userProfileReducer from '../store/reducers/userProfileReducer';
-const user = {
-    avatar: '/static/images/avatars/avatar_2.png',//userProfileReducer.profile.profilePic,
-    jobTitle: 'San Jose,CA',//userProfileReducer.address,
-    name: 'Katarina Smith',
-};
+import { connect } from 'react-redux';
 
 const items = [
     {
@@ -31,7 +25,7 @@ const items = [
         title: 'Dashboard',
     },
     {
-        href: '/app/gethelp/:all',
+        href: '/app/gethelp',
         icon: PackageIcon,
         title: 'Get Help',
     },
@@ -73,9 +67,13 @@ const items = [
     },*/
 ];
 
-export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
+const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
-
+    const user = {
+        avatar: '/static/images/avatars/avatar_2.png',
+        jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
+        name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
+    };
     React.useEffect(() => {
         if (openMobile && onMobileClose) {
             onMobileClose();
@@ -209,4 +207,11 @@ export const DashboardSidebar = ({ onMobileClose, openMobile ,}) => {
 //     openMobile: false,
 // };
 
-export default DashboardSidebar;
+//export default DashboardSidebar;
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
+});
+const mapDispatchToProps = {};
+
+const ConnectedDashboardSidebar = connect(mapStateToProps, mapDispatchToProps)(DashboardSidebar);
+export default ConnectedDashboardSidebar;

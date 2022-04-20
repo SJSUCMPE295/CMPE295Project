@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
+import { connect } from 'react-redux';
 
 const SettingsPassword = (props) => {
     const [values, setValues] = useState({
@@ -77,4 +78,9 @@ const SettingsPassword = (props) => {
     );
 };
 
-export default SettingsPassword;
+const mapStateToProps = ({ user }) => ({
+    user,
+});
+const mapDispatchToProps = {};
+const ConnectedSettingsPassword = connect(mapStateToProps, mapDispatchToProps)(SettingsPassword);
+export default ConnectedSettingsPassword;

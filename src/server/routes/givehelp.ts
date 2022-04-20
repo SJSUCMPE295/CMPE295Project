@@ -5,19 +5,19 @@ const router = Router();
 
 // API to post resource
 router.post('/resource', async (req, res) => {
-    const UserId=req.body.UserId;
-    const Resource_Name=req.body.Resource_Name;
-    const Category=req.body.Category;
-    const Description=req.body.Description;
-    const Phone_Number=req.body.Phone_Number;
-    const Address=req.body.Address;
-    const City=req.body.City;
-    const State=req.body.State;
-    const Zipcode=req.body.Zipcode;
-    const Country=req.body.Country;
-    const SKU=req.body.SKU;
-    const ImageUrl=req.body.ImageUrl;
-    
+    const UserId = req.body.UserId;
+    const Resource_Name = req.body.Resource_Name;
+    const Category = req.body.Category;
+    const Description = req.body.Description;
+    const Phone_Number = req.body.Phone_Number;
+    const Address = req.body.Address;
+    const City = req.body.City;
+    const State = req.body.State;
+    const Zipcode = req.body.Zipcode;
+    const Country = req.body.Country;
+    const SKU = req.body.SKU;
+    const ImageUrl = req.body.ImageUrl;
+
     const resourcedata = new resourceModel({
         UserId,
         Resource_Name,
@@ -36,10 +36,14 @@ router.post('/resource', async (req, res) => {
         await resourcedata.save((error, data) => {
             if (error) {
                 console.log('error', error);
-                return res.status(500).send({message:'Unable to upload resource data due to internal server error!'});
+                return res
+                    .status(500)
+                    .send({
+                        message: 'Unable to upload resource data due to internal server error!',
+                    });
             } else {
                 console.log('data', data);
-                res.status(200).send({message:'Resource data uploaded!'});
+                res.status(200).send({ message: 'Resource data uploaded!' });
             }
         });
     } catch (err) {
@@ -49,18 +53,18 @@ router.post('/resource', async (req, res) => {
 
 // API to post service
 router.post('/service', async (req, res) => {
-    const UserId=req.body.UserId;
-    const Service_Name=req.body.Service_Name;
-    const Category=req.body.Category;
-    const Description=req.body.Description;
-    const Phone_Number=req.body.Phone_Number;
-    const Address=req.body.Address;
-    const City=req.body.City;
-    const State=req.body.State;
-    const Zipcode=req.body.Zipcode;
-    const Country=req.body.Country;
-    const availableDate=req.body.availableDate;
-    const ImageUrl=req.body.ImageUrl;
+    const UserId = req.body.UserId;
+    const Service_Name = req.body.Service_Name;
+    const Category = req.body.Category;
+    const Description = req.body.Description;
+    const Phone_Number = req.body.Phone_Number;
+    const Address = req.body.Address;
+    const City = req.body.City;
+    const State = req.body.State;
+    const Zipcode = req.body.Zipcode;
+    const Country = req.body.Country;
+    const availableDate = req.body.availableDate;
+    const ImageUrl = req.body.ImageUrl;
 
     const servicedata = new serviceModel({
         UserId,
@@ -80,10 +84,14 @@ router.post('/service', async (req, res) => {
         await servicedata.save((error, data) => {
             if (error) {
                 console.log('error', error);
-                return res.status(500).send({message:'Unable to upload service data due to internal server error!'});
+                return res
+                    .status(500)
+                    .send({
+                        message: 'Unable to upload service data due to internal server error!',
+                    });
             } else {
                 console.log('data', data);
-                res.status(200).send({message:'Resource data uploaded!'});
+                res.status(200).send({ message: 'Resource data uploaded!' });
             }
         });
     } catch (err) {
@@ -97,7 +105,7 @@ router.post('/update', async (_req, res) => {
     try {
         serviceModel.findByIdAndUpdate(
             id,
-            {$set:{ availableDate: _req.body.availableDate }},
+            { $set: { availableDate: _req.body.availableDate } },
             (error, data) => {
                 if (error) {
                     console.log('error', error);

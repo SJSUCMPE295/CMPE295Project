@@ -13,8 +13,9 @@ const routerContext = {};
 
 const serverRenderer: any =
     () => (req: express.Request & { store: Store }, res: express.Response) => {
+        console.log('res', res.locals.store.store);
         const content = renderToString(
-            <Provider store={res.locals.store}>
+            <Provider store={res.locals.store.store}>
                 <Router location={req.url} context={routerContext}>
                     <HelmetProvider context={helmetContext}>
                         <App />
@@ -23,7 +24,7 @@ const serverRenderer: any =
             </Provider>
         );
 
-        const state = JSON.stringify(res.locals.store.getState());
+        const state = JSON.stringify(res.locals.store.store.getState());
 
         return res.send(
             '<!doctype html>' +

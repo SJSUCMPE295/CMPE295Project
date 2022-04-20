@@ -18,6 +18,7 @@ import homeRouter from './routes/home';
 import giveHelpRouter from './routes/givehelp';
 import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
+import userRouter from './routes/user';
 import staticRouter from './routes/static';
 
 const mongoose = require('mongoose');
@@ -53,6 +54,7 @@ app.use('/api/signup', signUpRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/appointments', appointmentsRouter);
 app.use('/api/static', staticRouter);
+app.use('/api/user', userRouter);
 
 /* End: Api routes*/
 app.use(addStore);

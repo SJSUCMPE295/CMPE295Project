@@ -11,6 +11,7 @@ import {
     Grid,
     Typography,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
 const hideElements = null;
 const SettingsDoctor = (props) => {
     const handleSubmit = () => {
@@ -104,4 +105,11 @@ const SettingsDoctor = (props) => {
         </form>
     );
 };
-export default SettingsDoctor;
+const mapStateToProps = ({ user }) => ({
+    user,
+});
+
+const mapDispatchToProps = {};
+
+const ConnectedSettingsDoctor = connect(mapStateToProps, mapDispatchToProps)(SettingsDoctor);
+export default ConnectedSettingsDoctor;

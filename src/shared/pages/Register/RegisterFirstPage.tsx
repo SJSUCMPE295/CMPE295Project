@@ -36,7 +36,7 @@ const RegisterFirstPage = () => {
     const mounted = useMounted();
 
     const handleSubmit = (userName, firstName, lastName) => {
-       apiCall(userName, firstName, lastName);
+        apiCall(userName, firstName, lastName);
     };
 
     const apiCall = (userName, firstName, lastName) => {
@@ -48,23 +48,23 @@ const RegisterFirstPage = () => {
         axios.defaults.withCredentials = true;
         // make a post request with the user data
         axios.post(serverUrl + 'signup/user', payload).then(
-          (response) => {
-              console.log("axios call")
-            if (response.status === 200) {
-                console.log("updated successfully", response);
-                dispatch({ type: saveUserName, firstName, lastName, userName });
-                history.push('/register2', { replace: true });
+            (response) => {
+                console.log('axios call');
+                if (response.status === 200) {
+                    console.log('updated successfully', response);
+                    dispatch({ type: saveUserName, firstName, lastName, userName });
+                    history.push('/register2', { replace: true });
+                }
+            },
+            (error) => {
+                console.log('register error');
+                //   this.setState({
+                //     errorMessage: error.response.data,
+                //     signupFailed: true,
+                //   });
             }
-          },
-          (error) => {
-              console.log("register error")
-          //   this.setState({
-          //     errorMessage: error.response.data,
-          //     signupFailed: true,
-          //   });
-          }
         );
-    }
+    };
     const handleSubmitWithGoogle = (userName, firstName, lastName) => {
         apiCall(userName, firstName, lastName);
         // dispatch({ type: saveUserName, firstName, lastName, userName });
@@ -112,15 +112,19 @@ const RegisterFirstPage = () => {
                             register(values.userName, values.password)
                                 .then((response) => {
                                     console.log(response);
-                                    handleSubmit(values.userName, values.firstName, values.lastName);
+                                    handleSubmit(
+                                        values.userName,
+                                        values.firstName,
+                                        values.lastName
+                                    );
                                 })
                                 .catch((error) => {
                                     console.log(error.message);
                                     values.isSubmitting = false;
                                     setAlert(true);
                                     switch (error.code) {
-                                        case "auth/email-already-in-use" : {
-                                            setError("User Name already exists");
+                                        case 'auth/email-already-in-use': {
+                                            setError('User Name already exists');
                                             break;
                                         }
                                     }
