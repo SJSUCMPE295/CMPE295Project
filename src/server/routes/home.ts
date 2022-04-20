@@ -20,9 +20,10 @@ router.get('/', async (_req, res) => {
         userappointments: [{}],
     };
     try {
-        const user = _req.query.user;
-        console.log(user);
+        let user =_req.query.user;
+        console.log(_req.query);
         if (user != '') {
+            console.log(user);
             const usertransactions =  Transactions.aggregate(
                 [
                     {
@@ -39,7 +40,7 @@ router.get('/', async (_req, res) => {
                     if (error_ut) {
                         res.status(400).send(error_ut);
                     } else {
-                        //console.log(data_ut);
+                        console.log(data_ut);
                         response.usertransactions = data_ut;
                         const userappointment = DoctorAppointment.aggregate( [
                             {
@@ -191,7 +192,7 @@ router.get('/', async (_req, res) => {
                                                     res.status(400).send(error3);
                                                 } else {
                                                     response.transactions = transactioncount;
-                                                    console.log(response);
+                                                    //console.log(response);
                                                     res.send(response);
                                                 }
                                             }

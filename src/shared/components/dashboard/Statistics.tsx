@@ -1,5 +1,6 @@
 import React, { Component, useRef, useEffect, useState, FunctionComponent } from 'react';
 import { Link as RouterLink } from "react-router-dom";
+import { connect } from 'react-redux';
 import {
     Avatar,
     Box,
@@ -39,14 +40,17 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WarningIcon from '@material-ui/icons/Warning';
 import axios from 'axios';
 
-const Statistics: FunctionComponent<any> = (props) => {
+const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
+    const UserId =userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
+    console.log(UserId);
     //const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
-    let UserId = '617f2fb40583ba49a0091425';
+    //'617f2fb40583ba49a0091425';
     useEffect(() => {
+       // if (typeof myVar !== 'undefined'
         axios
-            .get('/api/home', { params: { user: '617f2fb40583ba49a0091425' } }) //change later
+            .get('/api/home', {params:{ user: UserId}} ) //change later
             .then(
                 (response) => {
                     console.log(response.data);
@@ -376,7 +380,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                                 <Button
                                     
                                   
-                                    href="/app/gethelp/:resources"
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -441,7 +445,7 @@ const Statistics: FunctionComponent<any> = (props) => {
                             >
                                 <Button
                                     
-                                    href="/app/gethelp/:services"
+                                    href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
                                     size="small"
@@ -520,4 +524,12 @@ const Statistics: FunctionComponent<any> = (props) => {
     );
 };
 
-export default Statistics;
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
+});
+
+const mapDispatchToProps = {};
+
+const ConnectedStatistics = connect(mapStateToProps, mapDispatchToProps)(Statistics);
+export default ConnectedStatistics;
+//export default Statistics;

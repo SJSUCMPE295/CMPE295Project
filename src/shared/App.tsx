@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
@@ -17,7 +18,7 @@ import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
 import AuthContextProvider from 'contexts/AuthContext';
 import GetHelp from 'pages/GetHelp/GetHelp';
-import GetHelpItem from 'pages/GetHelpItem';
+import GetHelpItem from 'pages/GetHelpItem/GetHelpItem';
 import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
@@ -41,7 +42,8 @@ const App: React.FC<any> = () => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                       <Route path={'/app/gethelp/:datafilter'} component={GetHelp} /> 
+                                        <Route path={'/app/gethelp/:id/:type'} component={GetHelpItem} /> 
+                                        <Route path={'/app/gethelp'} component={GetHelp} /> 
                                         <Route path={'/app/dashboard'} component={Dashboard} />
                                         <Route
                                             path={'/app/medicalAssistance'}
