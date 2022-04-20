@@ -124,10 +124,15 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
             description: values.description,
             licenseUrl: fileUrl
         };
+        const token = localStorage.getItem('token');
            // set the with credentials to true
            axios.defaults.withCredentials = true;
            // make a post request with the user data
-           axios.post(serverUrl + 'signup/doctor', payload).then(
+           axios.post(serverUrl + 'signup/doctor', payload, {
+            headers : {
+                authtoken: token
+            }
+            }).then(
                (response) => {
                    console.log("axios call", response);
                if (response.status === 200) {

@@ -79,11 +79,15 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                     zipCode: values.zipCode,
                 },
         };
-
+        const token = localStorage.getItem('token');
            // set the with credentials to true
            axios.defaults.withCredentials = true;
            // make a post request with the user data
-           axios.post(serverUrl + 'user/profileUpdate', payload).then(
+           axios.post(serverUrl + 'user/profileUpdate', payload,  {
+            headers : {
+                authtoken: token
+            }
+            }).then(
                (response) => {
                    console.log("axios call", response);
                if (response.status === 200) {

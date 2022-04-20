@@ -34,26 +34,30 @@ const Login = () => {
     const mounted = useMounted();
     const handleSubmit = (email, token) => {
         dispatch({type:loginAction, email});
+        localStorage.setItem("token", token);
         apiCall(email, token);
     }
 
     const handleSubmitWithGoogle = (email, token) => {
         dispatch({type:loginAction, email});
+        localStorage.setItem("token", token);
         apiCall(email, token);
     }
 
     const apiCall = (email, token) => {
         // downloadProfilePic(email);
+        console.log('token', token);
         const storage = getStorage();
         const storageRef = ref(storage, `/${email}/profilePic/userPic`);
         
         const payload = {
             userName: email,
-            token: token
         };
         axios.defaults.withCredentials = true;
           // make a post request with the user data
-          axios.post(serverUrl + 'login', payload).then(
+          axios.post(serverUrl + 'login', payload, {headers: {
+              authtoken: token
+            }},).then(
             (response) => {
                 console.log("axios call", response);
                 if(response.data.status === 401) {
@@ -238,8 +242,8 @@ const Login = () => {
                                         onClick={() =>
                                             signinWithGoogle()
                                                 .then((user: any) => {
-                                                    console.log(user);
-                                                    handleSubmitWithGoogle(user.user.email, user._tokenResponse.idtoken);
+                                                    console.log(user.user);
+                                                    handleSubmitWithGoogle(user.user.email, user.user.accessToken);
                                                     // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch((error) => {

@@ -101,9 +101,14 @@ const AccountProfile = ({userProfileReducer, ...props}) => {
                 profilePic: avatar,
             },
         };
+        const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
        // make a post request with the user data
-       axios.post(serverUrl + 'user/profilePicUpdate', payload).then(
+       axios.post(serverUrl + 'user/profilePicUpdate', payload, {
+        headers : {
+            authtoken: token
+        }
+        }).then(
            (response) => {
                console.log("axios call", response);
            if (response.status === 200) {

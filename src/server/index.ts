@@ -20,6 +20,7 @@ import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
 import userRouter from './routes/user';
 import staticRouter from './routes/static';
+import checkAuth from './middleware/auth';
 
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -44,11 +45,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/gethelp', getHelpRouter);
 app.use('/api/givehelp', giveHelpRouter);
 app.use('/api/home', homeRouter);
-app.use('/api/signup', signUpRouter);
-app.use('/api/login', loginRouter);
+app.use('/api/signup', checkAuth, signUpRouter);
+app.use('/api/login', checkAuth, loginRouter);
 app.use('/api/appointments', appointmentsRouter);
 app.use('/api/static', staticRouter);
-app.use('/api/user', userRouter);
+app.use('/api/user', checkAuth, userRouter);
 
 /* End: Api routes*/
 app.use(addStore);

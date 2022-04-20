@@ -72,9 +72,14 @@ const RegisterSecondPage = () => {
         };
         console.log("payload", payload);
         // set the with credentials to true
+        const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'signup/user/register', payload).then(
+        axios.post(serverUrl + 'signup/user/register', payload, {
+            headers : {
+                authtoken: token
+            }
+        }).then(
             (response) => {
                 console.log("axios call", response);
             if (response.status === 200) {
