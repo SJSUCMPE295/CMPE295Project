@@ -11,14 +11,30 @@ import {
     Grid,
     TextField,
     MenuItem,
-    Link
+    Link,
+    Typography
 } from '@material-ui/core';
+import { withStyles} from '@material-ui/styles'
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
 import axios from 'axios';
 import serverUrl from '../utils/config';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
+const BorderLinearProgress = withStyles((theme) => ({
+    root: {
+      height: 15,
+      borderRadius: 5,
+    },
+    colorPrimary: {
+      backgroundColor: "#EEEEEE",
+    },
+    bar: {
+      borderRadius: 5,
+      backgroundColor: '#1a90ff',
+    },
+  }))(LinearProgress);
 function getModalStyle() {
     // const top = 50 + rand();
     // const left = 50 + rand();
@@ -59,6 +75,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     const [fileLink, setFileLink] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
+    const [progress, setProgress] = useState(0);
     useEffect(() => {
         // set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -94,14 +111,24 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
         }
         const fileName = event.target.files[0].name;
         const storage = getStorage();
-        const storageRef = ref(storage, `/${values.user}/${fileName}`);
+        const storageRef = ref(storage, `/${values.user}/license/${fileName}`);
 
         const file = event.target.files[0];
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot);
-            setFileLink(snapshot.metadata.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed', (snapshot) => {
+            setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setFileLink(fileName);
+            switch (snapshot.state) {
+            case 'paused':
+                console.log('Upload is paused');
+                break;
+            case 'running':
+                console.log('Upload is running');
+                break;
+        }
+    }, (error) => {},
+    ()=> {
             getDownloadURL(storageRef).then((url) => {
-                    console.log('fileurl', url);
                     setFileUrl(url);
             })
             .catch((error) => {
@@ -111,8 +138,9 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                     break;
                 }
             });
-        });
-    };
+    }
+    );
+    }
 
     const handleSave = () => {
         const payload = {
@@ -242,7 +270,16 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                             <input type="file" hidden onChange={saveFile} />
                         </Button>
                         }
-                        {fileLink && 
+                        {progress>0 && progress<100 && (
+                        <Box className="mb25" display="flex" alignItems="center">
+                            <Box width="100%" mr={1}>
+                            <BorderLinearProgress variant="determinate" value={progress} />
+                            </Box>
+                            <Box minWidth={35}>
+                            <Typography variant="body2" color="textSecondary">{`${Math.round(progress)}%`}</Typography>
+                            </Box>
+                        </Box>)}
+                        {progress==100 && 
                         <Link href={fileUrl} 
                               variant="body2"
                               rel="noopener noreferrer"  

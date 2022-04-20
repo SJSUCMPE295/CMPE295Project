@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Avatar, Box, Button, Divider, Drawer, Hidden, List, Typography } from '@material-ui/core';
 import {
     AlertCircle as AlertCircleIcon,
@@ -16,18 +16,8 @@ import {
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
-<<<<<<< HEAD
-import RegisterDoctorModal from './RegisterDoctorModal';
-
-//import userProfileReducer from '../store/reducers/userProfileReducer';
-const user = {
-    avatar: '/static/images/avatars/avatar_2.png',//userProfileReducer.profile.profilePic,
-    jobTitle: 'San Jose,CA',//userProfileReducer.address,
-    name: 'Katarina Smith',
-};
-=======
 import { connect } from 'react-redux';
->>>>>>> 7457a4a8af71638182f37728355fd68cd145fbd6
+import { RegisterDoctorModal} from './RegisterDoctorModal';
 
 const items = [
     {
@@ -80,6 +70,7 @@ const items = [
 
  const DashboardSidebar = ({ onMobileClose, openMobile ,userProfileReducer,}) => {
     const location = useLocation();
+    const [open, setOpen] = useState(false);
     const user = {
         avatar:"/static/images/avatars/avatar_2.png",
         jobTitle: userProfileReducer?.address?.city+", "+userProfileReducer?.address?.state,//"San Jose, CA",//
@@ -182,7 +173,7 @@ const items = [
 
     return (
         <>
-        {open && <RegisterDoctorModal closeModal={closeModal} open={open}/> }
+        {open && <RegisterDoctorModal closeModal={closeModal} open={open} userProfileReducer={userProfileReducer}/> }
             <Hidden mdUp>
                 <Drawer
                     anchor="left"
@@ -228,9 +219,6 @@ const items = [
 //     onMobileClose: () => {},
 //     openMobile: false,
 // };
-<<<<<<< HEAD
-export default DashboardSidebar;
-=======
 
 //export default DashboardSidebar;
 const mapStateToProps = ({ userProfileReducer }) => ({
@@ -241,4 +229,3 @@ const mapDispatchToProps = {};
 const ConnectedDashboardSidebar = connect(mapStateToProps, mapDispatchToProps)(DashboardSidebar);
 export default ConnectedDashboardSidebar;
 
->>>>>>> 7457a4a8af71638182f37728355fd68cd145fbd6
