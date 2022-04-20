@@ -13,7 +13,7 @@ const routerContext = {};
 
 const serverRenderer: any =
     () => (req: express.Request & { store: Store }, res: express.Response) => {
-        console.log('res',res.locals.store.store);
+        console.log('res', res.locals.store.store);
         const content = renderToString(
             <Provider store={res.locals.store.store}>
                 <Router location={req.url} context={routerContext}>

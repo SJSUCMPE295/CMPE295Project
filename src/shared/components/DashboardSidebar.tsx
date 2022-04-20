@@ -67,12 +67,12 @@ const items = [
     },*/
 ];
 
- const DashboardSidebar = ({ onMobileClose, openMobile ,userProfileReducer,}) => {
+const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
     const user = {
-        avatar:"/static/images/avatars/avatar_2.png",
-        jobTitle: userProfileReducer?.address?.city+", "+userProfileReducer?.address?.state,//"San Jose, CA",//
-        name:userProfileReducer?.firstName+" "+userProfileReducer?.lastName//"katarina Smith"//
+        avatar: '/static/images/avatars/avatar_2.png',
+        jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
+        name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
     };
     React.useEffect(() => {
         if (openMobile && onMobileClose) {
@@ -215,4 +215,3 @@ const mapDispatchToProps = {};
 
 const ConnectedDashboardSidebar = connect(mapStateToProps, mapDispatchToProps)(DashboardSidebar);
 export default ConnectedDashboardSidebar;
-

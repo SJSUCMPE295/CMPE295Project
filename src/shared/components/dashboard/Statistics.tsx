@@ -1,5 +1,5 @@
 import React, { Component, useRef, useEffect, useState, FunctionComponent } from 'react';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Avatar,
@@ -40,17 +40,17 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WarningIcon from '@material-ui/icons/Warning';
 import axios from 'axios';
 
-const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
-    const UserId =userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
+const Statistics: FunctionComponent<any> = ({ userProfileReducer, props }) => {
+    const UserId = userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
     console.log(UserId);
     //const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     //'617f2fb40583ba49a0091425';
     useEffect(() => {
-       // if (typeof myVar !== 'undefined'
+        // if (typeof myVar !== 'undefined'
         axios
-            .get('/api/home', {params:{ user: UserId}} ) //change later
+            .get('/api/home', { params: { user: UserId } }) //change later
             .then(
                 (response) => {
                     console.log(response.data);
@@ -70,9 +70,9 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
     let transactiontype = [];
     let transactioncount = [];
     let totalusertrans = 0;
-    let totalresources=0;
-    let usertransactions={};
-    let userappointments={};
+    let totalresources = 0;
+    let usertransactions = {};
+    let userappointments = {};
     const theme = useTheme();
     if (data != null) {
         const resources = data.resources;
@@ -81,9 +81,9 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
             resourcename.push(element._id);
             resourcesku.push(element.resource_SKU);
         });
-         totalresources = resourcesku.reduce((result, number) => result + number);
+        totalresources = resourcesku.reduce((result, number) => result + number);
 
-         usertransactions = data.usertransactions;
+        usertransactions = data.usertransactions;
         if (usertransactions.length > 0) {
             usertransactions.forEach((element) => {
                 transactiontype.push(element._id);
@@ -152,35 +152,32 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
         maintainAspectRatio: false,
         responsive: true,
         scales: {
-            xAxes: 
-                {
-                    ticks: {
-                        Color: theme.palette.text.secondary,
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false,
-                    },
+            xAxes: {
+                ticks: {
+                    Color: theme.palette.text.secondary,
                 },
-            
-            yAxes: 
-                {
-                    ticks: {
-                        fontColor: theme.palette.text.secondary,
-                        beginAtZero: true,
-                        min: 0,
-                    },
-                    gridLines: {
-                        borderDash: [2],
-                        borderDashOffset: [2],
-                        color: theme.palette.divider,
-                        drawBorder: false,
-                        zeroLineBorderDash: [2],
-                        zeroLineBorderDashOffset: [2],
-                        zeroLineColor: theme.palette.divider,
-                    },
+                gridLines: {
+                    display: false,
+                    drawBorder: false,
                 },
-            
+            },
+
+            yAxes: {
+                ticks: {
+                    fontColor: theme.palette.text.secondary,
+                    beginAtZero: true,
+                    min: 0,
+                },
+                gridLines: {
+                    borderDash: [2],
+                    borderDashOffset: [2],
+                    color: theme.palette.divider,
+                    drawBorder: false,
+                    zeroLineBorderDash: [2],
+                    zeroLineBorderDashOffset: [2],
+                    zeroLineColor: theme.palette.divider,
+                },
+            },
         },
         tooltips: {
             backgroundColor: theme.palette.background.paper,
@@ -253,7 +250,7 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
                                 </Typography>
                                 {data != null ? (
                                     <Typography color="textPrimary" variant="h3">
-                                      {totalresources}
+                                        {totalresources}
                                     </Typography>
                                 ) : null}
                             </Grid>
@@ -378,8 +375,6 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
                                 }}
                             >
                                 <Button
-                                    
-                                  
                                     href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
@@ -444,7 +439,6 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
                                 }}
                             >
                                 <Button
-                                    
                                     href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
@@ -492,11 +486,12 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
                                                     ({
                                                         doctor_name: doctor_name,
                                                         AppointmentDetails: AppointmentDetails,
-                                                        _id:_id
+                                                        _id: _id,
                                                     }) => (
                                                         <Typography
                                                             color="textPrimary"
-                                                            variant="text" key={_id}
+                                                            variant="text"
+                                                            key={_id}
                                                         >
                                                             You have an appointment with{' '}
                                                             {doctor_name} at {AppointmentDetails}
