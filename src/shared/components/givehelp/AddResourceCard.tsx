@@ -90,13 +90,13 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         } else if (zipcode === null || zipcode === "") {
             setZipcodeError("Please enter your zipcode");
             return false;
-        } else if (zipcode.length != 5) {
+        } else if (zipcode.toString().length != 5) {
             setZipcodeError("Please enter a valid zipcode!");
             return false;
         } else if (phoneNum === "" || phoneNum === null) {
             setPhoneNumError("Please enter your contact number");
             return false;
-        } else if (phoneNum.length != 10) {
+        } else if (phoneNum.toString().length != 10) {
             setPhoneNumError("Please enter a valid phone number!");
             return false;
         } else {
@@ -118,8 +118,10 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         if (file == null || !file) {
             console.log('No image');
             setShowErrorMsg('Error: No image available');
+            setFindImage(false)
         } else {
             setImage(file);
+            setFindImage(true)
             console.log(file);
             const storageRef = ref(
                 storage,
@@ -128,20 +130,17 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             uploadBytes(storageRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!', snapshot.metadata);
                 setFileUploadTitle(snapshot.metadata.name);
-                setFindImage(true);
                 setShowErrorMsg('Image Uploaded successfully to firebase!');
                 getDownloadURL(storageRef)
                     .then((url) => {
                         console.log(url);
                         setUrl(url);
                         console.log('url', url);
-                        setFindImage(true);
                     })
                     .catch((error) => {
                         switch (error.code) {
                             case 'storage/object-not-found':
                                 setUrl('');
-                                setFindImage(false);
                                 break;
                         }
                     });
@@ -151,12 +150,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleImageChange = (e) => {
         console.log('Reached image change');
-        if (findImage) {
-            console.log('Image uploaded successfully to firebase!');
-            alert('Image uploaded successfully to firebase!');
-        } else {
+        if (!findImage) {
             console.log('Image upload failed!');
-            alert('Image upload failed!');
+            alert('Image upload failed! Please try again');
+        } else {
+            console.log('Image uploaded successfully');
+            alert('Image uploaded to firebase!');
         }
     };
 
@@ -424,51 +423,62 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     />
                                 </Grid>
                             </Grid>
-                            <Box>
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Zipcode"
-                                    value={zipcode}
-                                    onChange={handleZipcodeChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                                <TextField
-                                    required
-                                    id="outlined-required-input"
-                                    label="Phone Number"
-                                    value={phoneNum}
-                                    onChange={handlePhoneNumChange}
-                                    variant="outlined"
-                                    sx={{ m: 1, width: '50ch' }}
-                                />
-                            </Box>
-                            <Divider sx={{ pt: 1 }} />
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{zipcodeError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Zipcode"
+                                        value={zipcode}
+                                        onChange={handleZipcodeChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ color: 'red' }}>{phoneNumError}</div>
+                                    <TextField
+                                        required
+                                        id="outlined-required-input"
+                                        label="Phone Number"
+                                        value={phoneNum}
+                                        onChange={handlePhoneNumChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Divider sx={{ pt: 4 }} />
                             <Grid
                                 container
-                                rowSpacing={1}
-                                columnSpacing={{ xs: 3, sm: 3, md: 3 }}
+                                rowSpacing={4}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                                 zIndex={1}
                                 paddingTop={3}
                             >
                                 <Grid item xs={3}>
                                     <input type="file" onChange={handleImageUpload} />
-                                    <Button
-                                        color="primary"
-                                        variant="contained"
-                                        size="medium"
-                                        onClick={handleImageChange}
-                                    >
-                                        Upload Image
-                                    </Button>
+                                    
                                     {/* {showErrorMsg? (
                                         <Alert severity="error">This is an error message!</Alert>
                                     ): ''} */}
                                     {/* <Modal setOpenModal={showModal} onClose={() => setShowModal(false)} /> */}
                                 </Grid>
-                                <Grid item xs={3}></Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={1}></Grid>
+                                <Grid item xs={3}>
+                                    <Button
+                                            color="primary"
+                                            variant="contained"
+                                            size="medium"
+                                            onClick={handleImageChange}
+                                        >
+                                            Upload Image
+                                        </Button>
+                                </Grid>
+                                
+                                <Grid item xs={2}></Grid>
                                 <Grid item xs={3}>
                                     <Button
                                         color="primary"
