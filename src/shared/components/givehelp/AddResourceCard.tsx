@@ -36,7 +36,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [description, setDescription] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
     const [address, setAddress] = useState("");
-    const [sku, setSku] = useState(null);
+    const [sku, setSku] = useState(0);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
@@ -66,11 +66,11 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         } else if (category === "" || category === null) {
             setCategoryError("Please enter a category");
             return false;
-        } else if (sku === 0 || sku === null) {
-            setSkuError("Please enter resource quantity");
+        } else if (sku.toString() === "0" || sku === null) {
+            setSkuError("Please enter valid quantity");
             return false;
         } else if (sku < 0) {
-            setSkuError("Please enter a valid resource quantity");
+            setSkuError("Please enter a valid quantity");
             return false;
         } else if (description === "" || description === null) {
             setDescriptionError("Please enter description of resource");
@@ -104,8 +104,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         }
     };
 
-
-    
 
     const handleNameChange = (e) => {
         setResourceNameError("")
@@ -160,6 +158,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     };
 
     const handleSetCheck = (e) => {
+        setAddressError("");
+        setCityError("");
+        setStateError("");
+        setCountryError("");
+        setZipcodeError("");
+        setPhoneNumError("");
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
@@ -248,9 +252,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                         window.alert("Resource added!");
                         console.log("Resource added!");
                         window.location.reload();
+                    } else if (!findImage){
+                        window.alert("Please select an image to upload!");
+                        console.log("Please select an image to upload!");
                     } else {
-                        window.alert("Failed to upload resource data!");
-                        console.log("Failed to upload resource data!");
+                        window.alert("Failed to upload resource data! Please try again.");
+                        console.log("Failed to upload resource data! Please try again.");
                         window.location.reload();
                     }
                 }
@@ -340,6 +347,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         onChange={handleSkuChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText="Quanity should not be less than or equal to 0"
                                         
                                     />
                                 </Grid>
