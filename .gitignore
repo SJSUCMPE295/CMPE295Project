@@ -123,3 +123,4 @@ bundle-stats.json
 .vscode
 .idea
 # /dependency-graph.svg
+.DS_Store
