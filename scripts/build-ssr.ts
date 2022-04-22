@@ -76,6 +76,7 @@ const build = async () => {
         await clientPromise;
         // await generateStaticHTML();
         logMessage('Done!', 'info');
+        process.exit(1);
     } catch (error) {
         logMessage(error, 'error');
     }
