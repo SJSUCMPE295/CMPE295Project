@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
+import { profileUpdate } from 'store/actions';
 
-const SettingsPassword = (props) => {
+const SettingsPassword = ({ userMetaData }) => {
     const [values, setValues] = useState({
         oldpassword: '',
         password: '',
@@ -17,8 +18,16 @@ const SettingsPassword = (props) => {
                 [target.name]: target.value,
             });
     };
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
         console.log(values);
+        profileUpdate({})
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -69,7 +78,7 @@ const SettingsPassword = (props) => {
                         p: 2,
                     }}
                 >
-                    <Button color="primary" variant="contained">
+                    <Button color="primary" variant="contained" type="submit">
                         Update
                     </Button>
                 </Box>
@@ -79,8 +88,8 @@ const SettingsPassword = (props) => {
 };
 
 const mapStateToProps = ({ userProfileReducer }) => ({
-    ...userProfileReducer?.userMetaData,
+    ...userProfileReducer,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {  };
 const ConnectedSettingsPassword = connect(mapStateToProps, mapDispatchToProps)(SettingsPassword);
 export default ConnectedSettingsPassword;

@@ -12,10 +12,19 @@ import {
     Typography,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
+import { profileUpdate } from 'store/actions';
 const hideElements = null;
-const SettingsDoctor = ({ isDoctor }) => {
-    const handleSubmit = () => {
-        console.log(isDoctor);
+const SettingsDoctor = ({ userMetaData }) => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log(userMetaData?.isDoctor);
+        profileUpdate({})
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -97,7 +106,7 @@ const SettingsDoctor = ({ isDoctor }) => {
                         p: 2,
                     }}
                 >
-                    <Button color="primary" variant="contained">
+                    <Button color="primary" variant="contained" type="submit">
                         Update
                     </Button>
                 </Box>
@@ -106,7 +115,7 @@ const SettingsDoctor = ({ isDoctor }) => {
     );
 };
 const mapStateToProps = ({ userProfileReducer }) => ({
-    ...userProfileReducer?.userMetaData,
+    ...userProfileReducer,
 });
 
 const mapDispatchToProps = {};
