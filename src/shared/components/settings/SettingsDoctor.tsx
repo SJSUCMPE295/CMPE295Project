@@ -13,9 +13,9 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 const hideElements = null;
-const SettingsDoctor = (props) => {
+const SettingsDoctor = ({ isDoctor }) => {
     const handleSubmit = () => {
-        console.log(values);
+        console.log(isDoctor);
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -105,8 +105,8 @@ const SettingsDoctor = (props) => {
         </form>
     );
 };
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer?.userMetaData,
 });
 
 const mapDispatchToProps = {};

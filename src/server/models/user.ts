@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const UserModel = new Schema(
     {
         userName: { type: String, required: true },
-        // password: { type: String, required: true },
+        password: { type: String, required: false },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         userMetaData: {

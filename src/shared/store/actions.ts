@@ -28,3 +28,4 @@ export const getServiceById = (id, data = {}) =>
     api.get(`/api/gethelp/services/${id}${jsonToQueryString(data)}`);
 export const getResourcesById = (id, data = {}) =>
     api.get(`/api/gethelp/resources/${id}${jsonToQueryString(data)}`);
+export const profileUpdate = (data = {}) => api.put('/api/user', data);

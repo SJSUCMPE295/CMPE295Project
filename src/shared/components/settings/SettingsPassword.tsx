@@ -78,8 +78,8 @@ const SettingsPassword = (props) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer?.userMetaData,
 });
 const mapDispatchToProps = {};
 const ConnectedSettingsPassword = connect(mapStateToProps, mapDispatchToProps)(SettingsPassword);

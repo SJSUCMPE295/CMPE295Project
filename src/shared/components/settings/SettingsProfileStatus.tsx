@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 
 const SettingsProfileStatus = (props) => {
     const handleSubmit = () => {
-        console.log(values);
+        console.log(props);
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -97,8 +97,8 @@ const SettingsProfileStatus = (props) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer?.userMetaData,
 });
 
 const mapDispatchToProps = {};
