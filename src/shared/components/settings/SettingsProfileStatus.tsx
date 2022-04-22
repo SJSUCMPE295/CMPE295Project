@@ -12,10 +12,19 @@ import {
     Typography,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
+import { profileUpdate } from 'store/actions';
 
-const SettingsProfileStatus = (props) => {
-    const handleSubmit = () => {
-        console.log(values);
+const SettingsProfileStatus = ({ userMetaData }) => {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log(userMetaData);
+        profileUpdate({})
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -88,7 +97,7 @@ const SettingsProfileStatus = (props) => {
                         p: 2,
                     }}
                 >
-                    <Button color="primary" variant="contained">
+                    <Button color="primary" variant="contained" type="submit">
                         Update
                     </Button>
                 </Box>
@@ -97,8 +106,8 @@ const SettingsProfileStatus = (props) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer,
 });
 
 const mapDispatchToProps = {};

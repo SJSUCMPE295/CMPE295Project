@@ -15,57 +15,8 @@ import {
     Gift as GiftIcon,
     PlusCircle as PlusCircleIcon,
 } from 'react-feather';
-import NavItem from './NavItem';
 import { connect } from 'react-redux';
-
-const items = [
-    {
-        href: '/app/dashboard',
-        icon: BarChartIcon,
-        title: 'Dashboard',
-    },
-    {
-        href: '/app/gethelp',
-        icon: PackageIcon,
-        title: 'Get Help',
-    },
-    {
-        href: '/app/givehelp',
-        icon: ShoppingBagIcon,
-        title: 'Give Help',
-    },
-    {
-        href: '/app/medicalAssistance',
-        icon: PlusCircleIcon,
-        title: 'Medical Assistance',
-    },
-    {
-        href: '/app/account',
-        icon: UserIcon,
-        title: 'Account',
-    },
-    {
-        href: '/app/settings',
-        icon: SettingsIcon,
-        title: 'Settings',
-    },
-    /*
-    {
-        href: '/login',
-        icon: LockIcon,
-        title: 'Login',
-    },
-    {
-        href: '/register1',
-        icon: UserPlusIcon,
-        title: 'Register',
-    },
-    {
-        href: '/404',
-        icon: AlertCircleIcon,
-        title: 'Error',
-    },*/
-];
+import NavItem from './NavItem';
 
 const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
@@ -79,7 +30,40 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             onMobileClose();
         }
     }, [location.pathname]);
-
+    const items = [
+        {
+            href: '/app/dashboard',
+            icon: BarChartIcon,
+            title: 'Dashboard',
+        },
+        {
+            href: '/app/gethelp',
+            icon: PackageIcon,
+            title: 'Get Help',
+        },
+        {
+            href: '/app/givehelp',
+            icon: ShoppingBagIcon,
+            title: 'Give Help',
+        },
+        {
+            href: userProfileReducer?.userMetaData?.isDoctor
+                ? '/app/medicalAssistance'
+                : '/app/lookformedicalAssistance',
+            icon: PlusCircleIcon,
+            title: 'Medical Assistance',
+        },
+        {
+            href: '/app/account',
+            icon: UserIcon,
+            title: 'Account',
+        },
+        {
+            href: '/app/settings',
+            icon: SettingsIcon,
+            title: 'Settings',
+        },
+    ];
     const content = (
         <Box
             sx={{

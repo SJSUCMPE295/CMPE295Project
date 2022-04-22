@@ -1,12 +1,19 @@
 import axios from 'axios';
+import * as ActionTypes from './constants/action-types';
+import { Locale } from './user/types';
 const api = axios.create({
     //    withCredentials: true,
 });
-export const ActionTypes = {
-    SETGETHELP: 'app/set-get-help',
-};
+export const setLocale = (locale: Locale) => ({
+    type: ActionTypes.SETLOCALE,
+    payload: locale,
+});
 export const setGetHelp = (payload = {}) => ({
     type: ActionTypes.SETGETHELP,
+    payload,
+});
+export const updateUserProfile = (payload = {}) => ({
+    type: ActionTypes.updateUser,
     payload,
 });
 const jsonToQueryString = (json) => {
@@ -28,3 +35,4 @@ export const getServiceById = (id, data = {}) =>
     api.get(`/api/gethelp/services/${id}${jsonToQueryString(data)}`);
 export const getResourcesById = (id, data = {}) =>
     api.get(`/api/gethelp/resources/${id}${jsonToQueryString(data)}`);
+export const profileUpdate = (data = {}) => api.put('/api/user', data);
