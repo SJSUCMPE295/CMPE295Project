@@ -25,7 +25,7 @@ import DashboardLayout from './components/DashboardLayout';
 import AddServiceScreen from './pages/GiveHelp/AddService';
 import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
-
+import MyTransactions from './pages/MyTransactions/MyTransactions';
 import './styles.css';
 const App: React.FC<any> = () => {
     return (
@@ -38,12 +38,10 @@ const App: React.FC<any> = () => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                        <Route
-                                            path={'/app/gethelp/:id/:type'}
-                                            component={GetHelpItem}
-                                        />
+                                        <Route path={'/app/gethelp/:id/:type'} component={GetHelpItem} /> 
                                         <Route path={'/app/gethelp'} component={GetHelp} />
                                         <Route path={'/app/dashboard'} component={Dashboard} />
+                                        <Route path={'/app/mytransactions'} component={MyTransactions} />
                                         <Route
                                             path={'/app/medicalAssistance'}
                                             component={MedicalAssistance}

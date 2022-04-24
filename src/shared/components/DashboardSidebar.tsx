@@ -13,7 +13,7 @@ import {
     Package as PackageIcon,
     Users as UsersIcon,
     Gift as GiftIcon,
-    PlusCircle as PlusCircleIcon,
+    PlusCircle as PlusCircleIcon,CreditCard as CreditCardIcon
 } from 'react-feather';
 import { connect } from 'react-redux';
 import NavItem from './NavItem';
@@ -21,7 +21,7 @@ import NavItem from './NavItem';
 const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
     const user = {
-        avatar: '/static/images/avatars/avatar_2.png',
+        avatar: userProfileReducer?.profile.profilePic,//'/static/images/avatars/avatar_2.png',
         jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
         name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
     };
@@ -57,7 +57,12 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             href: '/app/account',
             icon: UserIcon,
             title: 'Account',
-        },
+        } ,
+        {
+        href: '/app/mytransactions',
+        icon: CreditCardIcon,
+        title: 'My Transactions',
+    },
         {
             href: '/app/settings',
             icon: SettingsIcon,
@@ -122,7 +127,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                     Are you a Doctor?
                 </Typography>
                 <Typography align="center" variant="body2">
-                    Please help us in assisting non-urgent medical needs
+                    Help us in assisting non-urgent medical needs
                 </Typography>
                 <Box
                     sx={{
