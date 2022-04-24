@@ -13,12 +13,19 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { profileUpdate } from 'store/actions';
-const hideElements = null;
-const SettingsDoctor = ({ userMetaData }) => {
+import { objectWithBoolean } from 'utils/json';
+
+const SettingsDoctor = ({ profile, userMetaData, id }) => {
     const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log(userMetaData?.isDoctor);
-        profileUpdate({})
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = objectWithBoolean({
+            emailNotifications: false,
+            appNotifications: false,
+            phoneCalls: false,
+            ...Object.fromEntries(formData),
+        });
+        profileUpdate({ id, userMetaData: { ...userMetaData, ...formProps } })
             .then((data) => {
                 console.log(data);
             })
@@ -33,13 +40,13 @@ const SettingsDoctor = ({ userMetaData }) => {
                     mb: 2,
                 }}
             >
-                <CardHeader subheader="Change your status" title="Doctor's Profile" />
+                <CardHeader subheader="Change your status" title="Doctor Settings" />
                 <Divider />
                 <CardContent>
                     <Grid container spacing={6} wrap="wrap">
                         <Grid
                             item
-                            md={12}
+                            md={4}
                             sm={6}
                             sx={{
                                 display: 'flex',
@@ -47,55 +54,40 @@ const SettingsDoctor = ({ userMetaData }) => {
                             }}
                             xs={12}
                         >
-                            {hideElements && (
-                                <Typography color="textPrimary" gutterBottom variant="h6">
-                                    Notifications
-                                </Typography>
-                            )}
+                            <Typography color="textPrimary" gutterBottom variant="h6">
+                                Messages
+                            </Typography>
                             <FormControlLabel
-                                control={<Checkbox color="primary" />}
-                                label="I am a Doctor"
+                                control={
+                                    <Checkbox
+                                        name="emailNotifications"
+                                        value={true}
+                                        defaultChecked={userMetaData?.emailNotifications}
+                                    />
+                                }
+                                label="Email"
                             />
-                            {hideElements && (
-                                <FormControlLabel
-                                    control={<Checkbox color="primary" defaultChecked />}
-                                    label="Push Notifications"
-                                />
-                            )}
-                            <FormControlLabel control={<Checkbox />} label="Text Messages" />
                             <FormControlLabel
-                                control={<Checkbox color="primary" defaultChecked />}
+                                control={
+                                    <Checkbox
+                                        name="appNotifications"
+                                        value={true}
+                                        defaultChecked={userMetaData?.appNotifications}
+                                    />
+                                }
+                                label="Push Notifications"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        name="phoneCalls"
+                                        value={true}
+                                        defaultChecked={userMetaData?.phoneCalls}
+                                    />
+                                }
                                 label="Phone calls"
                             />
                         </Grid>
-                        {hideElements && (
-                            <Grid
-                                item
-                                md={4}
-                                sm={6}
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                }}
-                                xs={12}
-                            >
-                                <Typography color="textPrimary" gutterBottom variant="h6">
-                                    Messages
-                                </Typography>
-                                <FormControlLabel
-                                    control={<Checkbox color="primary" defaultChecked />}
-                                    label="Email"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox />}
-                                    label="Push Notifications"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox color="primary" defaultChecked />}
-                                    label="Phone calls"
-                                />
-                            </Grid>
-                        )}
                     </Grid>
                 </CardContent>
                 <Divider />

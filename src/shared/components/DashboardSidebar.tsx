@@ -21,7 +21,7 @@ import NavItem from './NavItem';
 const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
     const user = {
-        avatar: userProfileReducer?.profile.profilePic,//'/static/images/avatars/avatar_2.png',
+        avatar: userProfileReducer?.profile?.profilePic,//'/static/images/avatars/avatar_2.png',
         jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
         name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
     };

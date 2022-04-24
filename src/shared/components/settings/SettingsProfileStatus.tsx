@@ -9,16 +9,20 @@ import {
     Divider,
     FormControlLabel,
     Grid,
-    Typography,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { profileUpdate } from 'store/actions';
-
-const SettingsProfileStatus = ({ userMetaData }) => {
+import { objectWithBoolean } from 'utils/json';
+const SettingsProfileStatus = ({ profile, id }) => {
     const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log(userMetaData);
-        profileUpdate({})
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = objectWithBoolean({
+            ...profile,
+            profileActive: false,
+            ...Object.fromEntries(formData),
+        });
+        profileUpdate({ id, profile: formProps })
             .then((data) => {
                 console.log(data);
             })
@@ -47,46 +51,18 @@ const SettingsProfileStatus = ({ userMetaData }) => {
                             }}
                             xs={12}
                         >
-                            {/* <Typography color="textPrimary" gutterBottom variant="h6">
-                            Notifications
-                        </Typography> */}
                             <FormControlLabel
-                                control={<Checkbox color="primary" />}
-                                label="Deactivate your profile - This will delete your profile permanently"
+                                control={
+                                    <Checkbox
+                                        color="primary"
+                                        name="profileActive"
+                                        value={true}
+                                        defaultChecked={profile?.profileActive}
+                                    />
+                                }
+                                label="Deactivate your profile"
                             />
-                            {/* <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Push Notifications"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Text Messages" />
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Phone calls"
-                        /> */}
                         </Grid>
-                        {/* <Grid
-                        item
-                        md={4}
-                        sm={6}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                        xs={12}
-                    >
-                        <Typography color="textPrimary" gutterBottom variant="h6">
-                            Messages
-                        </Typography>
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Email"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Push Notifications" />
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Phone calls"
-                        />
-                    </Grid> */}
                     </Grid>
                 </CardContent>
                 <Divider />
