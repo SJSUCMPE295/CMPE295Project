@@ -17,7 +17,7 @@ export default (state: any = initialState, action: Action | any): any => {
             return { ...state, ...action?.payload };
         }
         case ActionTypes.SETDOCTORDATA: {
-            return { ...state, doctor: action?.payload };
+            return { ...state, doctor: action?.payload?.doctor || action?.payload };
         }
         case ActionTypes.saveUserName: {
             return {
