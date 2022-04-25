@@ -48,7 +48,6 @@ export const getAllDoctorsAppointmentHandler = async (req, res) => {
             res.status(500).json({ message: err.message });
         });
 };
-
 export const getAllAvailableDoctorsHandler = async (req, res) => {
     doctorModel
         .find(req?.query)
@@ -67,7 +66,7 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
             res.status(500).json({ message: err.message });
         });
 };
-export const setDoctorsAvailability = async (req, res) => {
+export const setDoctorsAvailabilityHandler = async (req, res) => {
     doctorModel
         .findOneAndUpdate({ doctorId: req?.params?.id }, req?.body)
         .then((data) => {
@@ -90,7 +89,7 @@ export const deleteAppointmentHandler = async (req, res) => {
 };
 router.get('/doctors', getAllAvailableDoctorsHandler);
 router.get('/doctors/:id', getAllDoctorsAppointmentHandler);
-router.post('/doctors/:id', setDoctorsAvailability);
+router.post('/doctors/:id', setDoctorsAvailabilityHandler);
 
 router.post('/', createAppointmentHandler);
 router.delete('/:id', deleteAppointmentHandler);

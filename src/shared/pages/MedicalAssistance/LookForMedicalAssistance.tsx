@@ -219,7 +219,7 @@ export const LookForMedicalAssistance = (props) => {
                                     </Button>
                                 )}
 
-                                <Button onClick={handleNext}>
+                                <Button onClick={handleNext} color="primary">
                                     {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                 </Button>
                             </Box>
@@ -231,8 +231,8 @@ export const LookForMedicalAssistance = (props) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer
 });
 
 const mapDispatchToProps = { setGetHelp };

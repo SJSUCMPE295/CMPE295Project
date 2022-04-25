@@ -56,8 +56,8 @@ const SettingsProfileStatus = ({ profile, id }) => {
                                     <Checkbox
                                         color="primary"
                                         name="profileActive"
-                                        value={true}
-                                        defaultChecked={profile?.profileActive}
+                                        value={false}
+                                        defaultChecked={!profile?.profileActive}
                                     />
                                 }
                                 label="Deactivate your profile"
