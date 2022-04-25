@@ -57,12 +57,12 @@ const columns = [
 
 export const DoctorSchedule = (props) => {
     const [open, setOpen] = React.useState(false);
-    const [activeUser, setActiveUser] = React.useState();
+    const [activeUser, setActiveUser] = React.useState(null);
     const [available, setAvailable] = React.useState();
     const [appointments, setAppointments] = React.useState();
 
     React.useEffect(() => {
-        setAvailable(props?.id);
+        setAvailable(props?.userMetaData?.isDoctor);
         getAllDoctorsAppointments(props?.id)
             .then((response) => setAppointments(response.data))
             .catch(console.log);
@@ -77,11 +77,15 @@ export const DoctorSchedule = (props) => {
         setActiveUser(null);
         setOpen(false);
     };
+    const handleToggleAvailability = (e) => {
+        const value = e?.current?.value;
+        setAvailable(value);
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean(Object.fromEntries(formData));
-        console.log(formProps);
+        console.log(formProps, available);
     };
     const DataTable = ({ rows }) => {
         if (rows) {
@@ -156,24 +160,33 @@ export const DoctorSchedule = (props) => {
                     <DialogTitle>Provide Medical Assistance</DialogTitle>
                     <DialogContent>
                         <FormControlLabel
-                            control={<Switch defaultChecked={false} name="available" />}
+                            control={
+                                <Switch
+                                    defaultChecked={available}
+                                    onChange={handleToggleAvailability}
+                                    name="available"
+                                />
+                            }
                             label="Available"
                         />
-                        <DialogContentText>Set up your availability</DialogContentText>
-
-                        <Box sx={{ my: 2 }}>
-                            <TextField
-                                id="datetime-local"
-                                name="availability"
-                                label="To"
-                                type="datetime-local"
-                                defaultValue="2017-05-24T10:30"
-                                className="mb-2"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Box>
+                        {available && (
+                            <>
+                                <DialogContentText>Set up your availability</DialogContentText>
+                                <Box sx={{ my: 2 }}>
+                                    <TextField
+                                        id="datetime-local"
+                                        name="availability"
+                                        label="To"
+                                        type="datetime-local"
+                                        defaultValue="2017-05-24T10:30"
+                                        className="mb-2"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Box>
+                            </>
+                        )}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
