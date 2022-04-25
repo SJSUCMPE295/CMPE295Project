@@ -22,7 +22,7 @@ const GetHelpItem : FunctionComponent<any>= ({userProfileReducer,props}) => {
   
 const param=useParams();
 const location=useLocation();
-  const user_email=userProfileReducer.userName;//"abc@gmail.com";//change
+  const user_email=userProfileReducer?.userName;//"abc@gmail.com";//change
   const history = useHistory();
     const [resource, setResource] = React.useState({});
     const [currentloc,setCurrentloc]= React.useState({
@@ -45,11 +45,11 @@ const containerStyle = {
     lng: -121.8381589
   };
   //change start
-  const UserId = userProfileReducer.id;//'6225e61bf81d2541a4000bc9';
+  const UserId = userProfileReducer?.id;//'6225e61bf81d2541a4000bc9';
     
 React.useEffect(() => {
-  const id = param.id.substring(param.id.indexOf(':') + 1);
-  const item_type = param.type.substring(param.type.indexOf(':') + 1)+"s";
+  const id = param?.id?.substring(param?.id?.indexOf(':') + 1);
+  const item_type = param?.type?.substring(param?.type?.indexOf(':') + 1)+"s";
   //alert(param.id);
     //const id='62474b2f4a682270e03d0dfc';
     //const item_type='resources';
@@ -67,10 +67,10 @@ React.useEffect(() => {
             .then(
                 (response) => {
                   
-                    setData(response.data.resources);
+                    setData(response?.data?.resources);
                     //setCity(response.data.user_currentcity);
-                    setCurrentloc(response.data.user_currentaddress);
-                    getDirections(response.data.resources[0]);
+                    setCurrentloc(response?.data?.user_currentaddress);
+                    getDirections(response?.data?.resources[0]);
                 },
                 (error) => {
                     console.log(error);

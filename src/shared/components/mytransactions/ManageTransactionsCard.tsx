@@ -294,9 +294,9 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
      }}) 
    .then(
        (response) => {
-         console.log(response.data.resources);
-         setGiveData(response.data.resources.filter((m) => m.Availability != 'false'));
-         setGetData(response.data.getresources);
+         console.log(response?.data?.resources);
+         setGiveData(response?.data?.resources.filter((m) => m.Availability != 'false'));
+         setGetData(response?.data?.getresources);
          setOpenresource(false);
          setOpenservice(false);
 
