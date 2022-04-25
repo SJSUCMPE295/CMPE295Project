@@ -5,8 +5,9 @@ import doctorModel from '../models/doctor';
 
 const router = Router();
 export const getDoctorsData = async (user) => {
-    if (user?.userMetaData?.isDoctor) {
-        return doctorModel.find({ userId: user?.userId });
+    const userId = user?._id.toString() || user?.userId;
+    if (user?.userMetaData?.isDoctor && userId) {
+        return doctorModel.findOne({ userId });
     }
 };
 
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
             // });
             // const jwtToken = 'JWT' + token;
             const doctor = await getDoctorsData(user);
-            res.status(200).json({ user: { ...user, doctor } });
+            res.status(200).json({ user, doctor });
             // } else {
             //     res.status(401).end('Wrong password');
             // }

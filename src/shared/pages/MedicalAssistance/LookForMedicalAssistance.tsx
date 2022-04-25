@@ -35,21 +35,22 @@ export const LookForMedicalAssistance = (props) => {
     const isStepSkipped = (step) => {
         return skipped.has(step);
     };
-
+    const saveNotes = () => {
+        // @ts-ignore
+        const notesValue = notesInput?.current?.value;
+        if (notesValue && notesValue !== notes) {
+            setNotes(notesValue);
+        }
+    };
     const handleNext = () => {
         let newSkipped = skipped;
         if (isStepSkipped(activeStep)) {
             newSkipped = new Set(newSkipped.values());
             newSkipped.delete(activeStep);
         }
-
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         setSkipped(newSkipped);
-        // @ts-ignore
-        const notesValue = notesInput?.current?.value;
-        if (notesValue && notesValue !== notes) {
-            setNotes(notesValue);
-        }
+        saveNotes();
     };
 
     const handleBack = () => {
@@ -232,7 +233,7 @@ export const LookForMedicalAssistance = (props) => {
 };
 
 const mapStateToProps = ({ userProfileReducer }) => ({
-    ...userProfileReducer
+    ...userProfileReducer,
 });
 
 const mapDispatchToProps = { setGetHelp };
