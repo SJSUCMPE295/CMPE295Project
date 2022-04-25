@@ -41,7 +41,7 @@ const containerStyle = {
   };
 const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
   const location = useLocation();
-    const UserId = '6225e61bf81d2541a4000bc9';//userProfileReducer.id;
+    const UserId = userProfileReducer?.id;
     
     //console.log(UserId);
     const [error, setError] = useState(null);
@@ -82,10 +82,10 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
             .then(
                 (response) => {
                  // console.log(response.data.resources);
-                    setData(response.data.resources);
-                    setCity(response.data.user_currentcity);
-                    setCurrentloc(response.data.user_currentaddress);
-                    setCount(Math.ceil((Object.keys(response.data.resources).length) / pageSize));
+                    setData(response?.data?.resources);
+                    setCity(response?.data?.user_currentcity);
+                    setCurrentloc(response?.data?.user_currentaddress);
+                    setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
                     
                 },
                 (error) => {
@@ -117,9 +117,9 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
         .then(
             (response) => {
               
-                setData(response.data.resources);
+                setData(response?.data?.resources);
                 setDirections(null);
-                setCount(Math.ceil((Object.keys(response.data.resources).length) / pageSize));
+                setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
                 
                //setCity(response.data.user_currentcity)
                 //console.log(user_loc);
@@ -403,8 +403,7 @@ onChange={handleRadioChange}
 
         };
 
-////userProfileReducer.userName
-       const mapStateToProps = ({ userProfileReducer }) => ({
+const mapStateToProps = ({ userProfileReducer }) => ({
           userProfileReducer,
       });
       
@@ -412,5 +411,5 @@ onChange={handleRadioChange}
       
       const ConnectedGetHelp = connect(mapStateToProps, mapDispatchToProps)(GetHelp);
       export default withRouter(ConnectedGetHelp); 
-      //export default withRouter(GetHelp);      
+          
 

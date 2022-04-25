@@ -61,7 +61,7 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
             .then(
                 (response) => {
                     console.log(response.data);
-                    setData(response.data);
+                    setData(response?.data);
                 },
                 (error) => {
                     console.log(error);
@@ -98,7 +98,7 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
             });
             totalusertrans = transactioncount.reduce((result, number) => result + number);
         }
-        userappointments = data.userappointments;
+        userappointments = data?.userappointments;
     }
     const data_donut = {
         datasets: [
