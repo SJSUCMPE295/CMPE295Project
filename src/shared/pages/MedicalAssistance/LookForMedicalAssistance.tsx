@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { getAvailableDoctors, getHelp, setGetHelp } from 'store/actions';
-import { getDate } from "utils/json";
+import { getDate } from 'utils/json';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
     const [activeStep, setActiveStep] = React.useState(0);
@@ -26,9 +26,10 @@ export const LookForMedicalAssistance = (props) => {
     const [selectedDoctor, setSelectedDoctor] = React.useState(null);
     const notesInput = React.useRef();
     const [notes, setNotes] = React.useState('');
-
     const [skipped, setSkipped] = React.useState(new Set());
-
+    React.useEffect(() => {
+        setTime();
+    }, []);
     const isStepOptional = (step) => {
         return step === 2;
     };
@@ -44,20 +45,34 @@ export const LookForMedicalAssistance = (props) => {
         }
     };
     const handleNext = () => {
+        const last = activeStep === steps.length - 1;
+        const setDoctorStep = activeStep === 1;
         let newSkipped = skipped;
         if (isStepSkipped(activeStep)) {
             newSkipped = new Set(newSkipped.values());
             newSkipped.delete(activeStep);
         }
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped(newSkipped);
-        saveNotes();
+        if (last) {
+            console.log({ selectedTime, selectedDoctor, notes });
+        } else {
+            if (setDoctorStep && !selectedDoctor) {
+                return;
+            }
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            setSkipped(newSkipped);
+            saveNotes();
+        }
     };
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-
+    const setTime = (time = '') => {
+        time && setSelectedTime(time);
+        getAvailableDoctors({ time: time ? time : selectedTime })
+            .then((response) => setDoctors(response.data))
+            .catch(console.log);
+    };
     const handleSkip = () => {
         if (!isStepOptional(activeStep)) {
             // You probably want to guard against something like this,
@@ -76,8 +91,8 @@ export const LookForMedicalAssistance = (props) => {
     const handleReset = () => {
         setActiveStep(0);
     };
-    const StepContainer = (props: any) => {
-        switch (props?.step) {
+    const StepContainer = ({ step }: any) => {
+        switch (step) {
             case 0: {
                 return (
                     <TextField
@@ -90,10 +105,7 @@ export const LookForMedicalAssistance = (props) => {
                             shrink: true,
                         }}
                         onChange={({ currentTarget }) => {
-                            setSelectedTime(currentTarget?.value);
-                            getAvailableDoctors({ time: currentTarget?.value })
-                                .then((response) => setDoctors(response.data))
-                                .catch(console.log);
+                            setTime(currentTarget?.value);
                         }}
                     />
                 );
@@ -141,12 +153,14 @@ export const LookForMedicalAssistance = (props) => {
                 return <textarea {...props} />;
             }
             case 3: {
+                const date = new Date(selectedTime).toLocaleDateString();
+                const day = new Date(selectedTime).toLocaleTimeString();
                 return (
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader
                             avatar={<Avatar src="" aria-label="" />}
                             title={selectedDoctor?.firstName}
-                            subheader="September 14, 2016"
+                            subheader={`${date}  ${day}`}
                         />
                         <CardContent>
                             <Typography variant="body2" color="text.secondary">
@@ -202,7 +216,7 @@ export const LookForMedicalAssistance = (props) => {
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
-                            <Box sx={{ my: 2 }}>
+                            <Box sx={{ my: 2, minHeight: '170px' }}>
                                 <StepContainer step={activeStep} />
                             </Box>
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
