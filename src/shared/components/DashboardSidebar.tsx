@@ -36,19 +36,19 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             href: '/app/dashboard',
             icon: BarChartIcon,
             title: 'Dashboard',
-            isHidden: userProfileReducer?.profile?.profileActive,
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/gethelp',
             icon: PackageIcon,
             title: 'Get Help',
-            isHidden: userProfileReducer?.profile?.profileActive,
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/givehelp',
             icon: ShoppingBagIcon,
             title: 'Give Help',
-            isHidden: userProfileReducer?.profile?.profileActive,
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: userProfileReducer?.userMetaData?.isDoctor
@@ -56,7 +56,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                 : '/app/lookformedicalAssistance',
             icon: PlusCircleIcon,
             title: 'Medical Assistance',
-            isHidden: userProfileReducer?.profile?.profileActive,
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/account',
@@ -67,7 +67,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             href: '/app/mytransactions',
             icon: CreditCardIcon,
             title: 'My Transactions',
-            isHidden: userProfileReducer?.profile?.profileActive,
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/settings',
