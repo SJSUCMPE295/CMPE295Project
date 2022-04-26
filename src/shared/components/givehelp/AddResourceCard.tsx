@@ -15,6 +15,11 @@ import Checkbox from '@mui/material/Checkbox';
 import { useState, FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import countries from 'i18n-iso-countries';
+const { getStates } = require('country-state-picker');
+const { getCode } =require('country-list');
+import CountryData from "./CountryData.json";
+
 
 // const Input = styled('input')({
 //     display: 'none',
@@ -35,12 +40,15 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
+    const [dialCode, setDialCode] = useState("+1");
     const [address, setAddress] = useState("");
     const [sku, setSku] = useState(0);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState("United States of America");
+    const [countryNames, setCountryNames] = useState(CountryData);
+    const [code,setCode] = useState('us');
     const [showErrorMsg, setShowErrorMsg] = React.useState('');
     const storage = getStorage();
     const [image, setImage] = useState(null);
@@ -96,19 +104,30 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         } else if (phoneNum === "" || phoneNum === null) {
             setPhoneNumError("Please enter your contact number");
             return false;
-        } else if (phoneNum.toString().length != 10) {
-            setPhoneNumError("Please enter a valid phone number!");
-            return false;
+        // } else if (phoneNum.toString().length != 10) {
+        //     setPhoneNumError("Please enter a valid phone number!");
+        //     return false;
         } else {
             return true;
         }
     };
 
+    countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+    const countryObj = countries.getNames('en', { select: 'official' });
+    const countryArray = Object.entries(countryObj).map(([key, value]) => {
+        return {
+            label: key,
+            value: value,
+        };
+    });
+
+    
 
     const handleNameChange = (e) => {
         setResourceNameError("")
         setResourceName(e.target.value)
     };
+
 
     const handleImageUpload = (event) => {
         console.log('Reached upload image task');
@@ -167,11 +186,14 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
+            const obj = countryNames.find(({ code }) => code === getCode(address.country));
             setAddress(address.location);
             setCity(address.city);
             setCountry(address.country);
             setZipcode(address.zipCode);
             setState(address.state);
+            setCode(getCode(address.country))
+            setDialCode(obj.dial_code)
             setPhoneNum(profile.phoneNumber);
         } else {
             setAddress('');
@@ -226,7 +248,21 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const handleCountryChange = (e) => {
         setCountryError("")
         setCountry(e.target.value)
+        const obj = countryNames.find(({ name }) => name === e.target.value);
+        setCode(getCode(e.target.value))
+        setDialCode(obj.dial_code)
     };
+
+
+    
+    const stateObj = getStates(code.toLowerCase())   
+    const stateArray = Object.entries(stateObj).map(([key, value]) => {
+        return {
+            label: value,
+            value: value,
+        };
+    });
+
 
     const handleSubmit = async (e) => {
                 e.preventDefault();
@@ -263,6 +299,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                 }
                 
             }
+ 
     
 
     return (
@@ -406,6 +443,24 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
+                                        label="Select State"
+                                        name="state"
+                                        onChange={handleStateChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        value={state}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {stateArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+
+                                    </TextField>
+                                    {/* <TextField
                                         required
                                         id="outlined-required"
                                         label="State"
@@ -413,22 +468,28 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         onChange={handleStateChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                        
-                                    />
+                                    /> */}
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{countryError}</div>
                                     <TextField
-                                        required
-                                        id="outlined-required-input"
-                                        label="Country"
-                                        value={country}
+                                        label="Select Country"
+                                        name="country"
                                         onChange={handleCountryChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        value={country}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                        
-                                    />
+                                    >
+                                        {countryArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -445,8 +506,20 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
+                                <Grid item xs={1}>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        sx={{ m: 1 }}
+                                        value={dialCode}
+                                        style = {{width: 70}}
+                                        // InputProps={{
+                                        //     readOnly: true,
+                                        // }}
+                                    />
+                                </Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{phoneNumError}</div>
+                                    
                                     <TextField
                                         required
                                         id="outlined-required-input"
@@ -454,7 +527,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value={phoneNum}
                                         onChange={handlePhoneNumChange}
                                         variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
+                                        sx={{ m: 1, width: '41ch' }}
                                     />
                                 </Grid>
                             </Grid>
