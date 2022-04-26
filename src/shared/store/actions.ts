@@ -12,9 +12,9 @@ export const setGetHelp = (payload = {}) => ({
     type: ActionTypes.SETGETHELP,
     payload,
 });
-export const updateUserProfile = (payload = {}) => ({
+export const updateUserProfile = (payload) => ({
     type: ActionTypes.updateUser,
-    payload,
+    payload: payload?.data?.data || payload?.data || payload || {}
 });
 export const updateUserProfileDoctorData = (payload = {}) => ({
     type: ActionTypes.SETDOCTORDATA,
