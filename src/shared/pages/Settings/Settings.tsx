@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { connect } from 'react-redux';
 import { Box, Container } from '@material-ui/core';
 import SettingsProfileStatus from '../../components/settings/SettingsProfileStatus';
-import SettingsDoctor from '../../components/settings/SettingsDoctor';
 import SettingsPassword from '../../components/settings/SettingsPassword';
+import SettingsDoctor from '../../components/settings/SettingsDoctor';
 
-const SettingsView = () => (
+const SettingsView = (props) => (
     <>
         <Helmet>
             <title>Settings</title>
@@ -18,13 +19,19 @@ const SettingsView = () => (
             }}
         >
             <Container maxWidth="lg">
-                <SettingsPassword />
-
-                <SettingsDoctor />
+                {null && <SettingsPassword />}
+                {props.isDoctor && <SettingsDoctor {...props} />}
                 <SettingsProfileStatus />
             </Container>
         </Box>
     </>
 );
 
-export default SettingsView;
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer?.userMetaData,
+});
+
+const mapDispatchToProps = {};
+
+const ConnectedSettingsView = connect(mapStateToProps, mapDispatchToProps)(SettingsView);
+export default ConnectedSettingsView;

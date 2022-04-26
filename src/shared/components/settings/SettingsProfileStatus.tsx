@@ -9,13 +9,26 @@ import {
     Divider,
     FormControlLabel,
     Grid,
-    Typography,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-
-const SettingsProfileStatus = (props) => {
-    const handleSubmit = () => {
-        console.log(values);
+import { profileUpdate } from 'store/actions';
+import { objectWithBoolean } from 'utils/json';
+const SettingsProfileStatus = ({ profile, id }) => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = objectWithBoolean({
+            ...profile,
+            profileActive: false,
+            ...Object.fromEntries(formData),
+        });
+        profileUpdate({ id, profile: formProps })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
@@ -38,46 +51,18 @@ const SettingsProfileStatus = (props) => {
                             }}
                             xs={12}
                         >
-                            {/* <Typography color="textPrimary" gutterBottom variant="h6">
-                            Notifications
-                        </Typography> */}
                             <FormControlLabel
-                                control={<Checkbox color="primary" />}
-                                label="Deactivate your profile - This will delete your profile permanently"
+                                control={
+                                    <Checkbox
+                                        color="primary"
+                                        name="profileActive"
+                                        value={false}
+                                        defaultChecked={!profile?.profileActive}
+                                    />
+                                }
+                                label="Deactivate your profile"
                             />
-                            {/* <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Push Notifications"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Text Messages" />
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Phone calls"
-                        /> */}
                         </Grid>
-                        {/* <Grid
-                        item
-                        md={4}
-                        sm={6}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                        xs={12}
-                    >
-                        <Typography color="textPrimary" gutterBottom variant="h6">
-                            Messages
-                        </Typography>
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Email"
-                        />
-                        <FormControlLabel control={<Checkbox />} label="Push Notifications" />
-                        <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked />}
-                            label="Phone calls"
-                        />
-                    </Grid> */}
                     </Grid>
                 </CardContent>
                 <Divider />
@@ -88,7 +73,7 @@ const SettingsProfileStatus = (props) => {
                         p: 2,
                     }}
                 >
-                    <Button color="primary" variant="contained">
+                    <Button color="primary" variant="contained" type="submit">
                         Update
                     </Button>
                 </Box>
@@ -97,8 +82,8 @@ const SettingsProfileStatus = (props) => {
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer,
 });
 
 const mapDispatchToProps = {};

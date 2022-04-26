@@ -13,43 +13,42 @@ import {
     Package as PackageIcon,
     Users as UsersIcon,
     Gift as GiftIcon,
-    PlusCircle as PlusCircleIcon,
+    PlusCircle as PlusCircleIcon,CreditCard as CreditCardIcon
 } from 'react-feather';
-import NavItem from './NavItem';
 import { connect } from 'react-redux';
 import { RegisterDoctorModal} from './RegisterDoctorModal';
 
-const items = [
-    {
-        href: '/app/dashboard',
-        icon: BarChartIcon,
-        title: 'Dashboard',
-    },
-    {
-        href: '/app/gethelp',
-        icon: PackageIcon,
-        title: 'Get Help',
-    },
-    {
-        href: '/app/givehelp',
-        icon: ShoppingBagIcon,
-        title: 'Give Help',
-    },
-    {
-        href: '/app/medicalAssistance',
-        icon: PlusCircleIcon,
-        title: 'Medical Assistance',
-    },
-    {
-        href: '/app/account',
-        icon: UserIcon,
-        title: 'Account',
-    },
-    {
-        href: '/app/settings',
-        icon: SettingsIcon,
-        title: 'Settings',
-    },
+// const items = [
+//     {
+//         href: '/app/dashboard',
+//         icon: BarChartIcon,
+//         title: 'Dashboard',
+//     },
+//     {
+//         href: '/app/gethelp',
+//         icon: PackageIcon,
+//         title: 'Get Help',
+//     },
+//     {
+//         href: '/app/givehelp',
+//         icon: ShoppingBagIcon,
+//         title: 'Give Help',
+//     },
+//     {
+//         href: '/app/medicalAssistance',
+//         icon: PlusCircleIcon,
+//         title: 'Medical Assistance',
+//     },
+//     {
+//         href: '/app/account',
+//         icon: UserIcon,
+//         title: 'Account',
+//     },
+//     {
+//         href: '/app/settings',
+//         icon: SettingsIcon,
+//         title: 'Settings',
+//     },
     /*
     {
         href: '/login',
@@ -66,13 +65,14 @@ const items = [
         icon: AlertCircleIcon,
         title: 'Error',
     },*/
-];
+// ];
+import NavItem from './NavItem';
 
 const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
     const [open, setOpen] = useState(false);
     const user = {
-        avatar: '/static/images/avatars/avatar_2.png',
+        avatar: userProfileReducer?.profile?.profilePic,//'/static/images/avatars/avatar_2.png',
         jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
         name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
     };
@@ -90,6 +90,45 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
         setOpen(false);
     }
 
+    const items = [
+        {
+            href: '/app/dashboard',
+            icon: BarChartIcon,
+            title: 'Dashboard',
+        },
+        {
+            href: '/app/gethelp',
+            icon: PackageIcon,
+            title: 'Get Help',
+        },
+        {
+            href: '/app/givehelp',
+            icon: ShoppingBagIcon,
+            title: 'Give Help',
+        },
+        {
+            href: userProfileReducer?.userMetaData?.isDoctor
+                ? '/app/medicalAssistance'
+                : '/app/lookformedicalAssistance',
+            icon: PlusCircleIcon,
+            title: 'Medical Assistance',
+        },
+        {
+            href: '/app/account',
+            icon: UserIcon,
+            title: 'Account',
+        } ,
+        {
+        href: '/app/mytransactions',
+        icon: CreditCardIcon,
+        title: 'My Transactions',
+    },
+        {
+            href: '/app/settings',
+            icon: SettingsIcon,
+            title: 'Settings',
+        },
+    ];
     const content = (
         <Box
             sx={{
@@ -148,7 +187,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                     Are you a Doctor?
                 </Typography>
                 <Typography align="center" variant="body2">
-                    Please help us in assisting non-urgent medical needs
+                    Help us in assisting non-urgent medical needs
                 </Typography>
                 <Box
                     sx={{

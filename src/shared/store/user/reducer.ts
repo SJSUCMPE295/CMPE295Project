@@ -1,11 +1,4 @@
-import { produce } from 'immer';
-import {
-    createUserProfile,
-    loginAction,
-    logoutAction,
-    saveUserName,
-} from 'store/constants/action-types';
-import { ActionTypes } from '../actions';
+import * as ActionTypes from '../constants/action-types';
 import { Action } from './types';
 
 export const initialState = Object.freeze<any>({
@@ -14,13 +7,19 @@ export const initialState = Object.freeze<any>({
 
 export default (state: any = initialState, action: Action | any): any => {
     switch (action?.type) {
-        case ActionTypes.SETGETHELP: {
-            return { ...state, help: true };
-        }
         case 'persist/REHYDRATE': {
             return { ...state, ...action?.payload?.user, ...action?.payload?.userProfileReducer };
         }
-        case saveUserName: {
+        case ActionTypes.SETGETHELP: {
+            return { ...state, help: true };
+        }
+        case ActionTypes.updateUser: {
+            return { ...state, ...action?.payload };
+        }
+        case ActionTypes.SETDOCTORDATA: {
+            return { ...state, doctor: action?.payload?.doctor || action?.payload };
+        }
+        case ActionTypes.saveUserName: {
             return {
                 ...state,
                 firstName: action?.firstName,
@@ -28,7 +27,7 @@ export default (state: any = initialState, action: Action | any): any => {
                 userName: action?.userName,
             };
         }
-        case createUserProfile: {
+        case ActionTypes.createUserProfile: {
             return {
                 ...state,
                 id: action?.id,
@@ -37,13 +36,13 @@ export default (state: any = initialState, action: Action | any): any => {
                 address: action?.address,
             };
         }
-        case loginAction:
+        case ActionTypes.loginAction:
             return {
                 ...state,
                 email: action.email,
             };
 
-        case logoutAction:
+        case ActionTypes.logoutAction:
             return {};
         default:
             return state;

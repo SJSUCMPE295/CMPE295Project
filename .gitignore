@@ -105,6 +105,7 @@ dist
 
 # ------------------------------------
 node_modules
+node_modules/
 logs/*.log
 /.vagrant
 .webpack-cache
@@ -123,3 +124,10 @@ bundle-stats.json
 .vscode
 .idea
 # /dependency-graph.svg
+.DS_Store
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+

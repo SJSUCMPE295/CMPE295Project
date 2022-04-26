@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import Mongoose from 'mongoose';
-import { userModel } from '../models/user';
-import doctorModel from '../models/doctor';
 import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
+import { userModel } from '../models/user';
+import doctorModel from '../models/doctor';
 const router = Router();
 
 ///API for profileUpdate
@@ -63,4 +63,25 @@ router.post('/profilePicUpdate', async (req, res) => {
     }
 });
 
+///API for all user fields updates
+router.put('/', async (req, res) => {
+    const { id, ...data } = req.body;
+    try {
+        userModel.findByIdAndUpdate(id, data, (error, user) => {
+            if (user) {
+                res.writeHead(200, {
+                    'Content-Type': 'text/plain',
+                });
+                res.end(JSON.stringify({ message: 'Profile Updated!', data: user }));
+            } else {
+                res.writeHead(401, {
+                    'Content-Type': 'text/plain',
+                });
+                res.end('Error updating Profile.');
+            }
+        });
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
 export default router;

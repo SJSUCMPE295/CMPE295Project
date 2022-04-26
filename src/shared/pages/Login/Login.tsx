@@ -15,12 +15,12 @@ import {
     Typography,
     Alert,
 } from '@material-ui/core';
-import GoogleIcon from '../../icons/Google';
-import { useAuth } from 'contexts/AuthContext';
-import useMounted from '../hooks/useMounted';
 import { useDispatch } from 'react-redux';
-import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
 import axios from 'axios';
+import { useAuth } from 'contexts/AuthContext';
+import GoogleIcon from '../../icons/Google';
+import useMounted from '../hooks/useMounted';
+import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
 import serverUrl from '../../utils/config';
 import session from '../../utils/session';
 
@@ -68,19 +68,24 @@ const Login = () => {
                     history.push('/login2register', { replace: true });
                 }
                 if (response.status === 200) {
-                    console.log('login successful', response.data.user);
+                    const user = response?.data?.user;
+                    console.log('login successful', user);
+                    //   getDownloadURL(storageRef)
+                    //     .then((url) => {
+                    //         console.log('url', url);
+                    //         // setPicUrl(url);
+                    //         response.data.user.profile.profilePic = url;
+                    //         console.log('picurl', picUrl);
+                    //         console.log('response', response);
                     dispatch({
                         type: saveUserName,
-                        firstName: response.data.user.firstName,
-                        lastName: response.data.user.lastName,
-                        userName: response.data.user.userName,
+                        ...user,
                     });
                     dispatch({
                         type: createUserProfile,
                         id: response.data.user._id,
-                        userMetaData: response.data.user.userMetaData,
-                        profile: response.data.user.profile,
-                        address: response.data.user.address,
+                        ...user,
+                        payload: response?.data,
                     });
                     history.push('app/dashboard', { replace: true });
                 }
