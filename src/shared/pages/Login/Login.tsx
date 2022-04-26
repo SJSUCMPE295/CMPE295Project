@@ -39,9 +39,9 @@ const Login = () => {
         apiCall(email, token);
     };
 
-    useEffect(() => {
-        session();
-    }, [1]);
+    // useEffect(() => {
+    //     session();
+    // }, [1]);
 
     const handleSubmitWithGoogle = (email, token) => {
         dispatch({type:loginAction, email});
