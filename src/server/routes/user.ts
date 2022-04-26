@@ -4,7 +4,6 @@ import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
 import { userModel } from '../models/user';
 import doctorModel from '../models/doctor';
-import mongoose from "mongoose";
 const router = Router();
 
 ///API for profileUpdate
@@ -64,38 +63,11 @@ router.post('/profilePicUpdate', async (req, res) => {
     }
 });
 
+///API for all user fields updates
 router.put('/', async (req, res) => {
     const { id, ...data } = req.body;
     try {
         userModel.findByIdAndUpdate(id, data, (error, user) => {
-            if (user) {
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                });
-                res.end(JSON.stringify({ message: 'Profile Updated!', data: user }));
-            } else {
-                res.writeHead(401, {
-                    'Content-Type': 'text/plain',
-                });
-                res.end('Error updating Profile.');
-            }
-        });
-    } catch (err) {
-        res.json({ message: err });
-    }
-});
-router.put('/password', async (req, res) => {
-    const { id, oldPassword, password } = req.body;
-    try {
-        const user = await userModel.find({
-            _id: {
-                $in: new mongoose.Types.ObjectId(id),
-            },
-        });
-        if (!user?.password || user?.password !== oldPassword) {
-            return res.json({ message: 'Error updating Profile.' });
-        }
-        userModel.findByIdAndUpdate(id, { password }, (error, user) => {
             if (user) {
                 res.writeHead(200, {
                     'Content-Type': 'text/plain',

@@ -12,10 +12,19 @@ import {
     TextField,
     TextareaAutosize,
     Typography,
+    Switch,
+    FormControlLabel,
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
-import { getAllDoctorsAppointments, setGetHelp } from 'store/actions';
+import {
+    getAllDoctorsAppointments,
+    profileUpdate,
+    setDoctorsAvailability,
+    setGetHelp
+} from "store/actions";
+import { objectWithBoolean } from 'utils/json';
+import { getDoctorsData } from "routes/login";
 
 const columns = [
     {
@@ -54,11 +63,13 @@ const columns = [
 
 export const DoctorSchedule = (props) => {
     const [open, setOpen] = React.useState(false);
-    const [activeUser, setActiveUser] = React.useState();
+    const [activeUser, setActiveUser] = React.useState(null);
+    const [available, setAvailable] = React.useState();
     const [appointments, setAppointments] = React.useState();
 
     React.useEffect(() => {
-        getAllDoctorsAppointments('6188430f8946f6387e38b3d3')
+        setAvailable(props?.userMetaData?.isDoctor);
+        getAllDoctorsAppointments(props?.id)
             .then((response) => setAppointments(response.data))
             .catch(console.log);
     }, []);
@@ -71,6 +82,21 @@ export const DoctorSchedule = (props) => {
     const handleClose = () => {
         setActiveUser(null);
         setOpen(false);
+    };
+    const handleToggleAvailability = (e, checked) => {
+        setAvailable(checked);
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = objectWithBoolean(Object.fromEntries(formData));
+        setDoctorsAvailability({ ...formProps, id: props?.id})
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     const DataTable = ({ rows }) => {
         if (rows) {
@@ -141,35 +167,51 @@ export const DoctorSchedule = (props) => {
                 </DialogActions>
             </Dialog>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Provide Medical Assistance</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Set up your availability</DialogContentText>
-                    <form className="" noValidate>
-                        <Box sx={{ my: 2 }}>
-                            <TextField
-                                id="datetime-local"
-                                label="To"
-                                type="datetime-local"
-                                defaultValue="2017-05-24T10:30"
-                                className="mb-2"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </Box>
-                    </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Save Details</Button>
-                </DialogActions>
+                <form className="" noValidate onSubmit={handleSubmit}>
+                    <DialogTitle>Provide Medical Assistance</DialogTitle>
+                    <DialogContent>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    defaultChecked={available}
+                                    onChange={handleToggleAvailability}
+                                    name="available"
+                                    value="true"
+                                />
+                            }
+                            label="Available"
+                        />
+                        {available && (
+                            <>
+                                <DialogContentText>Set up your availability</DialogContentText>
+                                <Box sx={{ my: 2 }}>
+                                    <TextField
+                                        id="datetime-local"
+                                        name="availability"
+                                        label="To"
+                                        type="datetime-local"
+                                        defaultValue="2017-05-24T10:30"
+                                        className="mb-2"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </Box>
+                            </>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button type="submit">Save Details</Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </>
     );
 };
 
-const mapStateToProps = ({ user }) => ({
-    user,
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer,
 });
 
 const mapDispatchToProps = { setGetHelp };

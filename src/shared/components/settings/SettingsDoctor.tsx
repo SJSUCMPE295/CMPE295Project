@@ -12,10 +12,10 @@ import {
     Typography,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { profileUpdate } from 'store/actions';
+import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
 
-const SettingsDoctor = ({ profile, userMetaData, id }) => {
+const SettingsDoctor = ({ profile, userMetaData, id, ...rest }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -27,7 +27,7 @@ const SettingsDoctor = ({ profile, userMetaData, id }) => {
         });
         profileUpdate({ id, userMetaData: { ...userMetaData, ...formProps } })
             .then((data) => {
-                console.log(data);
+                rest?.updateUserProfile(data);
             })
             .catch((err) => {
                 console.log(err);
@@ -110,7 +110,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateUserProfile };
 
 const ConnectedSettingsDoctor = connect(mapStateToProps, mapDispatchToProps)(SettingsDoctor);
 export default ConnectedSettingsDoctor;
