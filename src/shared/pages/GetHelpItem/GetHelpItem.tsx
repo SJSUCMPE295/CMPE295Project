@@ -34,7 +34,7 @@ const location=useLocation();
     const [errorText,setErrorText]=useState("");
     const [directions,setDirections]= useState(null);
     const [open, setOpen] = React.useState(false);
-    const [quantity,setQuantity]=useState(null);
+    const [quantity,setQuantity]=useState(0);
 const containerStyle = {
     width: '1125px',
     height: '450px'
