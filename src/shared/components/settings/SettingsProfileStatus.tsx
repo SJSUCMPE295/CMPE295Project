@@ -19,10 +19,9 @@ const SettingsProfileStatus = ({ profile, id }) => {
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean({
             ...profile,
-            profileActive: false,
             ...Object.fromEntries(formData),
         });
-        profileUpdate({ id, profile: formProps })
+        profileUpdate({ id, profile: { ...formProps, profileActive: 'false' === formProps?.profileActive } })
             .then((data) => {
                 console.log(data);
             })
