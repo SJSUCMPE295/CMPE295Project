@@ -17,8 +17,14 @@ import {
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
-import { getAllDoctorsAppointments, setGetHelp } from 'store/actions';
+import {
+    getAllDoctorsAppointments,
+    profileUpdate,
+    setDoctorsAvailability,
+    setGetHelp
+} from "store/actions";
 import { objectWithBoolean } from 'utils/json';
+import { getDoctorsData } from "routes/login";
 
 const columns = [
     {
@@ -77,15 +83,20 @@ export const DoctorSchedule = (props) => {
         setActiveUser(null);
         setOpen(false);
     };
-    const handleToggleAvailability = (e) => {
-        const value = e?.current?.value;
-        setAvailable(value);
+    const handleToggleAvailability = (e, checked) => {
+        setAvailable(checked);
     };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean(Object.fromEntries(formData));
-        console.log(formProps, available);
+        setDoctorsAvailability({ ...formProps, id: props?.id})
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
     const DataTable = ({ rows }) => {
         if (rows) {
@@ -165,6 +176,7 @@ export const DoctorSchedule = (props) => {
                                     defaultChecked={available}
                                     onChange={handleToggleAvailability}
                                     name="available"
+                                    value="true"
                                 />
                             }
                             label="Available"

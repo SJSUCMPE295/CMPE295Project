@@ -17,10 +17,11 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { getAvailableDoctors, getHelp, setGetHelp } from 'store/actions';
+import { getDate } from "utils/json";
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
     const [activeStep, setActiveStep] = React.useState(0);
-    const [selectedTime, setSelectedTime] = React.useState('2017-05-24T10:30');
+    const [selectedTime, setSelectedTime] = React.useState(getDate() + 'T10:30');
     const [doctors, setDoctors] = React.useState([]);
     const [selectedDoctor, setSelectedDoctor] = React.useState(null);
     const notesInput = React.useRef();
@@ -81,7 +82,7 @@ export const LookForMedicalAssistance = (props) => {
                 return (
                     <TextField
                         id="datetime-local"
-                        label="To"
+                        label="Time"
                         type="datetime-local"
                         defaultValue={selectedTime}
                         className="mb-2"

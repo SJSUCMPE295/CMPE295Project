@@ -55,11 +55,13 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
             const userIds = data.map((x) => x.userId);
             const users = await getAllUsers(userIds);
             res.send(
-                data.map((doctor) => {
-                    let user = users.find((x) => x?._id.toString() === doctor?.userId) || {};
-                    user = user?.toJSON ? user.toJSON() : user;
-                    return { ...user, doctor, password: '' };
-                })
+                data
+                    .map((doctor) => {
+                        let user = users.find((x) => x?._id.toString() === doctor?.userId) || {};
+                        user = user?.toJSON ? user.toJSON() : user;
+                        return { ...user, doctor, password: '' };
+                    })
+                    .filter((x) => x?._id)
             );
         })
         .catch((err) => {
@@ -68,7 +70,7 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
 };
 export const setDoctorsAvailabilityHandler = async (req, res) => {
     doctorModel
-        .findOneAndUpdate({ doctorId: req?.params?.id }, req?.body)
+        .findOneAndUpdate({ doctorId: req?.params?.id || req?.body?.doctorId }, req?.body)
         .then((data) => {
             res.send(data);
         })
