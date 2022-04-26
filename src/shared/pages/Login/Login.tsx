@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux';
 import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
+import session from '../../utils/session';
 
 const Login = () => {
     const history = useHistory();
@@ -37,6 +38,10 @@ const Login = () => {
         localStorage.setItem("token", token);
         apiCall(email, token);
     };
+
+    useEffect(() => {
+        session();
+    }, [1]);
 
     const handleSubmitWithGoogle = (email, token) => {
         dispatch({type:loginAction, email});
