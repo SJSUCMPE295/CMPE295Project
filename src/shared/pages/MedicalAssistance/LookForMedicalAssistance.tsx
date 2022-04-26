@@ -69,7 +69,7 @@ export const LookForMedicalAssistance = (props) => {
     };
     const setTime = (time = '') => {
         time && setSelectedTime(time);
-        getAvailableDoctors({ time: time ? time : selectedTime })
+        getAvailableDoctors({ availability: time ? time : selectedTime })
             .then((response) => setDoctors(response.data))
             .catch(console.log);
     };
