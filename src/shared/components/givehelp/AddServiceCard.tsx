@@ -18,6 +18,10 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import countries from 'i18n-iso-countries';
+const { getStates } = require('country-state-picker');
+const { getCode } =require('country-list');
+import CountryData from "./CountryData.json";
 
 const metadata = {
     contentType: 'image/jpeg',
@@ -30,11 +34,14 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [phoneNum, setPhoneNum] = useState('');
+    const [dialCode, setDialCode] = useState("+1");
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState(null);
     const [country, setCountry] = useState('');
+    const [countryNames, setCountryNames] = useState(CountryData);
+    const [code,setCode] = useState('us');
     const [availability, setAvailability] = useState(new Date());
     const [datePickerIsOpen, togglePicker] = useState(false);
     const [showErrorMsg, setShowErrorMsg] = React.useState('');
@@ -96,6 +103,15 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             return true;
         }
     };
+
+    countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+    const countryObj = countries.getNames('en', { select: 'official' });
+    const countryArray = Object.entries(countryObj).map(([key, value]) => {
+        return {
+            label: key,
+            value: value,
+        };
+    });
 
     const handleImageUpload = (event) => {
         console.log('Reached upload image task');
@@ -195,7 +211,18 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const handleCountryChange = (e) => {
         setCountryError("")
         setCountry(e.target.value);
+        const obj = countryNames.find(({ name }) => name === e.target.value);
+        setCode(getCode(e.target.value))
+        setDialCode(obj.dial_code)
     };
+
+    const stateObj = getStates(code.toLowerCase())   
+    const stateArray = Object.entries(stateObj).map(([key, value]) => {
+        return {
+            label: value,
+            value: value,
+        };
+    });
 
     const handleSetCheck = (e) => {
         setAddressError("");
@@ -432,6 +459,23 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                 <Grid item xs={6}>
                                     <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
+                                        label="Select State"
+                                        name="state"
+                                        onChange={handleStateChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        value={state}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {stateArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                    {/* <TextField
                                         required
                                         id="outlined-required"
                                         label="State"
@@ -439,11 +483,28 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         onChange={handleStateChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                    />
+                                    /> */}
                                 </Grid>
                                 <Grid item xs={6}>
                                     <div style={{ color: 'red' }}>{countryError}</div>
                                     <TextField
+                                        label="Select Country"
+                                        name="country"
+                                        onChange={handleCountryChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        value={country}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {countryArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                    {/* <TextField
                                         required
                                         id="outlined-required-input"
                                         label="Country"
@@ -451,33 +512,47 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         onChange={handleCountryChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{zipcodeError}</div>
-                                    <TextField
-                                        required
-                                        id="outlined-required-input"
-                                        label="Zipcode"
-                                        value={zipcode}
-                                        onChange={handleZipcodeChange}
-                                        variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{phoneNumError}</div>
-                                    <TextField
-                                        required
-                                        id="outlined-required-input"
-                                        label="Phone Number"
-                                        value={phoneNum}
-                                        onChange={handlePhoneNumChange}
-                                        variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
-                                    />
+                                    /> */}
                                 </Grid>
                             </Grid>
+                                <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                    <Grid item xs={3}>
+                                        <div style={{ color: 'red' }}>{zipcodeError}</div>
+                                        <TextField
+                                            required
+                                            id="outlined-required-input"
+                                            label="Zipcode"
+                                            value={zipcode}
+                                            onChange={handleZipcodeChange}
+                                            variant="outlined"
+                                            sx={{ m: 1, width: '50ch' }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={3}></Grid>
+                                    <Grid item xs={1}>
+                                        <TextField
+                                            id="outlined-read-only-input"
+                                            sx={{ m: 1 }}
+                                            value={dialCode}
+                                            style = {{width: 70}}
+                                            // InputProps={{
+                                            //     readOnly: true,
+                                            // }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <div style={{ color: 'red' }}>{phoneNumError}</div>
+                                        <TextField
+                                            required
+                                            id="outlined-required-input"
+                                            label="Phone Number"
+                                            value={phoneNum}
+                                            onChange={handlePhoneNumChange}
+                                            variant="outlined"
+                                            sx={{ m: 1, width: '41ch' }}
+                                        />
+                                    </Grid>
+                                </Grid>
                             <Divider sx={{ pt: 4 }} />
                             <Grid
                                 container

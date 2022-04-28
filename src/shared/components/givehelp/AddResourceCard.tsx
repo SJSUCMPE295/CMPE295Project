@@ -104,9 +104,9 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         } else if (phoneNum === "" || phoneNum === null) {
             setPhoneNumError("Please enter your contact number");
             return false;
-        // } else if (phoneNum.toString().length != 10) {
-        //     setPhoneNumError("Please enter a valid phone number!");
-        //     return false;
+        } else if (phoneNum.toString().length != 10) {
+            setPhoneNumError("Please enter a valid phone number!");
+            return false;
         } else {
             return true;
         }
@@ -378,14 +378,16 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 <div style={{ color: 'red' }}>{skuError}</div>
                                     <TextField
                                         required
-                                        id="outlined-required"
+                                        id="outlined-number"
                                         label="Quantity"
+                                        type="number"
                                         defaultValue={sku}
                                         onChange={handleSkuChange}
-                                        variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         helperText="Quanity should not be less than or equal to 0"
-                                        
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}     
                                     />
                                 </Grid>
                             </Grid>
