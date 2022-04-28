@@ -84,4 +84,20 @@ router.put('/', async (req, res) => {
         res.json({ message: err });
     }
 });
+router.get('/:id', async (req, res) => {
+    const { id } = req?.params;
+    try {
+        userModel.findById(id, async (error, data) => {
+            const user = data?.toJSON ? data.toJSON() : data;
+            if (user) {
+                const doctor = (await doctorModel.find({ userId: data?.id })) || [];
+                res.send({ ...user, doctor: user?.userMetaData?.isDoctor ? doctor[0] : undefined });
+            } else {
+                res.send({ error: 'finding user' });
+            }
+        });
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
 export default router;
