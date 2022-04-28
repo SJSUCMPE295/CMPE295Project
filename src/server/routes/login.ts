@@ -8,11 +8,8 @@ const router = Router();
 //API for login
 router.post('/', async (req, res) => {
     // console.log('login page' + JSON.stringify(req.body));
-
-    Users.findOne({ userName: req.body.userName }, async (err, user) => {
-        if (err) {
-            res.status(500).end('System Error');
-        }
+    try {
+        const user = await Users.findOne({ userName: req.body.userName });
         if (!user) {
             res.json({ status: 401, message: 'No such user exists' });
         } else {
@@ -24,13 +21,15 @@ router.post('/', async (req, res) => {
             //     expiresIn: 90000, //seconds
             // });
             // const jwtToken = 'JWT' + token;
-            const userData = (await getUserData(user)) || {};
+            const userData = await getUserData(user);
             res.status(200).json(userData || user);
             // } else {
             //     res.status(401).end('Wrong password');
             // }
         }
-    });
+    } catch (err) {
+        res.json({ message: err });
+    }
 });
 
 export default router;
