@@ -2,9 +2,10 @@ import { Schema, model } from 'mongoose';
 
 const DoctorAppointment = new Schema(
     {
-        UserId: { type: Object, required: true },
+        userId: { type: Object, required: true },
         doctorId: { type: Object, required: true },
         appointmentDetails: { type: String, required: true },
+        time: { type: Date, required: true },
         status: { type: String, required: true },
         notes: { type: String, required: false },
     },

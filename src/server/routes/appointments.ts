@@ -1,35 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import userModel from 'models/user';
+import { getUserByIdWithAppointments, getAllUsers, getUserById } from "utils/dao";
 const router = Router();
-export const getAllUsers = async (userIds = [], query = {}) => {
-    const userIdsObjects = userIds.map((id) => {
-        if (typeof id === 'string') {
-            return new mongoose.Types.ObjectId(id);
-        }
-        return id;
-    });
-    Object.keys(query).forEach((key) => {
-        if (query[key] === undefined) {
-            delete query[key];
-        }
-    });
-    const idsQuery = userIdsObjects.length
-        ? {
-              _id: {
-                  $in: userIdsObjects,
-              },
-          }
-        : {};
-    const userQuery = {
-        ...query,
-        ...idsQuery,
-    };
-    const users = (await userModel.find(userQuery)) || [];
-    return users;
-};
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
     newAppointment
@@ -42,24 +15,19 @@ export const createAppointmentHandler = async ({ body }, res) => {
         });
 };
 export const getAllDoctorsAppointmentHandler = async (req, res) => {
-    doctorAppointmentModel
-        .find({ doctorId: req?.params?.id })
-        .then(async (data) => {
-            const userIds = data.map((x) => x.userId);
-            const users = await getAllUsers(userIds);
-            const appointments = data.map((appointment) => {
-                let user = users.find((x) => x?._id.toString() === appointment?.userId) || {};
-                user = user?.toJSON ? user.toJSON() : user;
-                return { ...user, appointment, password: '' };
-            });
-            res.send({ appointments });
-        })
-        .catch((err) => {
-            res.status(500).json({ message: err.message });
-        });
+    try {
+        const user = await getUserByIdWithAppointments(req?.params?.id)
+        if (user) {
+            res.send(user);
+        } else {
+            res.send({ error: 'finding user' });
+        }
+    } catch (err) {
+        res.json({ message: err });
+    }
 };
 export const getAllAvailableDoctorsHandler = async (req, res) => {
-    const { userName, firstName, lastName, ...doctorModelQuery } = req?.query;
+    const { userName, firstName, lastName, availability, ...doctorModelQuery } = req?.query;
     doctorModel
         .find(doctorModelQuery)
         .then(async (data = []) => {
