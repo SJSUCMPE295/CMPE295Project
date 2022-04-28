@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import { getAllUsers } from "utils/dao";
+import { getUserByIdWithAppointments, getAllUsers, getUserById } from "utils/dao";
 const router = Router();
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
@@ -15,21 +15,16 @@ export const createAppointmentHandler = async ({ body }, res) => {
         });
 };
 export const getAllDoctorsAppointmentHandler = async (req, res) => {
-    doctorAppointmentModel
-        .find({ doctorId: req?.params?.id })
-        .then(async (data) => {
-            const userIds = data.map((x) => x.userId);
-            const users = await getAllUsers(userIds);
-            const appointments = data.map((appointment) => {
-                let user = users.find((x) => x?._id.toString() === appointment?.userId) || {};
-                user = user?.toJSON ? user.toJSON() : user;
-                return { ...user, appointment, password: '' };
-            });
-            res.send({ appointments });
-        })
-        .catch((err) => {
-            res.status(500).json({ message: err.message });
-        });
+    try {
+        const user = await getUserByIdWithAppointments(req?.params?.id)
+        if (user) {
+            res.send(user);
+        } else {
+            res.send({ error: 'finding user' });
+        }
+    } catch (err) {
+        res.json({ message: err });
+    }
 };
 export const getAllAvailableDoctorsHandler = async (req, res) => {
     const { userName, firstName, lastName, availability, ...doctorModelQuery } = req?.query;

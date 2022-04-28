@@ -2,9 +2,8 @@ import { Router } from 'express';
 import Mongoose from 'mongoose';
 import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
-import { getUserById } from 'utils/dao';
+import { getUserByIdWithAppointments } from 'utils/dao';
 import { userModel } from '../models/user';
-import doctorModel from '../models/doctor';
 const router = Router();
 
 ///API for profileUpdate
@@ -88,7 +87,7 @@ router.put('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req?.params;
     try {
-        const user = (await getUserById(id)) || {};
+        const user = (await getUserByIdWithAppointments(id)) || {};
         if (user) {
             res.send(user);
         } else {

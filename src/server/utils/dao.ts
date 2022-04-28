@@ -49,6 +49,26 @@ export const getUserById = async (id) => {
         }
     }
 };
+export const getUserByIdWithAppointments = async (id) => {
+    const user = await getUserById(id);
+    const users = (await userModel.find()) || [];
+    const usersObject = (users?.toJSON ? users.toJSON() : users).reduce(
+        (acc, curr) => ({ ...acc, [curr?._id]: curr }),
+        {}
+    );
+    const appointments =
+        user?.appointments?.map &&
+        user?.appointments?.map((appointment) => {
+            const obj = appointment?.toJSON ? appointment.toJSON() : appointment;
+            return {
+                ...obj,
+                id: appointment?._id || obj?._id || obj?.id,
+                user: usersObject[appointment?.userId],
+                doctor: usersObject[appointment?.doctorId],
+            };
+        });
+    return { ...user, appointments }
+};
 export const getUserData = async (user) => {
     const userId = user?._id.toString() || user?.userId;
     if (userId) {
