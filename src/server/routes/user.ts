@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Mongoose from 'mongoose';
 import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
+import { getUserById } from 'utils/dao';
 import { userModel } from '../models/user';
 import doctorModel from '../models/doctor';
 const router = Router();
@@ -87,15 +88,12 @@ router.put('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const { id } = req?.params;
     try {
-        userModel.findById(id, async (error, data) => {
-            const user = data?.toJSON ? data.toJSON() : data;
-            if (user) {
-                const doctor = (await doctorModel.find({ userId: data?.id })) || [];
-                res.send({ ...user, doctor: user?.userMetaData?.isDoctor ? doctor[0] : undefined });
-            } else {
-                res.send({ error: 'finding user' });
-            }
-        });
+        const user = (await getUserById(id)) || {};
+        if (user) {
+            res.send(user);
+        } else {
+            res.send({ error: 'finding user' });
+        }
     } catch (err) {
         res.json({ message: err });
     }

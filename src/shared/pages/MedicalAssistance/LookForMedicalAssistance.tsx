@@ -16,7 +16,13 @@ import {
     Card,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { getAvailableDoctors, getHelp, setGetHelp } from 'store/actions';
+import {
+    getAllDoctorsAppointments,
+    getAvailableDoctors,
+    getHelp,
+    setGetHelp,
+    getProfileData,
+} from 'store/actions';
 import { getDate } from 'utils/json';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
@@ -28,6 +34,7 @@ export const LookForMedicalAssistance = (props) => {
     const [notes, setNotes] = React.useState('');
     const [skipped, setSkipped] = React.useState(new Set());
     React.useEffect(() => {
+        props?.id && props.getProfileData({ id: props?.id });
         setTime();
     }, []);
     const isStepOptional = (step) => {
@@ -53,7 +60,14 @@ export const LookForMedicalAssistance = (props) => {
             newSkipped.delete(activeStep);
         }
         if (last) {
-            console.log({ selectedTime, selectedDoctor, notes });
+            console.log({
+                userId: props?.id,
+                time: selectedTime,
+                doctorId: selectedDoctor?._id,
+                notes,
+                status: false,
+                appointmentDetails: notes,
+            });
         } else {
             if (setDoctorStep && !selectedDoctor) {
                 return;
@@ -251,7 +265,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = { setGetHelp };
+const mapDispatchToProps = { setGetHelp, getProfileData };
 
 const ConnectedLookForMedicalAssistance = connect(
     mapStateToProps,

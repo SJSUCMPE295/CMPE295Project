@@ -4,8 +4,8 @@ import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
 import userModel from 'models/user';
 const router = Router();
-export const getAllUsers = async (userIds = [], query = {}) => {
-    const userIdsObjects = userIds.map((id) => {
+export const getAllUsers = async (userIds, query = {}) => {
+    const userIdsObjects = (userIds || []).map((id) => {
         if (typeof id === 'string') {
             return new mongoose.Types.ObjectId(id);
         }
@@ -59,7 +59,7 @@ export const getAllDoctorsAppointmentHandler = async (req, res) => {
         });
 };
 export const getAllAvailableDoctorsHandler = async (req, res) => {
-    const { userName, firstName, lastName, ...doctorModelQuery } = req?.query;
+    const { userName, firstName, lastName, availability, ...doctorModelQuery } = req?.query;
     doctorModel
         .find(doctorModelQuery)
         .then(async (data = []) => {
