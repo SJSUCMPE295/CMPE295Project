@@ -19,12 +19,11 @@ import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
 import {
     getAllDoctorsAppointments,
-    profileUpdate,
     setDoctorsAvailability,
-    setGetHelp
-} from "store/actions";
-import { objectWithBoolean } from 'utils/json';
-import { getDoctorsData } from "routes/login";
+    setGetHelp,
+    getProfileData,
+} from 'store/actions';
+import { objectWithBoolean, formatDate } from 'utils/json';
 
 const columns = [
     {
@@ -68,7 +67,8 @@ export const DoctorSchedule = (props) => {
     const [appointments, setAppointments] = React.useState();
 
     React.useEffect(() => {
-        setAvailable(props?.userMetaData?.isDoctor);
+        setAvailable(props?.doctor?.availability);
+        props?.id && props.getProfileData({ id: props?.id });
         getAllDoctorsAppointments(props?.id)
             .then((response) => setAppointments(response.data))
             .catch(console.log);
@@ -90,12 +90,17 @@ export const DoctorSchedule = (props) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean(Object.fromEntries(formData));
-        setDoctorsAvailability({ ...formProps, id: props?.id})
+        if (!formProps?.available) {
+            formProps?.availability = '';
+        }
+        setDoctorsAvailability({ ...formProps, id: props?.id })
             .then((data) => {
-                console.log(data);
+                setAvailable(formProps?.availability);
+                props?.id && props.getProfileData({ id: props?.id });
+                setOpen(false);
             })
             .catch((err) => {
-                console.log(err);
+                console.log('Db issue');
             });
     };
     const DataTable = ({ rows }) => {
@@ -190,7 +195,11 @@ export const DoctorSchedule = (props) => {
                                         name="availability"
                                         label="To"
                                         type="datetime-local"
-                                        defaultValue="2017-05-24T10:30"
+                                        defaultValue={
+                                            (props?.doctor?.availability &&
+                                                formatDate(props?.doctor?.availability)) ||
+                                            '2017-06-04T10:30'
+                                        }
                                         className="mb-2"
                                         InputLabelProps={{
                                             shrink: true,
@@ -214,7 +223,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = { setGetHelp };
+const mapDispatchToProps = { setGetHelp, getProfileData };
 
 const ConnectedDoctorSchedule = connect(mapStateToProps, mapDispatchToProps)(DoctorSchedule);
 export default ConnectedDoctorSchedule;

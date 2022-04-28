@@ -14,19 +14,20 @@ export const setGetHelp = (payload = {}) => ({
 });
 export const updateUserProfile = (payload) => ({
     type: ActionTypes.updateUser,
-    payload: payload?.data?.data || payload?.data || payload || {}
+    payload: payload?.data?.data || payload?.data || payload || {},
 });
 export const updateUserProfileDoctorData = (payload = {}) => ({
     type: ActionTypes.SETDOCTORDATA,
     payload,
 });
-const jsonToQueryString = (json) => {
+const jsonToQueryString = (json = {}) => {
     const str = Object.keys(json)
         .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(json[key]))
         .join('&');
     return str ? '?' + str : '';
 };
 
+/* api */
 export const signUp = (data = {}) => api.post('/api/signup', data);
 export const login = (data = {}) => api.post('/api/login', data);
 export const getHome = (data = {}) => api.get('/api/listing' + jsonToQueryString(data));
@@ -44,4 +45,14 @@ export const getServiceById = (id, data = {}) =>
     api.get(`/api/gethelp/services/${id}${jsonToQueryString(data)}`);
 export const getResourcesById = (id, data = {}) =>
     api.get(`/api/gethelp/resources/${id}${jsonToQueryString(data)}`);
+export const getProfile = (data) =>
+    api.get(`/api/user/${data?.userId || data?.id}${jsonToQueryString(data)}`);
 export const profileUpdate = (data = {}) => api.put('/api/user', data);
+/* Thunk Actions */
+export const getProfileData = (data = {}) => {
+    return (dispatch) => {
+        getProfile(data).then((r) => {
+            dispatch(updateUserProfile(r));
+        });
+    };
+};
