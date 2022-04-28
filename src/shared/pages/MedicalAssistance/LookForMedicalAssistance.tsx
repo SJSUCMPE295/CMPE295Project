@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+    Alert,
     Box,
     Button,
     Container,
@@ -14,19 +15,41 @@ import {
     CardHeader,
     CardContent,
     Card,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    TextareaAutosize,
+    DialogActions,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
+import { DataGrid } from '@material-ui/data-grid';
 import { createAppointment, getAvailableDoctors, setGetHelp, getProfileData } from 'store/actions';
-import { getDate } from 'utils/json';
+import { getDate, formatDate } from 'utils/json';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
+    const [open, setOpen] = React.useState(false);
     const [activeStep, setActiveStep] = React.useState(0);
-    const [selectedTime, setSelectedTime] = React.useState(getDate() + 'T10:30');
+    const [selectedTime, setSelectedTime] = React.useState(getDate(1) + 'T10:30');
     const [doctors, setDoctors] = React.useState([]);
     const [selectedDoctor, setSelectedDoctor] = React.useState(null);
+    const [alert, setAlert] = React.useState('');
     const notesInput = React.useRef();
     const [notes, setNotes] = React.useState('');
     const [skipped, setSkipped] = React.useState(new Set());
+    const hasDuplicateAppointment = (props?.appointments || []).find(
+        (x) =>
+            selectedTime === x?.time ||
+            selectedTime === formatDate(x?.time) ||
+            x?.time?.indexOf(selectedTime) > 0
+    );
+    const handleClickOpen = () => {
+        setActiveStep(0)
+        setAlert('')
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
+
     React.useEffect(() => {
         props?.id && props.getProfileData({ id: props?.id });
         setTime();
@@ -65,17 +88,24 @@ export const LookForMedicalAssistance = (props) => {
             if (data.userId && data.time && data.doctorId) {
                 createAppointment(data)
                     .then((r) => window?.location?.reload())
-                    .catch((e) => alert('something went wrong'));
+                    .catch((e) => setAlert('something went wrong'));
             } else {
-                alert('missing data');
+                setAlert('missing data');
             }
+            setAlert('');
         } else {
+            if (activeStep === 0 && hasDuplicateAppointment) {
+                setAlert('Conflict with another appointment');
+                return;
+            }
             if (setDoctorStep && !selectedDoctor) {
+                setAlert('Please select a diffrent Time');
                 return;
             }
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
             setSkipped(newSkipped);
             saveNotes();
+            setAlert('');
         }
     };
 
@@ -190,6 +220,64 @@ export const LookForMedicalAssistance = (props) => {
             }
         }
     };
+    const DataTable = ({ rows }) => {
+        const columns = [
+            {
+                field: 'time',
+                headerName: 'Time',
+                flex: 1,
+                valueGetter: (params) => formatDate(params?.value),
+            },
+            {
+                field: 'fullName',
+                headerName: 'Full name',
+                description: 'This column has a value getter and is not sortable.',
+                sortable: false,
+                flex: 1,
+                valueGetter: (params) => {
+                    const user = params.getValue(params?.id, 'user');
+                    return `${user?.firstName || ''} ${user?.lastName || ''}`;
+                },
+            },
+            {
+                field: 'state',
+                headerName: 'State',
+                flex: 1,
+                valueGetter: (params) => params.getValue(params?.id, 'user')?.address?.state,
+            },
+            {
+                field: 'gender',
+                headerName: 'Gender',
+                flex: 1,
+                valueGetter: (params) => params.getValue(params?.id, 'user')?.userMetaData?.gender,
+            },
+            {
+                field: 'notes',
+                headerName: 'notes',
+                flex: 1,
+            },
+        ];
+        if (rows?.length) {
+            return (
+                <div style={{ height: '100vh', width: '100%' }}>
+                    {!rows.length ? (
+                        <Typography sx={{ mt: 2, mb: 1 }}>No Appointments</Typography>
+                    ) : (
+                        <>
+                            <Typography sx={{ mt: 2, mb: 1 }}>Appointments</Typography>
+                            <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                pageSize={5}
+                                disableSelectionOnClick
+                            />
+                        </>
+                    )}
+                </div>
+            );
+        }
+        return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
+    };
     return (
         <Box
             sx={{
@@ -199,63 +287,86 @@ export const LookForMedicalAssistance = (props) => {
             }}
         >
             <Container maxWidth={false}>
-                <Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={activeStep}>
-                        {steps.map((label, index) => {
-                            const stepProps = {};
-                            const labelProps = {};
-                            if (isStepOptional(index)) {
-                                labelProps.optional = (
-                                    <Typography variant="caption">Optional</Typography>
-                                );
-                            }
-                            if (isStepSkipped(index)) {
-                                stepProps.completed = false;
-                            }
-                            return (
-                                <Step key={label} {...stepProps}>
-                                    <StepLabel {...labelProps}>{label}</StepLabel>
-                                </Step>
-                            );
-                        })}
-                    </Stepper>
-                    {activeStep === steps.length ? (
-                        <React.Fragment>
-                            <Typography sx={{ mt: 2, mb: 1 }}>
-                                All steps completed - you&apos;re finished
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                <Box sx={{ flex: '1 1 auto' }} />
-                                <Button onClick={handleReset}>Reset</Button>
-                            </Box>
-                        </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                            <Box sx={{ my: 2, minHeight: '170px' }}>
-                                <StepContainer step={activeStep} />
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                <Button
-                                    color="inherit"
-                                    disabled={activeStep === 0}
-                                    onClick={handleBack}
-                                    sx={{ mr: 1 }}
-                                >
-                                    Back
-                                </Button>
-                                <Box sx={{ flex: '1 1 auto' }} />
-                                {isStepOptional(activeStep) && (
-                                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                                        Skip
-                                    </Button>
-                                )}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    <Button color="primary" variant="contained" onClick={handleClickOpen}>
+                        Add product
+                    </Button>
+                </Box>
+                <Dialog open={open} onClose={handleClose} fullWidth>
+                    <DialogTitle>Make an Appointment</DialogTitle>
+                    <DialogContent>
+                        {alert && <Alert severity="error">{alert}</Alert>}
+                        <Box sx={{ width: '100%' }}>
+                            <Stepper activeStep={activeStep}>
+                                {steps.map((label, index) => {
+                                    const stepProps = {};
+                                    const labelProps = {};
+                                    if (isStepOptional(index)) {
+                                        labelProps.optional = (
+                                            <Typography variant="caption">Optional</Typography>
+                                        );
+                                    }
+                                    if (isStepSkipped(index)) {
+                                        stepProps.completed = false;
+                                    }
+                                    return (
+                                        <Step key={label} {...stepProps}>
+                                            <StepLabel {...labelProps}>{label}</StepLabel>
+                                        </Step>
+                                    );
+                                })}
+                            </Stepper>
+                            {activeStep === steps.length ? (
+                                <React.Fragment>
+                                    <Typography sx={{ mt: 2, mb: 1 }}>
+                                        All steps completed - you&apos;re finished
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                        <Box sx={{ flex: '1 1 auto' }} />
+                                        <Button onClick={handleReset}>Reset</Button>
+                                    </Box>
+                                </React.Fragment>
+                            ) : (
+                                <React.Fragment>
+                                    <Box sx={{ my: 2, minHeight: '170px' }}>
+                                        <StepContainer step={activeStep} />
+                                    </Box>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                        <Button
+                                            color="inherit"
+                                            disabled={activeStep === 0}
+                                            onClick={handleBack}
+                                            sx={{ mr: 1 }}
+                                        >
+                                            Back
+                                        </Button>
+                                        <Box sx={{ flex: '1 1 auto' }} />
+                                        {isStepOptional(activeStep) && (
+                                            <Button
+                                                color="inherit"
+                                                onClick={handleSkip}
+                                                sx={{ mr: 1 }}
+                                            >
+                                                Skip
+                                            </Button>
+                                        )}
 
-                                <Button onClick={handleNext} color="primary">
-                                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                </Button>
-                            </Box>
-                        </React.Fragment>
-                    )}
+                                        <Button onClick={handleNext} color="primary">
+                                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                                        </Button>
+                                    </Box>
+                                </React.Fragment>
+                            )}
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+                <Box sx={{ width: '100%' }}>
+                    <DataTable rows={props?.appointments} />
                 </Box>
             </Container>
         </Box>

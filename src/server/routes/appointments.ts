@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import { getUserByIdWithAppointments, getAllUsers, getUserById } from "utils/dao";
+import { getUserByIdWithAppointments, getAllUsers, getUserById } from 'utils/dao';
 const router = Router();
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
@@ -16,7 +16,7 @@ export const createAppointmentHandler = async ({ body }, res) => {
 };
 export const getAllDoctorsAppointmentHandler = async (req, res) => {
     try {
-        const user = await getUserByIdWithAppointments(req?.params?.id)
+        const user = await getUserByIdWithAppointments(req?.params?.id);
         if (user) {
             res.send(user);
         } else {
@@ -26,8 +26,24 @@ export const getAllDoctorsAppointmentHandler = async (req, res) => {
         res.json({ message: err });
     }
 };
+export const equalDates = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return Number(date1) === Number(date2);
+};
+export const greaterThanDate = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return date1 <= date2;
+};
 export const getAllAvailableDoctorsHandler = async (req, res) => {
-    const { userName, firstName, lastName, availability, ...doctorModelQuery } = req?.query;
+    const { userName, firstName, lastName, availability = '', ...doctorModelQuery } = req?.query;
     doctorModel
         .find(doctorModelQuery)
         .then(async (data = []) => {
@@ -39,7 +55,22 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
                     user = user?.toJSON ? user.toJSON() : user;
                     return { ...user, doctor, password: '' };
                 })
-                .filter((x) => x?._id);
+                .filter((x) => x?._id)
+                .filter((x) => {
+                    const now = new Date();
+                    const isProfileActive = x?.profile?.profileActive;
+                    const isDateGreaterThanNow = greaterThanDate(now, availability);
+                    const isDocDateGreaterThanNow = greaterThanDate(now, x?.doctor?.availability);
+                    const hasConflictTime = equalDates(x?.doctor?.availability, availability);
+                    const isGreaterThanDate = greaterThanDate(
+                        x?.doctor?.availability,
+                        availability
+                    );
+                    const isAvailable = availability
+                        ? isDateGreaterThanNow && !hasConflictTime && isGreaterThanDate
+                        : isDocDateGreaterThanNow;
+                    return isProfileActive && isAvailable;
+                });
             res.send(doctorsList);
         })
         .catch((err) => {
