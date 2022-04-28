@@ -67,9 +67,11 @@ export const DoctorSchedule = (props) => {
     const [activeUser, setActiveUser] = React.useState(null);
     const [available, setAvailable] = React.useState(false);
     React.useEffect(() => {
-        setAvailable(!!props?.doctor?.availability);
         props?.id && props.getProfileData({ id: props?.id });
     }, []);
+    React.useEffect(() => {
+        setAvailable(!!props?.doctor?.availability);
+    }, [props?.doctor?.availability]);
     const handleClickOpen = () => {
         setOpen(true);
     };
