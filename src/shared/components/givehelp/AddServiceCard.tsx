@@ -39,7 +39,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState("United States of America");
     const [countryNames, setCountryNames] = useState(CountryData);
     const [code,setCode] = useState('us');
     const [availability, setAvailability] = useState(new Date());
