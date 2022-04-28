@@ -235,7 +235,7 @@ export const LookForMedicalAssistance = (props) => {
                 sortable: false,
                 flex: 1,
                 valueGetter: (params) => {
-                    const user = params.getValue(params?.id, 'user');
+                    const user = params.getValue(params?.id, 'doctor');
                     return `${user?.firstName || ''} ${user?.lastName || ''}`;
                 },
             },
@@ -243,13 +243,13 @@ export const LookForMedicalAssistance = (props) => {
                 field: 'state',
                 headerName: 'State',
                 flex: 1,
-                valueGetter: (params) => params.getValue(params?.id, 'user')?.address?.state,
+                valueGetter: (params) => params.getValue(params?.id, 'doctor')?.address?.state,
             },
             {
                 field: 'gender',
                 headerName: 'Gender',
                 flex: 1,
-                valueGetter: (params) => params.getValue(params?.id, 'user')?.userMetaData?.gender,
+                valueGetter: (params) => params.getValue(params?.id, 'doctor')?.userMetaData?.gender,
             },
             {
                 field: 'notes',
