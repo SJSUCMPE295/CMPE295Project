@@ -234,12 +234,15 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
+            const obj = countryNames.find(({ code }) => code === getCode(address.country));
             setAddress(address.location);
             setCity(address.city);
             setCountry(address.country);
             setZipcode(address.zipCode);
             setState(address.state);
             setPhoneNum(profile.phoneNumber);
+            setCode(getCode(address.country))
+            setDialCode(obj.dial_code)
         } else {
             setAddress('');
             setCity('');
