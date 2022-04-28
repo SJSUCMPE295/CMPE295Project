@@ -39,7 +39,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState("United States of America");
     const [countryNames, setCountryNames] = useState(CountryData);
     const [code,setCode] = useState('us');
     const [availability, setAvailability] = useState(new Date());
@@ -234,12 +234,15 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
+            const obj = countryNames.find(({ code }) => code === getCode(address.country));
             setAddress(address.location);
             setCity(address.city);
             setCountry(address.country);
             setZipcode(address.zipCode);
             setState(address.state);
             setPhoneNum(profile.phoneNumber);
+            setCode(getCode(address.country))
+            setDialCode(obj.dial_code)
         } else {
             setAddress('');
             setCity('');
