@@ -1,35 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import userModel from 'models/user';
+import { getAllUsers } from "utils/dao";
 const router = Router();
-export const getAllUsers = async (userIds, query = {}) => {
-    const userIdsObjects = (userIds || []).map((id) => {
-        if (typeof id === 'string') {
-            return new mongoose.Types.ObjectId(id);
-        }
-        return id;
-    });
-    Object.keys(query).forEach((key) => {
-        if (query[key] === undefined) {
-            delete query[key];
-        }
-    });
-    const idsQuery = userIdsObjects.length
-        ? {
-              _id: {
-                  $in: userIdsObjects,
-              },
-          }
-        : {};
-    const userQuery = {
-        ...query,
-        ...idsQuery,
-    };
-    const users = (await userModel.find(userQuery)) || [];
-    return users;
-};
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
     newAppointment

@@ -16,13 +16,7 @@ import {
     Card,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import {
-    getAllDoctorsAppointments,
-    getAvailableDoctors,
-    getHelp,
-    setGetHelp,
-    getProfileData,
-} from 'store/actions';
+import { createAppointment, getAvailableDoctors, setGetHelp, getProfileData } from 'store/actions';
 import { getDate } from 'utils/json';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
@@ -60,14 +54,21 @@ export const LookForMedicalAssistance = (props) => {
             newSkipped.delete(activeStep);
         }
         if (last) {
-            console.log({
+            const data = {
                 userId: props?.id,
                 time: selectedTime,
                 doctorId: selectedDoctor?._id,
                 notes,
                 status: false,
-                appointmentDetails: notes,
-            });
+                appointmentDetails: 'Appointment',
+            };
+            if (data.userId && data.time && data.doctorId) {
+                createAppointment(data)
+                    .then((r) => window?.location?.reload())
+                    .catch((e) => alert('something went wrong'));
+            } else {
+                alert('missing data');
+            }
         } else {
             if (setDoctorStep && !selectedDoctor) {
                 return;
@@ -265,7 +266,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = { setGetHelp, getProfileData };
+const mapDispatchToProps = { setGetHelp, getProfileData, createAppointment };
 
 const ConnectedLookForMedicalAssistance = connect(
     mapStateToProps,
