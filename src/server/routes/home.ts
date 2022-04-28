@@ -48,7 +48,7 @@ router.get('/', async (_req, res) => {
                             },
                             {
                                 $project: {
-                                    doctorObjId: { $toObjectId: '$DoctorId' },
+                                    doctorObjId: { $toObjectId: '$doctorId' },
                                     userId: 1,
                                     AppointmentDetails: 1,
                                     Status: 1,
