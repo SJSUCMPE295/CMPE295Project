@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@material-ui/core';
 // import CustomerList from 'pages/CustomerList';
+import { connect } from 'react-redux';
 import Dashboard from 'pages/Dashboard/Dashboard';
 import Account from 'pages/Account/Account';
 import MedicalAssistance from 'pages/MedicalAssistance/MedicalAssistance';
@@ -15,10 +16,9 @@ import Register2 from 'pages/Register/RegisterSecondPage';
 import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
 import ResetPassword from 'pages/ForgotPassword/ResetPassword';
 import NotFound from 'pages/NotFound';
-import AuthContextProvider from 'contexts/AuthContext';
+import AuthContextProvider, { useAuth } from 'contexts/AuthContext';
 import GetHelp from 'pages/GetHelp/GetHelp';
 import GetHelpItem from 'pages/GetHelpItem/GetHelpItem';
-import { useAuth } from 'contexts/AuthContext';
 import theme from './theme';
 import MainLayout from './components/MainLayout';
 import DashboardLayout from './components/DashboardLayout';
@@ -27,7 +27,13 @@ import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
 import MyTransactions from './pages/MyTransactions/MyTransactions';
 import './styles.css';
-const App: React.FC<any> = () => {
+const App: React.FC<any> = ({ id }) => {
+    const history = useHistory();
+    React.useEffect(() => {
+        if (!id) {
+            history.push('/login');
+        }
+    }, [id]);
     return (
         <AuthContextProvider>
             <StyledEngineProvider injectFirst>
@@ -38,10 +44,16 @@ const App: React.FC<any> = () => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                        <Route path={'/app/gethelp/:id/:type'} component={GetHelpItem} /> 
+                                        <Route
+                                            path={'/app/gethelp/:id/:type'}
+                                            component={GetHelpItem}
+                                        />
                                         <Route path={'/app/gethelp'} component={GetHelp} />
                                         <Route path={'/app/dashboard'} component={Dashboard} />
-                                        <Route path={'/app/mytransactions'} component={MyTransactions} />
+                                        <Route
+                                            path={'/app/mytransactions'}
+                                            component={MyTransactions}
+                                        />
                                         <Route
                                             path={'/app/medicalAssistance'}
                                             component={MedicalAssistance}
@@ -95,7 +107,7 @@ const App: React.FC<any> = () => {
                                 </MainLayout>
                             </Route>
                             <Route exact path="/">
-                                <Redirect to="/login" />
+                                <Redirect to={id ? '/app/dashboard' : '/login'} />
                             </Route>
                             <Route path={'/404'} component={NotFound} />
                             <Redirect to="/404" />
@@ -107,31 +119,10 @@ const App: React.FC<any> = () => {
     );
 };
 
-// const ProtectedRoute = (props) => {
-//     const { currentUser } = useAuth();
-//     const location = useLocation();
-//     const { path } = props;
-//     console.log('currentuse', currentUser);
-//     console.log('path', path);
-//     console.log('props', props);
-//     if (path == '/login' || path == '/register1') {
-//         return currentUser ? (
-//             <Redirect to={location.state?.from ?? '/app/dashboard'} />
-//         ) : (
-//             <Route {...props} />
-//         );
-//     }
-//
-//     return currentUser ? (
-//         <Route {...props} />
-//     ) : (
-//         <Redirect
-//             to={{
-//                 pathname: '/login',
-//                 state: { from: path },
-//             }}
-//         />
-//     );
-// }
+const mapStateToProps = ({ userProfileReducer }) => ({
+    ...userProfileReducer,
+});
 
-export default App;
+const mapDispatchToProps = {};
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+export default ConnectedApp;
