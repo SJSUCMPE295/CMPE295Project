@@ -104,10 +104,6 @@ const RegisterSecondPage = () => {
             }
         );
     };
-
-    const handleChangeSpeciality = (event) => {
-        setSpeciality(event.target.value);
-    };
     return (
         <>
             <Helmet>
@@ -146,10 +142,8 @@ const RegisterSecondPage = () => {
                                 'Phone Number should be 10 digits',
                                 (val) => val.length === 10
                             ),
-                            // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={(values) => {
-                            console.log('insde submit');
                             values.isSubmitting = true;
                             handleSubmit(
                                 values.address1,

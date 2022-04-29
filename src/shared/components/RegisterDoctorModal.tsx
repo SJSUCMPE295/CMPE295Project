@@ -16,6 +16,7 @@ import {
     FormControlLabel,
     Checkbox
 } from '@material-ui/core';
+import Alert from '@mui/material/Alert';
 import { withStyles} from '@material-ui/styles'
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
@@ -24,6 +25,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import serverUrl from '../utils/config';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { createUserProfile, saveUserName } from '../store/constants/action-types';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const BorderLinearProgress = withStyles((theme) => ({
@@ -63,15 +65,11 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     const [isLoading, setLoading] = useState(true);
     const[saveMsg, setSaveMsg] = useState('');
     const dispatch = useDispatch();
+    var userMetaData = userProfileReducer.userMetaData;
     const [doctorProfile, setDoctorProfile] = React.useState({
         firstName: userProfileReducer.firstName,
         userId: userProfileReducer.id,
         user: userProfileReducer.userName,
-        speciality: '',
-        license: '',
-        qualification: '',
-        experience: '',
-        description: '',
         licenseUrl: ''
 
     });
@@ -80,6 +78,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     const [fileLink, setFileLink] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
     const [progress, setProgress] = useState(0);
+    const [errMessage, setErrMessage] = useState('');
     useEffect(() => {
         // set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -95,10 +94,10 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
           },
           (error) => {
               console.log("register error")
-          //   this.setState({
-          //     errorMessage: error.response.data,
-          //     signupFailed: true,
-          //   });
+                // this.setState({
+                // errorMessage: error.response.data,
+                // signupFailed: true,
+                // });
           }
         );
       },[1]);
@@ -134,14 +133,17 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
 
     const handleSubmit = (values) => {
         console.log(values);
+        userMetaData.isDoctor = values.isDoctor;
         const payload = {
             userId: doctorProfile.userId,
+            userMetaData: userMetaData,
             speciality: values.speciality,
             license: values.license,
             qualification: values.qualification,
             experience: values.experience,
             description: values.description,
-            licenseUrl: fileUrl
+            licenseUrl: fileUrl.replace,
+            availability: ''
         };
         const token = localStorage.getItem('token');
            // set the with credentials to true
@@ -156,20 +158,26 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                    console.log("axios call", response);
                if (response.status === 200) {
                    console.log("updated successfully");
-                   setSaveMsg("Yes");
+                   const user = response?.data?.user || response?.data;
+                    dispatch({
+                        type: saveUserName,
+                        ...user,
+                        });
+                    dispatch({
+                        type: createUserProfile,
+                        id: user._id,
+                        ...user,
+                        payload: response?.data,
+                    });
                    closeModal();
                }
                if(response.status === 401) {
-                setSaveMsg("No");
+                    setErrMessage('System Error, contact Administrator!');
                }
             },
                (error) => {
                    console.log("register error")
-                   setSaveMsg("No");
-               //   this.setState({
-               //     errorMessage: error.response.data,
-               //     signupFailed: true,
-               //   });
+                    setErrMessage('System Error, contact Administrator!');
                }
            );
     }
@@ -177,12 +185,12 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
         <>
                 <Formik
                         initialValues={{
-                            isDoctor: userProfileReducer.userMetaData.isDoctor,
-                            speciality: '',
-                            license: '',
-                            qualification: '',
-                            experience: '',
-                            description: '',
+                            isDoctor: userProfileReducer?.userMetaData?.isDoctor,
+                            speciality: userProfileReducer?.userMetaData?.speciality,
+                            license: userProfileReducer?.doctor?.license,
+                            qualification: userProfileReducer?.doctor?.qualification,
+                            experience: userProfileReducer?.doctor?.experience,
+                            description: userProfileReducer?.doctor?.description,
                             isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
@@ -246,6 +254,13 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                             }
                         />
                     </div>
+                    {!values.isDoctor && <div style={{
+                                            width:"300px", height:"50px", display: 'flex', justifyContent: 'flex-start'
+                                        }}>
+                        <Alert variant="standard" severity="info">
+                            This will delete your Doctor info!
+                        </Alert>
+                    </div>}
                     <Grid container spacing={3}>
                         <Grid item md={6} xs={12}>
                             <TextField
@@ -352,6 +367,13 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                               target="_blank"
                         > {fileLink}</Link> }
                         </Grid>
+                    </Grid>
+                    <Grid>
+                    {errMessage && <Grid item md={12} xs={12}>
+                            <Alert variant="standard" severity="error">
+                                {errMessage}
+                            </Alert>
+                        </Grid>}
                     </Grid>
                 </CardContent>
                 <Divider />

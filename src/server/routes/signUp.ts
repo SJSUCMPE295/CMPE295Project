@@ -106,21 +106,30 @@ router.post('/doctor', async (req, res) => {
         qualification: req.body.qualification, 
         experience: req.body.experience, 
         description: req.body.description,
-        licenseUrl: req.body.licenseUrl
+        licenseUrl: req.body.licenseUrl,
+        availability: req.body.availability
     }
     const options = {
         upsert: true, new: true, setDefaultsOnInsert: true
     }
+    
     try {
-        doctorModel.findOneAndUpdate(query, update, options,(error, data) => {
+        doctorModel.findOneAndUpdate(query, update, options,(error, doctor) => {
             if (error) {
                 console.log('System Error', error);
                 return res.json(500).send('System Error');
             } else {
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                  });
-                res.end(JSON.stringify({data: data, message: "Doctor information is added!"}));
+                userModel.findOneAndUpdate({_id: req.body.userId}, {userMetaData : req.body.userMetaData}, options,(error, user) => {
+                    if(error) {
+                        console.log('System Error', error);
+                        return res.status(500).send('System Error');
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain',
+                        });
+                        res.end(JSON.stringify({doctor, user, message: "Doctor information is added!"}));
+                        }
+                })
             }
         });                                
     } catch (err) {

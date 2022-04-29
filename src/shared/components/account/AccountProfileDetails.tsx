@@ -199,12 +199,18 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                             />
                         </Grid>
                         <Grid item md={6} xs={12}>
-                            <TextField
+                        <TextField
                                 fullWidth
-                                label="Zipcode"
+                                label="ZipCode"
                                 name="zipcode"
                                 onChange={handleChange}
                                 type="number"
+                                InputProps={{
+                                    inputProps: {
+                                        max: 5,
+                                        min: 5,
+                                    },
+                                }}
                                 value={values.zipCode}
                                 variant="outlined"
                             />
