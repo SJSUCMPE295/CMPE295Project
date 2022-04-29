@@ -2,7 +2,7 @@ import { Router } from 'express';
 import Mongoose from 'mongoose';
 import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
-import { getUserByIdWithAppointments } from 'utils/dao';
+import { getUserByIdWithAppointments, getUserById } from 'utils/dao';
 import { userModel } from '../models/user';
 const router = Router();
 
@@ -67,19 +67,17 @@ router.post('/profilePicUpdate', async (req, res) => {
 router.put('/', async (req, res) => {
     const { id, ...data } = req.body;
     try {
-        userModel.findByIdAndUpdate(id, data, (error, user) => {
+        const update = await userModel.findByIdAndUpdate(id, data);
+        if (update) {
+            const user = (await getUserById(id)) || {};
             if (user) {
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                });
-                res.end(JSON.stringify({ message: 'Profile Updated!', data: user }));
+                res.send(user);
             } else {
-                res.writeHead(401, {
-                    'Content-Type': 'text/plain',
-                });
-                res.end('Error updating Profile.');
+                res.send({ error: 'updating user' });
             }
-        });
+        } else {
+            res.send({ error: 'updating user' });
+        }
     } catch (err) {
         res.json({ message: err });
     }

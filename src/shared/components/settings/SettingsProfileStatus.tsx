@@ -17,13 +17,15 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData)
         const formProps = objectWithBoolean({
             ...profile,
-            ...Object.fromEntries(formData),
+            ...data,
         });
+        console.log('settings',data?.profileActive,{ ...formProps, profileActive: formProps?.profileActive !== 'off' });
         profileUpdate({
             id,
-            profile: { ...formProps, profileActive: formProps?.profileActive === 'false' },
+            profile: { ...formProps, profileActive: formProps?.profileActive !== 'off' },
         })
             .then(({ data }) => {
                 rest?.updateUserProfile(data);
@@ -59,7 +61,7 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
                                     <Checkbox
                                         color="primary"
                                         name="profileActive"
-                                        value={false}
+                                        value="off"
                                         defaultChecked={!profile?.profileActive}
                                     />
                                 }

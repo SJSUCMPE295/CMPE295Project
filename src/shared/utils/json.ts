@@ -39,8 +39,16 @@ export const formatDate = (dateString, utcTime = false) => {
         dateNow.getDate().toString().length < 2 // Checking if date is < 10 and pre-prending 0 if not to adjust for date input.
             ? `0${dateNow.getDate()}`
             : dateNow.getDate();
-    const hour = utcTime? dateNow.getUTCHours(): dateNow.getHours();
-    const minutes = String(utcTime? dateNow.getMinutes(): dateNow.getMinutes()).padStart(2, '0') || '00';
+    const hour = utcTime ? dateNow.getUTCHours() : dateNow.getHours();
+    const minutes =
+        String(utcTime ? dateNow.getMinutes() : dateNow.getMinutes()).padStart(2, '0') || '00';
     const time = hour > 0 ? `T${hour}:${minutes}` : '';
     return `${year}-${month}-${date}${time}`; // combining to format for defaultValue or value attribute of material <TextField>
+};
+
+export const prettyDate = (selectedTime) => {
+    const d = new Date(selectedTime);
+    const date = d.toLocaleDateString();
+    const day = d.toLocaleTimeString();
+    return d ? `${date}  ${day}` : '';
 };
