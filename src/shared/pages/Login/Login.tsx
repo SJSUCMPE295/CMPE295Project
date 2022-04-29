@@ -70,13 +70,6 @@ const Login = () => {
                 if (response.status === 200) {
                     const user = response?.data?.user;
                     console.log('login successful', user);
-                    //   getDownloadURL(storageRef)
-                    //     .then((url) => {
-                    //         console.log('url', url);
-                    //         // setPicUrl(url);
-                    //         response.data.user.profile.profilePic = url;
-                    //         console.log('picurl', picUrl);
-                    //         console.log('response', response);
                     dispatch({
                         type: saveUserName,
                         ...user,

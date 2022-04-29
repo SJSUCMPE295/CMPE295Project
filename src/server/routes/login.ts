@@ -22,19 +22,8 @@ router.post('/', async (req, res) => {
         if (!user) {
             res.json({ status: 401, message: 'No such user exists' });
         } else {
-            console.log('user', user);
-            // if (req.body.password == user.password) {
-            // const payload = { name: user.name, _id: user._id };
-            console.log('success');
-            // const token = jwt.sign(payload, {
-            //     expiresIn: 90000, //seconds
-            // });
-            // const jwtToken = 'JWT' + token;
             const doctor = await getDoctorsData(user);
             res.status(200).json({ user, doctor });
-            // } else {
-            //     res.status(401).end('Wrong password');
-            // }
         }
     });
 });

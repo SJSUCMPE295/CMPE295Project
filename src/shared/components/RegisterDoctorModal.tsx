@@ -12,12 +12,16 @@ import {
     TextField,
     MenuItem,
     Link,
-    Typography
+    Typography,
+    FormControlLabel,
+    Checkbox
 } from '@material-ui/core';
 import { withStyles} from '@material-ui/styles'
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
 import axios from 'axios';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 import serverUrl from '../utils/config';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -59,7 +63,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     const [isLoading, setLoading] = useState(true);
     const[saveMsg, setSaveMsg] = useState('');
     const dispatch = useDispatch();
-    const [values, setValues] = React.useState({
+    const [doctorProfile, setDoctorProfile] = React.useState({
         firstName: userProfileReducer.firstName,
         userId: userProfileReducer.id,
         user: userProfileReducer.userName,
@@ -98,12 +102,6 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
           }
         );
       },[1]);
-    const handleChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
-    };
 
     const saveFile = (event) => {
         if (event.target.files[0] === null) {
@@ -111,7 +109,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
         }
         const fileName = event.target.files[0].name;
         const storage = getStorage();
-        const storageRef = ref(storage, `/${values.user}/license/${fileName}`);
+        const storageRef = ref(storage, `/${doctorProfile.user}/license/${fileName}`);
 
         const file = event.target.files[0];
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -134,9 +132,10 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     );
     }
 
-    const handleSave = () => {
+    const handleSubmit = (values) => {
+        console.log(values);
         const payload = {
-            userId: values.userId,
+            userId: doctorProfile.userId,
             speciality: values.speciality,
             license: values.license,
             qualification: values.qualification,
@@ -176,6 +175,54 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     }
     return (
         <>
+                <Formik
+                        initialValues={{
+                            isDoctor: userProfileReducer.userMetaData.isDoctor,
+                            speciality: '',
+                            license: '',
+                            qualification: '',
+                            experience: '',
+                            description: '',
+                            isSubmitting: false,
+                        }}
+                        validationSchema={Yup.object().shape({
+                            isDoctor: Yup.boolean(),
+                            speciality: Yup.string().max(255)
+                            .when("isDoctor", {
+                                is: true,
+                                then: Yup.string().required('Speciality is required')}),
+                            license: Yup.string().max(255)
+                            .when("isDoctor", {
+                                is: true,
+                                then: Yup.string().required('License is required')}),
+                            qualification: Yup.string().max(255)
+                            .when("isDoctor", {
+                                is: true,
+                                then: Yup.string().required('Qualification is required')}),
+                            experience: Yup.string().max(255)
+                            .when("isDoctor", {
+                                is: true,
+                                then: Yup.string().required('Experience is required')}),
+                            description: Yup.string().max(255)
+                            .when("isDoctor", {
+                                is: true,
+                                then: Yup.string().required('Description is required')})
+                        })}
+                        onSubmit={(values) => {
+                            console.log('insde submit');
+                            values.isSubmitting = true;
+                            handleSubmit(values);
+                        }}
+                    >
+                        {({
+                            errors,
+                            handleBlur,
+                            handleChange,
+                            handleSubmit,
+                            isSubmitting,
+                            touched,
+                            values,
+                        }) => (
              <Modal
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -187,16 +234,30 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                 <CardHeader subheader="The information will be edited if already exists" title="Register As a Doctor" />
                 <Divider />
                 <CardContent>
+                    <div>
+                        <FormControlLabel
+                            label="I am a Doctor"
+                            name="isDoctor"
+                            control={
+                            <Checkbox
+                                checked={values.isDoctor}
+                                onChange={handleChange}
+                            />
+                            }
+                        />
+                    </div>
                     <Grid container spacing={3}>
                         <Grid item md={6} xs={12}>
                             <TextField
+                                error={Boolean(touched.speciality && errors.speciality)}
+                                helperText={touched.speciality && errors.speciality}
                                 fullWidth
-                                // helperText="Please specify the first name"
                                 label="Speciality"
                                 name="speciality"
                                 select
                                 onChange={handleChange}
                                 required
+                                disabled={!values.isDoctor}
                                 value={values.speciality}
                                 variant="outlined"
                             >
@@ -208,9 +269,12 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField
+                                error={Boolean(touched.license && errors.license)}
+                                helperText={touched.license && errors.license}
                                 fullWidth
                                 label="License"
                                 name="license"
+                                disabled={!values.isDoctor}
                                 onChange={handleChange}
                                 required
                                 value={values.license}
@@ -219,9 +283,12 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField
+                                error={Boolean(touched.qualification && errors.qualification)}
+                                helperText={touched.qualification && errors.qualification}
                                 fullWidth
                                 label="Qualification"
                                 name="qualification"
+                                disabled={!values.isDoctor}
                                 onChange={handleChange}
                                 value={values.qualification}
                                 variant="outlined"
@@ -230,9 +297,12 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField
+                                error={Boolean(touched.experience && errors.experience)}
+                                helperText={touched.experience && errors.experience}
                                 fullWidth
                                 label="experience"
                                 name="experience"
+                                disabled={!values.isDoctor}
                                 onChange={handleChange}
                                 value={values.experience}
                                 variant="outlined"
@@ -241,9 +311,12 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                         </Grid>
                         <Grid item md={6} xs={12}>
                             <TextField
+                                error={Boolean(touched.description && errors.description)}
+                                helperText={touched.description && errors.experience}
                                 fullWidth
                                 label="Description"
                                 name="description"
+                                disabled={!values.isDoctor}
                                 onChange={handleChange}
                                 value={values.description}
                                 variant="outlined"
@@ -256,6 +329,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                                 variant="outlined"
                                 component="label"
                                 size="small"
+                                disabled={!values.isDoctor}
                                 style={{ marginRight: '50px' }}
                             >
                                 {fileUploadTitle}
@@ -278,36 +352,6 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                               target="_blank"
                         > {fileLink}</Link> }
                         </Grid>
-                        {/* <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="State"
-                                name="state"
-                                // onChange={handleChange}
-                                required
-                                // value={values.state}
-                                variant="outlined"
-                            />
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Select Country"
-                                name="country"
-                                // onChange={handleChange}
-                                required
-                                select
-                                SelectProps={{ native: true }}
-                                // value={values.country}
-                                variant="outlined"
-                            > */}
-                                {/* {countryArray.map((option) => (
-                                    <option key={option.label} value={option.value}>
-                                        {option.value}
-                                    </option>
-                                ))} */}
-                            {/* </TextField> */}
-                        {/* </Grid> */}
                     </Grid>
                 </CardContent>
                 <Divider />
@@ -320,18 +364,16 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                     }}
                 >
                     <Button color="primary" variant="contained" 
-                    onClick={handleSave}
+                    onClick={handleSubmit}
                     >
                             Save details
                     </Button>
-                    {/* {saveMsg == "Yes" && 
-                    <Alert severity="success">Profile is updated!</Alert>}
-                    {saveMsg === "No" &&
-                    <Alert severity="error">Error updating your profile.</Alert>} */}
                 </Box>
             </Card>
         </form>
             </Modal>
+                        )}
+                        </Formik>
         </>
     );
 };

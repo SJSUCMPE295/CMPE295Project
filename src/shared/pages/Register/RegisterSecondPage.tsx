@@ -337,34 +337,6 @@ const RegisterSecondPage = () => {
                                         }}
                                     />
                                 </div>
-                                {/* <Box
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        ml: 3.5,
-                                    }}
-                                >
-                                    <Checkbox
-                                        checked={values.policy}
-                                        name="policy"
-                                        onChange={handleChange}
-                                    />
-                                    <Typography color="textSecondary" variant="body1">
-                                        I have read the{' '}
-                                        <Link
-                                            color="primary"
-                                            component={RouterLink}
-                                            to="#"
-                                            underline="always"
-                                            variant="h6"
-                                        >
-                                            Terms and Conditions
-                                        </Link>
-                                    </Typography>
-                                </Box> */}
-                                {/* {Boolean(touched.policy && errors.policy) && (
-                                    <FormHelperText error>{errors.policy}</FormHelperText>
-                                )} */}
                                 <Box sx={{ py: 2, alignItems: 'center', display: 'flex', ml: 5 }}>
                                     <Button
                                         color="primary"
@@ -373,8 +345,6 @@ const RegisterSecondPage = () => {
                                         type="submit"
                                         variant="contained"
                                         style={{ width: '475px' }}
-                                        // onClick={()=>handleSubmit}
-                                        // onClick={()=>{history.push('app/dashboard', { replace: true })}}
                                     >
                                         Create
                                     </Button>
@@ -394,40 +364,6 @@ const RegisterSecondPage = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
-                                {/* <Box
-                                    sx={{
-                                        pb: 1,
-                                        pt: 3,
-                                    }}
-                                >
-                                    <Typography
-                                        align="center"
-                                        color="textSecondary"
-                                        variant="body1"
-                                    >
-                                        or signup with social platform
-                                    </Typography>
-                                </Box> */}
-                                {/* <Grid
-                                    container
-                                    spacing={3}
-                                    display="flex"
-                                    flexDirection="column"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    <Grid item xs={12} md={6}>
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Grid>
-                                </Grid> */}
                             </form>
                         )}
                     </Formik>
