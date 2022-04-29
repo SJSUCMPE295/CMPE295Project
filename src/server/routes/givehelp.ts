@@ -2,6 +2,8 @@ import { Router } from 'express';
 import serviceModel from '../models/services';
 import resourceModel from '../models/resources';
 const router = Router();
+import Transaction_Logger from '../models/transactionLogger';
+import categoryModel from '../models/category';
 
 // API to post resource
 router.post('/resource', async (req, res) => {
@@ -32,6 +34,7 @@ router.post('/resource', async (req, res) => {
         SKU,
         ImageUrl,
     });
+
     try {
         await resourcedata.save((error, data) => {
             if (error) {
@@ -43,7 +46,30 @@ router.post('/resource', async (req, res) => {
                     });
             } else {
                 console.log('data', data);
-                res.status(200).send({ message: 'Resource data uploaded!' });
+                //adding transaction to transaction_logger if no error in resource data
+                const id = data._id;
+                var currentDate = new Date();
+                var category_id;
+                var category = categoryModel.findOne({ Name: Category });
+                if (category != null)
+                {category_id =  category._id;}
+                else{category_id="0";}
+                const transaction = new Transaction_Logger({
+                    UserId: UserId,
+                    ResourceId: id,
+                    ServiceId: "",
+                    Date: currentDate,
+                    CategoryId: category_id,
+                    Quantity: SKU,
+                    Type: 'Give Help',
+                });
+                console.log(transaction)
+                transaction.save(function (err, result) {
+                    if (err) throw err;
+                    console.log(result)
+                    res.status(200).send({ message: 'Resource data uploaded!' });
+
+                });
             }
         });
     } catch (err) {
@@ -91,7 +117,29 @@ router.post('/service', async (req, res) => {
                     });
             } else {
                 console.log('data', data);
-                res.status(200).send({ message: 'Resource data uploaded!' });
+                const id = data._id;
+                var currentDate = new Date();
+                var category_id;
+                var category = categoryModel.findOne({ Name: Category });
+                if (category != null)
+                {category_id =  category._id;}
+                else{category_id="0";}
+                const transaction = new Transaction_Logger({
+                    UserId: UserId,
+                    ServiceId: id,
+                    ResourceId: "",
+                    Date: currentDate,
+                    CategoryId: category_id,
+                    Quantity: 0,
+                    Type: 'Give Help',
+                });
+                console.log(transaction)
+                transaction.save(function (err, result) {
+                    if (err) throw err;
+                    console.log(result)
+                    res.status(200).send({ message: 'Service data uploaded!' });
+
+                });
             }
         });
     } catch (err) {

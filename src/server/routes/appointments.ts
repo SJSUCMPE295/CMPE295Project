@@ -1,24 +1,8 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import userModel from 'models/user';
+import { getUserByIdWithAppointments, getAllUsers, getUserById } from 'utils/dao';
 const router = Router();
-export const getAllUsers = async (userIds) => {
-    const userIdsObjects = userIds.map((id) => {
-        if (typeof id === 'string') {
-            return new mongoose.Types.ObjectId(id);
-        }
-        return id;
-    });
-    const users =
-        (await userModel.find({
-            _id: {
-                $in: userIdsObjects,
-            },
-        })) || [];
-    return users;
-};
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
     newAppointment
@@ -31,36 +15,62 @@ export const createAppointmentHandler = async ({ body }, res) => {
         });
 };
 export const getAllDoctorsAppointmentHandler = async (req, res) => {
-    doctorAppointmentModel
-        .find({ doctorId: req?.params?.id })
-        .then(async (data) => {
-            const userIds = data.map((x) => x.userId);
-            const users = await getAllUsers(userIds);
-            res.send(
-                data.map((appointment) => {
-                    let user = users.find((x) => x?._id.toString() === appointment?.userId) || {};
-                    user = user?.toJSON ? user.toJSON() : user;
-                    return { ...user, appointment, password: '' };
-                })
-            );
-        })
-        .catch((err) => {
-            res.status(500).json({ message: err.message });
-        });
+    try {
+        const user = await getUserByIdWithAppointments(req?.params?.id);
+        if (user) {
+            res.send(user);
+        } else {
+            res.send({ error: 'finding user' });
+        }
+    } catch (err) {
+        res.json({ message: err });
+    }
+};
+export const equalDates = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return Number(date1) === Number(date2);
+};
+export const greaterThanDate = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return date1 <= date2;
 };
 export const getAllAvailableDoctorsHandler = async (req, res) => {
+    const { userName, firstName, lastName, availability = '', ...doctorModelQuery } = req?.query;
     doctorModel
-        .find(req?.query)
+        .find(doctorModelQuery)
         .then(async (data = []) => {
             const userIds = data.map((x) => x.userId);
-            const users = await getAllUsers(userIds);
+            const users = await getAllUsers(userIds, { userName, firstName, lastName });
             const doctorsList = data
                 .map((doctor) => {
                     let user = users.find((x) => x?._id.toString() === doctor?.userId) || {};
                     user = user?.toJSON ? user.toJSON() : user;
                     return { ...user, doctor, password: '' };
                 })
-                .filter((x) => x?._id);
+                .filter((x) => x?._id)
+                .filter((x) => {
+                    const now = new Date();
+                    const isProfileActive = x?.profile?.profileActive;
+                    const isDateGreaterThanNow = greaterThanDate(now, availability);
+                    const isDocDateGreaterThanNow = greaterThanDate(now, x?.doctor?.availability);
+                    const hasConflictTime = equalDates(x?.doctor?.availability, availability);
+                    const isGreaterThanDate = greaterThanDate(
+                        x?.doctor?.availability,
+                        availability
+                    );
+                    const isAvailable = availability
+                        ? isDateGreaterThanNow && !hasConflictTime && isGreaterThanDate
+                        : isDocDateGreaterThanNow;
+                    return isProfileActive && isAvailable;
+                });
             res.send(doctorsList);
         })
         .catch((err) => {
@@ -69,9 +79,14 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
 };
 export const setDoctorsAvailabilityHandler = async (req, res) => {
     doctorModel
-        .findOneAndUpdate({ doctorId: req?.params?.id || req?.body?.doctorId }, req?.body)
+        .findOneAndUpdate({ userId: req?.params?.id }, req?.body)
         .then((data) => {
-            res.send(data);
+            const dataJson = data?.toJSON ? data.toJSON() : data;
+            const doctor = { ...dataJson, ...req?.body };
+            if (dataJson) {
+                return res.send({ doctor });
+            }
+            return res.status(500).json({ message: 'no data' });
         })
         .catch((err) => {
             res.status(500).json({ message: err.message });

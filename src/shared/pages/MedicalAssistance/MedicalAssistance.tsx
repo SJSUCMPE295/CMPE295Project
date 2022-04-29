@@ -19,18 +19,18 @@ import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
 import {
     getAllDoctorsAppointments,
-    profileUpdate,
     setDoctorsAvailability,
-    setGetHelp
-} from "store/actions";
-import { objectWithBoolean } from 'utils/json';
-import { getDoctorsData } from "routes/login";
+    setGetHelp,
+    getProfileData,
+} from 'store/actions';
+import { objectWithBoolean, formatDate } from 'utils/json';
 
 const columns = [
     {
         field: 'time',
         headerName: 'Time',
         flex: 1,
+        valueGetter: (params) => formatDate(params?.value),
     },
     {
         field: 'fullName',
@@ -38,41 +38,40 @@ const columns = [
         description: 'This column has a value getter and is not sortable.',
         sortable: false,
         flex: 1,
-        valueGetter: (params) =>
-            `${params.getValue(params.id, 'firstName') || ''} ${
-                params.getValue(params.id, 'lastName') || ''
-            }`,
+        valueGetter: (params) => {
+            const user = params.getValue(params?.id, 'user');
+            return `${user?.firstName || ''} ${user?.lastName || ''}`;
+        },
     },
     {
-        field: 'age',
-        headerName: 'Age',
+        field: 'state',
+        headerName: 'State',
         flex: 1,
+        valueGetter: (params) => params.getValue(params?.id, 'user')?.address?.state,
     },
     {
         field: 'gender',
         headerName: 'Gender',
         flex: 1,
+        valueGetter: (params) => params.getValue(params?.id, 'user')?.userMetaData?.gender,
     },
     {
         field: 'notes',
         headerName: 'notes',
         flex: 1,
-        editable: true,
     },
 ];
 
 export const DoctorSchedule = (props) => {
     const [open, setOpen] = React.useState(false);
     const [activeUser, setActiveUser] = React.useState(null);
-    const [available, setAvailable] = React.useState();
-    const [appointments, setAppointments] = React.useState();
-
+    const [available, setAvailable] = React.useState(false);
     React.useEffect(() => {
-        setAvailable(props?.userMetaData?.isDoctor);
-        getAllDoctorsAppointments(props?.id)
-            .then((response) => setAppointments(response.data))
-            .catch(console.log);
+        props?.id && props.getProfileData({ id: props?.id });
     }, []);
+    React.useEffect(() => {
+        setAvailable(!!props?.doctor?.availability);
+    }, [props?.doctor?.availability]);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -90,16 +89,21 @@ export const DoctorSchedule = (props) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean(Object.fromEntries(formData));
-        setDoctorsAvailability({ ...formProps, id: props?.id})
+        if (!formProps?.available) {
+            formProps?.availability = '';
+        }
+        setDoctorsAvailability({ ...formProps, id: props?.id })
             .then((data) => {
-                console.log(data);
+                setAvailable(formProps?.availability);
+                props?.id && props.getProfileData({ id: props?.id });
+                setOpen(false);
             })
             .catch((err) => {
-                console.log(err);
+                console.log('Db issue');
             });
     };
     const DataTable = ({ rows }) => {
-        if (rows) {
+        if (rows?.length) {
             return (
                 <div style={{ height: '100vh', width: '100%' }}>
                     {!rows.length ? (
@@ -142,12 +146,12 @@ export const DoctorSchedule = (props) => {
                         </Button>
                     </Box>
                     <Box sx={{ pt: 3 }}>
-                        <DataTable rows={appointments} />
+                        <DataTable rows={props?.appointments} />
                     </Box>
                 </Container>
             </Box>
             <Dialog open={!!activeUser} onClose={handleClose} fullWidth>
-                <DialogTitle>{activeUser?.firstName}</DialogTitle>
+                <DialogTitle>{activeUser?.user?.firstName}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>Notes</DialogContentText>
                     <form className="" noValidate>
@@ -155,7 +159,7 @@ export const DoctorSchedule = (props) => {
                             <TextareaAutosize
                                 id="datetime-local"
                                 minRows={10}
-                                defaultValue={activeUser?.notes}
+                                defaultValue={activeUser?.user?.notes}
                                 className="full-width"
                             />
                         </Box>
@@ -190,7 +194,11 @@ export const DoctorSchedule = (props) => {
                                         name="availability"
                                         label="To"
                                         type="datetime-local"
-                                        defaultValue="2017-05-24T10:30"
+                                        defaultValue={
+                                            (props?.doctor?.availability &&
+                                                formatDate(props?.doctor?.availability)) ||
+                                            '2017-06-04T10:30'
+                                        }
                                         className="mb-2"
                                         InputLabelProps={{
                                             shrink: true,
@@ -214,7 +222,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = { setGetHelp };
+const mapDispatchToProps = { setGetHelp, getProfileData };
 
 const ConnectedDoctorSchedule = connect(mapStateToProps, mapDispatchToProps)(DoctorSchedule);
 export default ConnectedDoctorSchedule;

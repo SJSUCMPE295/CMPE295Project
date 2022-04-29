@@ -44,12 +44,12 @@ router.get('/', async (_req, res) => {
                         response.usertransactions = data_ut;
                         const userappointment = DoctorAppointment.aggregate( [
                             {
-                                $match: { UserId: user },
+                                $match: { userId: user },
                             },
                             {
                                 $project: {
-                                    doctorObjId: { $toObjectId: '$DoctorId' },
-                                    UserId: 1,
+                                    doctorObjId: { $toObjectId: '$doctorId' },
+                                    userId: 1,
                                     AppointmentDetails: 1,
                                     Status: 1,
                                     _id:1
@@ -71,7 +71,7 @@ router.get('/', async (_req, res) => {
                             },
                             {
                                 $project: {
-                                    UserId: 1,
+                                    userId: 1,
                                     _id:1,
                                     doctor_name: {$concat: [
                                         '$doctor_appointments.firstName',
@@ -96,7 +96,7 @@ router.get('/', async (_req, res) => {
             }
         const resources =  Resources.aggregate(
             [
-                
+
                 {
                     $group: {
                         _id: '$Resource_Name',
@@ -106,7 +106,7 @@ router.get('/', async (_req, res) => {
                 {
                     $sort: { resource_SKU: -1 },
                 },
-                
+
             ],(error, data) => {
                 if (error) {
                     //console.log('error', error);
@@ -115,7 +115,7 @@ router.get('/', async (_req, res) => {
                     //console.log(data);
                     response.resources = data.filter(function(resource){return resource.resource_SKU > 0;});
                     const service_user = Services.find({ $query: {Availability: "true"} , $orderby: { availableDate : 1 } } ,
-                      
+
                         function (error, result_service) {
                             if (error) {
                                 console.log(error);

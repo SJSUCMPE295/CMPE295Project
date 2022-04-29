@@ -7,7 +7,7 @@ export const Transaction_Logger = new Schema(
         ResourceId: { type: Object, required: true },
         ServiceId: { type: Object, required: true },
         Date: { type: Date, required: true },
-        CategoryId: { type: String, required: true },
+        CategoryId: { type: String, required: false },
         Quantity: { type: Number, required: true },
         Type: { type: String, required: true },
     },

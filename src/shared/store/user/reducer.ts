@@ -30,6 +30,7 @@ export default (state: any = initialState, action: Action | any): any => {
         case ActionTypes.createUserProfile: {
             return {
                 ...state,
+                ...action?.payload,
                 id: action?.id,
                 userMetaData: action?.userMetaData,
                 profile: action?.profile,

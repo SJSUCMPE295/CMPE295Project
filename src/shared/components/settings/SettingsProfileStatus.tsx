@@ -11,19 +11,22 @@ import {
     Grid,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { profileUpdate } from 'store/actions';
+import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
-const SettingsProfileStatus = ({ profile, id }) => {
+const SettingsProfileStatus = ({ profile, id, ...rest }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean({
             ...profile,
-            profileActive: false,
             ...Object.fromEntries(formData),
         });
-        profileUpdate({ id, profile: formProps })
-            .then((data) => {
+        profileUpdate({
+            id,
+            profile: { ...formProps, profileActive: formProps?.profileActive === 'false' },
+        })
+            .then(({ data }) => {
+                rest?.updateUserProfile(data);
                 console.log(data);
             })
             .catch((err) => {
@@ -86,7 +89,7 @@ const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateUserProfile };
 
 const ConnectedSettingsProfileStatus = connect(
     mapStateToProps,

@@ -2,8 +2,8 @@ import { Router } from 'express';
 import Mongoose from 'mongoose';
 import { User } from 'react-feather';
 import { fabClasses } from '@mui/material';
+import { getUserByIdWithAppointments } from 'utils/dao';
 import { userModel } from '../models/user';
-import doctorModel from '../models/doctor';
 const router = Router();
 
 ///API for profileUpdate
@@ -80,6 +80,19 @@ router.put('/', async (req, res) => {
                 res.end('Error updating Profile.');
             }
         });
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+router.get('/:id', async (req, res) => {
+    const { id } = req?.params;
+    try {
+        const user = (await getUserByIdWithAppointments(id)) || {};
+        if (user) {
+            res.send(user);
+        } else {
+            res.send({ error: 'finding user' });
+        }
     } catch (err) {
         res.json({ message: err });
     }

@@ -68,7 +68,7 @@ const Login = () => {
                     history.push('/login2register', { replace: true });
                 }
                 if (response.status === 200) {
-                    const user = response?.data?.user;
+                    const user = response?.data?.user || response?.data;
                     console.log('login successful', user);
                     dispatch({
                         type: saveUserName,
@@ -76,7 +76,7 @@ const Login = () => {
                     });
                     dispatch({
                         type: createUserProfile,
-                        id: response.data.user._id,
+                        id: user._id,
                         ...user,
                         payload: response?.data,
                     });

@@ -13,7 +13,8 @@ import {
     Package as PackageIcon,
     Users as UsersIcon,
     Gift as GiftIcon,
-    PlusCircle as PlusCircleIcon,CreditCard as CreditCardIcon
+    PlusCircle as PlusCircleIcon,
+    CreditCard as CreditCardIcon,
 } from 'react-feather';
 import { connect } from 'react-redux';
 import { RegisterDoctorModal} from './RegisterDoctorModal';
@@ -72,7 +73,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
     const location = useLocation();
     const [open, setOpen] = useState(false);
     const user = {
-        avatar: userProfileReducer?.profile?.profilePic,//'/static/images/avatars/avatar_2.png',
+        avatar: userProfileReducer?.profile?.profilePic, //'/static/images/avatars/avatar_2.png',
         jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
         name: userProfileReducer?.firstName + ' ' + userProfileReducer?.lastName, //"katarina Smith"//
     };
@@ -95,16 +96,19 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             href: '/app/dashboard',
             icon: BarChartIcon,
             title: 'Dashboard',
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/gethelp',
             icon: PackageIcon,
             title: 'Get Help',
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/givehelp',
             icon: ShoppingBagIcon,
             title: 'Give Help',
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: userProfileReducer?.userMetaData?.isDoctor
@@ -112,17 +116,19 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                 : '/app/lookformedicalAssistance',
             icon: PlusCircleIcon,
             title: 'Medical Assistance',
+            isHidden: !userProfileReducer?.profile?.profileActive,
         },
         {
             href: '/app/account',
             icon: UserIcon,
             title: 'Account',
-        } ,
+        },
         {
-        href: '/app/mytransactions',
-        icon: CreditCardIcon,
-        title: 'My Transactions',
-    },
+            href: '/app/mytransactions',
+            icon: CreditCardIcon,
+            title: 'My Transactions',
+            isHidden: !userProfileReducer?.profile?.profileActive,
+        },
         {
             href: '/app/settings',
             icon: SettingsIcon,
@@ -166,12 +172,16 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             <Box sx={{ p: 2 }}>
                 <List>
                     {items.map((item) => (
-                        <NavItem
-                            href={item.href}
-                            key={item.title}
-                            title={item.title}
-                            icon={item.icon}
-                        />
+                        <>
+                            {!item.isHidden && (
+                                <NavItem
+                                    href={item.href}
+                                    key={item.title}
+                                    title={item.title}
+                                    icon={item.icon}
+                                />
+                            )}
+                        </>
                     ))}
                 </List>
             </Box>
