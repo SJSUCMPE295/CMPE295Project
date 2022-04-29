@@ -28,13 +28,13 @@ import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
 import MyTransactions from './pages/MyTransactions/MyTransactions';
 import './styles.css';
-const App: React.FC<any> = ({ id }) => {
+const App: React.FC<any> = ({ _id }) => {
     const history = useHistory();
     React.useEffect(() => {
-        if (!id) {
+        if (!_id) {
             history.push('/login');
         }
-    }, [id]);
+    }, [_id]);
     return (
         <AuthContextProvider>
             <StyledEngineProvider injectFirst>
@@ -112,7 +112,7 @@ const App: React.FC<any> = ({ id }) => {
                                 </MainLayout>
                             </Route>
                             <Route exact path="/">
-                                <Redirect to={id ? '/app/dashboard' : '/login'} />
+                                <Redirect to={_id ? '/app/dashboard' : '/login'} />
                             </Route>
                             <Route path={'/404'} component={NotFound} />
                             <Redirect to="/404" />

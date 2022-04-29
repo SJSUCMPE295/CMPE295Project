@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { styled } from '@mui/material/styles';
 // import MuiAlert from '@mui/material/Alert';
-import Alert from '@mui/material/Alert';
+import { Alert, Snackbar}  from '@mui/material';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import {
     Avatar,
@@ -43,9 +43,11 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         firstName: userProfileReducer.firstName,
         userName: userProfileReducer.userName,
     };
+    console.log('user ', user);
     const dispatch = useDispatch();
+    const [open, setOpen] = React.useState(false);
     const [saveMsg, setSaveMsg] = useState('');
-    const [avatar, setAvatar] = React.useState('');
+    const [avatar, setAvatar] = React.useState(userProfileReducer?.profile?.profilePic);
     const [showErrorMsg, setShowErrorMsg] = React.useState(false);
     const storage = getStorage();
     const storageRef = ref(storage, `/${user.userName}/profilePic/userPic`);
@@ -53,10 +55,17 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
     const [findImage, setFindImage] = React.useState(false);
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Profile Pic');
     const [progress, setProgress] = useState(100);
+    // const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    //     if (reason === 'clickaway') {
+    //       return;
+    //     }
+    //     setOpen(false);
+    //   };
     const uploadPicture = (event) => {
         if (image == null) return;
         const imageName = event.target.files[0].name;
         var file = event.target.files[0];
+        console.log(event.target.files[0]);
         // const storage = getStorage();
         // const storageRef = ref(storage, `/${user.userName}/profilePic/userPic`);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -64,7 +73,6 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
             setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             setFileUploadTitle(imageName);
             downloadProfilePic();
-            updateProfilePic();
     }, (error) => {});
     }
 
@@ -73,6 +81,18 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         deleteObject(storageRef)
             .then(() => {
                 setAvatar('');
+                var profile = {
+                    phoneNumber: user?.profile?.phoneNumber,
+                    profileActive: user?.profile?.profileActive,
+                    profilePic: '',
+                }
+                // dispatch({
+                //     type: createUserProfile,
+                //     userMetaData: user?.userMetaData,
+                //     profile: profile,
+                //     address: user?.address,
+                // });
+                updateProfilePicApiCall(profile);
             })
             .catch((error) => {
                 setShowErrorMsg(true);
@@ -83,7 +103,9 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
             .then((url) => {
                 console.log(url);
                 setAvatar(url);
-                console.log('user avatar', avatar);
+                user.profile.profilePic = url;
+                console.log('user avatar', user);
+                updateProfilePic();
                 setFindImage(true);
             })
             .catch((error) => {
@@ -97,18 +119,27 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
     };
 
     const updateProfilePic = () => {
-        const payload = {
-            userName: user.userName,
-            profile: {
+        const profile = {
                 phoneNumber: user?.profile?.phoneNumber,
                 profileActive: user?.profile?.profileActive,
-                profilePic: avatar,
-            },
+                profilePic: user?.profile?.profilePic,
+        }
+        updateProfilePicApiCall(profile);
+    }
+
+    const updateProfilePicApiCall = (profile) => {
+        const payload = {
+            userName: user.userName,
+            profile: profile,
         };
         const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'user/profilePicUpdate', payload).then(
+        axios.post(serverUrl + 'user/profilePicUpdate', payload, {
+            headers : {
+                authtoken: token
+            }
+            }).then(
             (response) => {
                 console.log('axios call', response);
                 if (response.status === 200) {
@@ -136,10 +167,10 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         );
     };
 
-    useEffect(() => {
-        console.log('inside useeffect');
-        downloadProfilePic();
-    }, [1]);
+    // useEffect(() => {
+    //     console.log('inside useeffect');
+    //     downloadProfilePic();
+    // }, [1]);
     return (
         <Card {...props}>
             <CardContent>
@@ -195,18 +226,21 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
             {/* {showErrorMsg? (
                 <Alert severity="error">This is an error message!</Alert>
             ): ''} */}
-            <div
+            {/* <div
                 style={{
                     alignItems: 'center',
                     display: 'flex',
                     flexDirection: 'column',
                 }}
             >
-                {saveMsg == 'Yes' && <Alert severity="success">Profile Pic is updated!</Alert>}
+                {saveMsg == 'Yes' &&
+                <Snackbar autoHideDuration={6000} onClose={handleClose}>
+                 <Alert severity="success">Profile Pic is updated!</Alert>
+                 </Snackbar>}
                 {saveMsg === 'No' && (
                     <Alert severity="error">Error updating your profile pic.</Alert>
                 )}
-            </div>
+            </div> */}
         </Card>
     );
 };
