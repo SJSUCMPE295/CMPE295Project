@@ -14,6 +14,7 @@ import {
     Typography,
     Switch,
     FormControlLabel,
+    Alert,
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
@@ -23,14 +24,14 @@ import {
     setGetHelp,
     getProfileData,
 } from 'store/actions';
-import { objectWithBoolean, formatDate } from 'utils/json';
+import { objectWithBoolean, formatDate, prettyDate } from "utils/json";
 
 const columns = [
     {
         field: 'time',
         headerName: 'Time',
         flex: 1,
-        valueGetter: (params) => formatDate(params?.value),
+        valueGetter: (params) => prettyDate(params?.value),
     },
     {
         field: 'fullName',
@@ -65,6 +66,7 @@ const columns = [
 export const DoctorSchedule = (props) => {
     const [open, setOpen] = React.useState(false);
     const [activeUser, setActiveUser] = React.useState(null);
+    const [successAlert, setSuccessAlert] = React.useState('');
     const [available, setAvailable] = React.useState(false);
     React.useEffect(() => {
         props?.id && props.getProfileData({ id: props?.id });
@@ -77,6 +79,12 @@ export const DoctorSchedule = (props) => {
     };
     const handleRowClick = ({ row }) => {
         setActiveUser(row);
+    };
+    const setSuccessAlertWithTimer = (msg) => {
+        setSuccessAlert(msg);
+        setTimeout(() => {
+            setSuccessAlert('');
+        }, 6000);
     };
     const handleClose = () => {
         setActiveUser(null);
@@ -92,9 +100,11 @@ export const DoctorSchedule = (props) => {
         if (!formProps?.available) {
             formProps?.availability = '';
         }
+        console.log(formProps);
         setDoctorsAvailability({ ...formProps, id: props?.id })
             .then((data) => {
                 setAvailable(formProps?.availability);
+                setSuccessAlertWithTimer('Updated Availability');
                 props?.id && props.getProfileData({ id: props?.id });
                 setOpen(false);
             })
@@ -112,7 +122,7 @@ export const DoctorSchedule = (props) => {
                         <DataGrid
                             rows={rows}
                             columns={columns}
-                            pageSize={5}
+                            pageSize={15}
                             disableSelectionOnClick
                             onRowClick={handleRowClick}
                         />
@@ -120,7 +130,8 @@ export const DoctorSchedule = (props) => {
                 </div>
             );
         }
-        return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
+        return null;
+        //return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
     };
     return (
         <>
@@ -142,9 +153,10 @@ export const DoctorSchedule = (props) => {
                         }}
                     >
                         <Button color="primary" variant="contained" onClick={handleClickOpen}>
-                            Add product
+                            Update Availibility
                         </Button>
                     </Box>
+                    {successAlert && <Alert severity="success">{successAlert}</Alert>}
                     <Box sx={{ pt: 3 }}>
                         <DataTable rows={props?.appointments} />
                     </Box>

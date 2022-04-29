@@ -25,7 +25,7 @@ import {
 import { connect } from 'react-redux';
 import { DataGrid } from '@material-ui/data-grid';
 import { createAppointment, getAvailableDoctors, setGetHelp, getProfileData } from 'store/actions';
-import { getDate, formatDate } from 'utils/json';
+import { getDate, formatDate, prettyDate } from "utils/json";
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
     const [open, setOpen] = React.useState(false);
@@ -33,6 +33,7 @@ export const LookForMedicalAssistance = (props) => {
     const [selectedTime, setSelectedTime] = React.useState(getDate(1) + 'T10:30');
     const [doctors, setDoctors] = React.useState([]);
     const [selectedDoctor, setSelectedDoctor] = React.useState(null);
+    const [successAlert, setSuccessAlert] = React.useState('');
     const [alert, setAlert] = React.useState('');
     const notesInput = React.useRef();
     const [notes, setNotes] = React.useState('');
@@ -44,12 +45,24 @@ export const LookForMedicalAssistance = (props) => {
             x?.time?.indexOf(selectedTime) > 0
     );
     const handleClickOpen = () => {
-        setActiveStep(0)
-        setAlert('')
+        setActiveStep(0);
+        setAlert('');
         setOpen(true);
     };
-    const handleClose = () => setOpen(false);
-
+    const handleClose = () => {
+        setNotes('');
+        setSelectedDoctor('');
+        setActiveStep(0);
+        setAlert('');
+        setOpen(false)
+    };
+    const setSuccessAlertWithTimer = (msg) => {
+        setSuccessAlert(msg);
+        setAlert('');
+        setTimeout(() => {
+            setSuccessAlert('');
+        }, 6000);
+    };
     React.useEffect(() => {
         props?.id && props.getProfileData({ id: props?.id });
         setTime();
@@ -87,7 +100,11 @@ export const LookForMedicalAssistance = (props) => {
             };
             if (data.userId && data.time && data.doctorId) {
                 createAppointment(data)
-                    .then((r) => window?.location?.reload())
+                    .then((r) => {
+                        handleClose();
+                        setSuccessAlertWithTimer('Appointment Set');
+                        props?.id && props.getProfileData({ id: props?.id });
+                    })
                     .catch((e) => setAlert('something went wrong'));
             } else {
                 setAlert('missing data');
@@ -99,7 +116,7 @@ export const LookForMedicalAssistance = (props) => {
                 return;
             }
             if (setDoctorStep && !selectedDoctor) {
-                setAlert('Please select a diffrent Time');
+                setAlert('Please select a different Time');
                 return;
             }
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -200,12 +217,13 @@ export const LookForMedicalAssistance = (props) => {
             case 3: {
                 const date = new Date(selectedTime).toLocaleDateString();
                 const day = new Date(selectedTime).toLocaleTimeString();
+                const formattedDate = `${date}  ${day}`
                 return (
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader
                             avatar={<Avatar src="" aria-label="" />}
                             title={selectedDoctor?.firstName}
-                            subheader={`${date}  ${day}`}
+                            subheader={prettyDate(selectedTime)}
                         />
                         <CardContent>
                             <Typography variant="body2" color="text.secondary">
@@ -226,7 +244,7 @@ export const LookForMedicalAssistance = (props) => {
                 field: 'time',
                 headerName: 'Time',
                 flex: 1,
-                valueGetter: (params) => formatDate(params?.value),
+                valueGetter: (params) => prettyDate(params?.value),
             },
             {
                 field: 'fullName',
@@ -249,7 +267,8 @@ export const LookForMedicalAssistance = (props) => {
                 field: 'gender',
                 headerName: 'Gender',
                 flex: 1,
-                valueGetter: (params) => params.getValue(params?.id, 'doctor')?.userMetaData?.gender,
+                valueGetter: (params) =>
+                    params.getValue(params?.id, 'doctor')?.userMetaData?.gender,
             },
             {
                 field: 'notes',
@@ -268,7 +287,7 @@ export const LookForMedicalAssistance = (props) => {
                             <DataGrid
                                 rows={rows}
                                 columns={columns}
-                                pageSize={5}
+                                pageSize={15}
                                 disableSelectionOnClick
                             />
                         </>
@@ -276,7 +295,8 @@ export const LookForMedicalAssistance = (props) => {
                 </div>
             );
         }
-        return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
+        return null;
+        //return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
     };
     return (
         <Box
@@ -294,9 +314,10 @@ export const LookForMedicalAssistance = (props) => {
                     }}
                 >
                     <Button color="primary" variant="contained" onClick={handleClickOpen}>
-                        Add product
+                        Make Appointment
                     </Button>
                 </Box>
+                {successAlert && <Alert severity="success">{successAlert}</Alert>}
                 <Dialog open={open} onClose={handleClose} fullWidth>
                     <DialogTitle>Make an Appointment</DialogTitle>
                     <DialogContent>
