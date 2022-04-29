@@ -30,7 +30,7 @@ import { createUserProfile, saveUserName } from '../../store/constants/action-ty
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 // import RootState from '../../store/rootReducer';
 
-const RegisterSecondPage = () => {
+const RegisterThruLogin = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
@@ -111,11 +111,16 @@ const RegisterSecondPage = () => {
                 zipCode: values.zipCode,
             },
         };
-        console.log('payload', payload);
+        console.log("payload", payload);
+        const token = localStorage.getItem('token');
         // set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post(serverUrl + 'signup/user', payload).then(
+          axios.defaults.withCredentials = true;
+          // make a post request with the user data
+          axios.post(serverUrl + 'signup/user', payload, {
+            headers : {
+                authtoken: token
+            }
+        }).then(
             (response) => {
                 console.log('axios call', response);
                 if (response.status === 200) {
@@ -566,4 +571,4 @@ const RegisterSecondPage = () => {
     );
 };
 
-export default RegisterSecondPage;
+export default RegisterThruLogin;

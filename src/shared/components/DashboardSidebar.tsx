@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { Avatar, Box, Button, Divider, Drawer, Hidden, List, Typography } from '@material-ui/core';
 import {
     AlertCircle as AlertCircleIcon,
@@ -17,10 +17,61 @@ import {
     CreditCard as CreditCardIcon,
 } from 'react-feather';
 import { connect } from 'react-redux';
+import { RegisterDoctorModal} from './RegisterDoctorModal';
+
+// const items = [
+//     {
+//         href: '/app/dashboard',
+//         icon: BarChartIcon,
+//         title: 'Dashboard',
+//     },
+//     {
+//         href: '/app/gethelp',
+//         icon: PackageIcon,
+//         title: 'Get Help',
+//     },
+//     {
+//         href: '/app/givehelp',
+//         icon: ShoppingBagIcon,
+//         title: 'Give Help',
+//     },
+//     {
+//         href: '/app/medicalAssistance',
+//         icon: PlusCircleIcon,
+//         title: 'Medical Assistance',
+//     },
+//     {
+//         href: '/app/account',
+//         icon: UserIcon,
+//         title: 'Account',
+//     },
+//     {
+//         href: '/app/settings',
+//         icon: SettingsIcon,
+//         title: 'Settings',
+//     },
+    /*
+    {
+        href: '/login',
+        icon: LockIcon,
+        title: 'Login',
+    },
+    {
+        href: '/register1',
+        icon: UserPlusIcon,
+        title: 'Register',
+    },
+    {
+        href: '/404',
+        icon: AlertCircleIcon,
+        title: 'Error',
+    },*/
+// ];
 import NavItem from './NavItem';
 
 const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => {
     const location = useLocation();
+    const [open, setOpen] = useState(false);
     const user = {
         avatar: userProfileReducer?.profile?.profilePic, //'/static/images/avatars/avatar_2.png',
         jobTitle: userProfileReducer?.address?.city + ', ' + userProfileReducer?.address?.state, //"San Jose, CA",//
@@ -31,6 +82,15 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
             onMobileClose();
         }
     }, [location.pathname]);
+
+    const registerDoctor = () => {
+        setOpen(true);
+    }
+
+    const closeModal = () => {
+        setOpen(false);
+    }
+
     const items = [
         {
             href: '/app/dashboard',
@@ -149,8 +209,9 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                     <Button
                         color="primary"
                         component="a"
-                        href="https://react-material-kit.devias.io"
+                        // href="/app/registerdoctor"
                         variant="contained"
+                        onClick={registerDoctor}
                     >
                         Register as Doctor
                     </Button>
@@ -161,6 +222,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
 
     return (
         <>
+        {open && <RegisterDoctorModal closeModal={closeModal} open={open} userProfileReducer={userProfileReducer}/> }
             <Hidden mdUp>
                 <Drawer
                     anchor="left"
@@ -173,6 +235,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                         },
                     }}
                 >
+                    
                     {content}
                 </Drawer>
             </Hidden>

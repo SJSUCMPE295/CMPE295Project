@@ -35,11 +35,12 @@ const RegisterFirstPage = () => {
     const { register, signinWithGoogle } = useAuth();
     const mounted = useMounted();
 
-    const handleSubmit = (userName, firstName, lastName) => {
-        apiCall(userName, firstName, lastName);
+    const handleSubmit = (userName, firstName, lastName, token) => {
+       localStorage.setItem("token", token); 
+       apiCall(userName, firstName, lastName, token);
     };
 
-    const apiCall = (userName, firstName, lastName) => {
+    const apiCall = (userName, firstName, lastName, token) => {
         const payload = {
             userName: userName,
             firstName: firstName,
@@ -47,26 +48,23 @@ const RegisterFirstPage = () => {
         };
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'signup/user', payload).then(
-            (response) => {
-                console.log('axios call');
-                if (response.status === 200) {
-                    console.log('updated successfully', response);
-                    dispatch({ type: saveUserName, firstName, lastName, userName });
-                    history.push('/register2', { replace: true });
-                }
-            },
-            (error) => {
-                console.log('register error');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
+        axios.post(serverUrl + 'signup/user', payload, {
+            headers : {
+                authtoken: token
             }
-        );
-    };
-    const handleSubmitWithGoogle = (userName, firstName, lastName) => {
-        apiCall(userName, firstName, lastName);
+        }).then(
+          (response) => {
+              console.log("axios call")
+            if (response.status === 200) {
+                console.log("updated successfully", response);
+                dispatch({ type: saveUserName, firstName, lastName, userName });
+                history.push('/register2', { replace: true });
+            }
+          });
+    }
+    const handleSubmitWithGoogle = (userName, firstName, lastName, token) => {
+        localStorage.setItem('token', token);
+        apiCall(userName, firstName, lastName, token);
         // dispatch({ type: saveUserName, firstName, lastName, userName });
         // history.push('/register2', { replace: true });
     };
@@ -110,13 +108,9 @@ const RegisterFirstPage = () => {
                             console.log(values);
                             values.isSubmitting = true;
                             register(values.userName, values.password)
-                                .then((response) => {
-                                    console.log(response);
-                                    handleSubmit(
-                                        values.userName,
-                                        values.firstName,
-                                        values.lastName
-                                    );
+                                .then((response: any) => {
+                                    console.log('response',response);
+                                    handleSubmit(values.userName, values.firstName, values.lastName, response.user.accessToken);
                                 })
                                 .catch((error) => {
                                     console.log(error.message);
@@ -297,11 +291,12 @@ const RegisterFirstPage = () => {
                                         onClick={() =>
                                             signinWithGoogle()
                                                 .then((user: any) => {
-                                                    // console.log(user._tokenResponse.lastName);
+                                                    console.log(user);
                                                     handleSubmitWithGoogle(
                                                         user.user.email,
                                                         user._tokenResponse.firstName,
-                                                        user._tokenResponse.lastName
+                                                        user._tokenResponse.lastName,
+                                                        user.user.accessToken
                                                     );
                                                     // history.push('/register2');
                                                 })
@@ -312,7 +307,7 @@ const RegisterFirstPage = () => {
                                         size="large"
                                         variant="contained"
                                     >
-                                        Login with Google
+                                        Signup with Google
                                     </Button>
                                 </Box>
                                 {/* </Grid>

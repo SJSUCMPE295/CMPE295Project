@@ -19,6 +19,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     const signout = () => {
         logout().then((data) => {
             // dispatch({ type: logoutAction });
+            localStorage.clear();
             dispatch({ type: resetState });
         });
         history.push('/login');

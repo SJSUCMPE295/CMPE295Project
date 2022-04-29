@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import * as Yup from 'yup';
@@ -13,11 +13,9 @@ import {
     Button,
     Checkbox,
     Container,
-    FormHelperText,
     Link,
     TextField,
     Typography,
-    Grid,
     FormControlLabel,
     FormControl,
     InputLabel,
@@ -27,18 +25,15 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 // import {storage} from '../../utils/firebase';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+// import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 const RegisterSecondPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(true);
-    const [user, setUser] = React.useState(
-        useSelector((state: any) => state.userProfileReducer.userName)
-    );
-    countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
-    const countryObj = countries.getNames('en', { select: 'official' });
-    const countryArray = Object.entries(countryObj).map(([key, value]) => {
+    const [user, setUser] = React.useState(useSelector((state: any) => state.userProfileReducer.userName));
+    countries.registerLocale(require("i18n-iso-countries/langs/en.json"));
+    const countryObj = countries.getNames("en",{select:"official"});
+    const countryArray = Object.entries(countryObj).map(([key, value]) =>{
         return {
             label: key,
             value: value,
@@ -46,33 +41,10 @@ const RegisterSecondPage = () => {
     });
     const genderOptions = ['Female', 'Male', 'Do not want to specify'];
 
-    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
+    // const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
     const [speciality, setSpeciality] = React.useState('');
-    const [specialityOptions, setSpecialityOptions] = React.useState([]);
-    useEffect(() => {
-        // set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.get(serverUrl + 'static/speciality').then(
-            (response) => {
-                console.log('axios call');
-                if (response.status === 200) {
-                    console.log('updated successfully', response.data[0].name);
-                    setSpecialityOptions(response.data[0].name);
-                    setLoading(false);
-                }
-            },
-            (error) => {
-                console.log('register error');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
-            }
-        );
-    }, [1]);
-
+   
     const handleSubmit = (address1, city, zipCode, phoneNumber, state, gender, country) => {
         const payload = {
             userName: user,
@@ -95,9 +67,14 @@ const RegisterSecondPage = () => {
         };
         console.log('payload', payload);
         // set the with credentials to true
+        const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'signup/user/register', payload).then(
+        axios.post(serverUrl + 'signup/user/register', payload, {
+            headers : {
+                authtoken: token
+            }
+        }).then(
             (response) => {
                 console.log('axios call', response);
                 if (response.status === 200) {
@@ -126,25 +103,6 @@ const RegisterSecondPage = () => {
                 //   });
             }
         );
-    };
-
-    const handleChangeSpeciality = (event) => {
-        setSpeciality(event.target.value);
-    };
-
-    const saveFile = (event) => {
-        if (event.target.files[0] === null) {
-            return;
-        }
-        const fileName = event.target.files[0].name;
-        const storage = getStorage();
-        const storageRef = ref(storage, `/${user}/${fileName}`);
-
-        const file = event.target.files[0];
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot);
-            setFileUploadTitle(snapshot.metadata.name);
-        });
     };
     return (
         <>
@@ -184,10 +142,8 @@ const RegisterSecondPage = () => {
                                 'Phone Number should be 10 digits',
                                 (val) => val.length === 10
                             ),
-                            // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
                         })}
                         onSubmit={(values) => {
-                            console.log('insde submit');
                             values.isSubmitting = true;
                             handleSubmit(
                                 values.address1,
@@ -234,57 +190,10 @@ const RegisterSecondPage = () => {
                                         }
                                     />
                                 </div>
-                                {checked ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                        }}
-                                    >
-                                        <FormControl
-                                            variant="standard"
-                                            sx={{ m: 1, minWidth: 120 }}
-                                        >
-                                            <InputLabel id="demo-simple-select-standard-label">
-                                                Speciality
-                                            </InputLabel>
-
-                                            <Select
-                                                labelId="demo-simple-select-standard-label"
-                                                id="demo-simple-select-standard"
-                                                value={speciality}
-                                                onChange={handleChangeSpeciality}
-                                                label="Speciality"
-                                                style={{ width: '250px' }}
-                                            >
-                                                isLoading ? (<div>Loading ...</div>) : (
-                                                {specialityOptions.map((speciality) => (
-                                                    <MenuItem key={speciality} value={speciality}>
-                                                        {speciality}
-                                                    </MenuItem>
-                                                ))}
-                                                )
-                                            </Select>
-                                        </FormControl>
-                                        <Button
-                                            variant="text"
-                                            component="label"
-                                            size="small"
-                                            style={{ marginRight: '50px' }}
-                                        >
-                                            {fileUploadTitle}
-                                            <input type="file" hidden onChange={saveFile} />
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    ''
-                                )}
-                                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                    <div
-                                        style={{
-                                            width: '250px',
-                                        }}
-                                    >
+                                <div style={{  display: 'flex', justifyContent: 'flex-start' }}>
+                                    <div style={{
+                                            width:"250px"
+                                        }}>
                                         <TextField
                                             error={Boolean(touched.gender && errors.gender)}
                                             helperText={touched.gender && errors.gender}
@@ -422,34 +331,6 @@ const RegisterSecondPage = () => {
                                         }}
                                     />
                                 </div>
-                                {/* <Box
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        ml: 3.5,
-                                    }}
-                                >
-                                    <Checkbox
-                                        checked={values.policy}
-                                        name="policy"
-                                        onChange={handleChange}
-                                    />
-                                    <Typography color="textSecondary" variant="body1">
-                                        I have read the{' '}
-                                        <Link
-                                            color="primary"
-                                            component={RouterLink}
-                                            to="#"
-                                            underline="always"
-                                            variant="h6"
-                                        >
-                                            Terms and Conditions
-                                        </Link>
-                                    </Typography>
-                                </Box> */}
-                                {/* {Boolean(touched.policy && errors.policy) && (
-                                    <FormHelperText error>{errors.policy}</FormHelperText>
-                                )} */}
                                 <Box sx={{ py: 2, alignItems: 'center', display: 'flex', ml: 5 }}>
                                     <Button
                                         color="primary"
@@ -458,8 +339,6 @@ const RegisterSecondPage = () => {
                                         type="submit"
                                         variant="contained"
                                         style={{ width: '475px' }}
-                                        // onClick={()=>handleSubmit}
-                                        // onClick={()=>{history.push('app/dashboard', { replace: true })}}
                                     >
                                         Create
                                     </Button>
@@ -479,40 +358,6 @@ const RegisterSecondPage = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
-                                {/* <Box
-                                    sx={{
-                                        pb: 1,
-                                        pt: 3,
-                                    }}
-                                >
-                                    <Typography
-                                        align="center"
-                                        color="textSecondary"
-                                        variant="body1"
-                                    >
-                                        or signup with social platform
-                                    </Typography>
-                                </Box> */}
-                                {/* <Grid
-                                    container
-                                    spacing={3}
-                                    display="flex"
-                                    flexDirection="column"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    <Grid item xs={12} md={6}>
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Grid>
-                                </Grid> */}
                             </form>
                         )}
                     </Formik>

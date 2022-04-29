@@ -2,7 +2,9 @@ import axios from 'axios';
 import * as ActionTypes from './constants/action-types';
 import { Locale } from './user/types';
 const api = axios.create({
-    //    withCredentials: true,
+       withCredentials: true, headers : {
+        authtoken: typeof window !== 'undefined' && window.localStorage.getItem('token')
+    }
 });
 export const setLocale = (locale: Locale) => ({
     type: ActionTypes.SETLOCALE,

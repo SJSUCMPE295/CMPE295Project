@@ -22,6 +22,7 @@ import GoogleIcon from '../../icons/Google';
 import useMounted from '../hooks/useMounted';
 import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
 import serverUrl from '../../utils/config';
+import session from '../../utils/session';
 
 const Login = () => {
     const history = useHistory();
@@ -33,27 +34,33 @@ const Login = () => {
     const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();
     const handleSubmit = (email, token) => {
-        dispatch({ type: loginAction, email });
+        dispatch({type:loginAction, email});
+        localStorage.setItem("token", token);
         apiCall(email, token);
     };
 
+    // useEffect(() => {
+    //     session();
+    // }, [1]);
+
     const handleSubmitWithGoogle = (email, token) => {
-        dispatch({ type: loginAction, email });
+        dispatch({type:loginAction, email});
+        localStorage.setItem("token", token);
         apiCall(email, token);
     };
 
     const apiCall = (email, token) => {
-        // downloadProfilePic(email);
         const storage = getStorage();
         const storageRef = ref(storage, `/${email}/profilePic/userPic`);
 
         const payload = {
             userName: email,
-            token: token,
         };
         axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post(serverUrl + 'login', payload).then(
+          // make a post request with the user data
+          axios.post(serverUrl + 'login', payload, {headers: {
+              authtoken: token
+            }},).then(
             (response) => {
                 console.log('axios call', response);
                 if (response.data.status === 401) {
@@ -63,13 +70,6 @@ const Login = () => {
                 if (response.status === 200) {
                     const user = response?.data?.user || response?.data;
                     console.log('login successful', user);
-                    //   getDownloadURL(storageRef)
-                    //     .then((url) => {
-                    //         console.log('url', url);
-                    //         // setPicUrl(url);
-                    //         response.data.user.profile.profilePic = url;
-                    //         console.log('picurl', picUrl);
-                    //         console.log('response', response);
                     dispatch({
                         type: saveUserName,
                         ...user,
@@ -82,17 +82,6 @@ const Login = () => {
                     });
                     history.push('app/dashboard', { replace: true });
                 }
-                // )
-                // .catch((error) => {
-                //     console.log(error);
-                //     switch (error.code) {
-                //     case 'storage/object-not-found':
-                //         setPicUrl('');
-                //         break;
-                //     }
-                // });
-
-                //   }
             },
             (error) => {
                 console.log('login error', error);
@@ -106,20 +95,12 @@ const Login = () => {
         getDownloadURL(storageRef)
             .then((url) => {
                 setPicUrl(url);
-                // console.log('user avatar', avatar);
-                // setFindImage(true);
             })
             .catch((error) => {
                 switch (error.code) {
                     case 'storage/object-not-found':
                         setPicUrl('');
                         break;
-                    // case 'storage/unauthorized':
-                    //     // User doesn't have permission to access the object
-                    //     break;
-                    // case 'storage/canceled':
-                    //     // User canceled the upload
-                    //     break;
                 }
             });
     };
@@ -139,9 +120,6 @@ const Login = () => {
                 }}
             >
                 <Container maxWidth="sm" style={{ marginTop: '70px' }}>
-                    {/* <Paper elevation={0}>
-                    <img src={image} height="100" style={{marginLeft:"400"}}/>
-                </Paper> */}
                     <div style={{ marginTop: '50px', marginBottom: '50px' }}>
                         {alert ? <Alert severity="error">{error}</Alert> : <></>}
                     </div>
@@ -234,11 +212,8 @@ const Login = () => {
                                         onClick={() =>
                                             signinWithGoogle()
                                                 .then((user: any) => {
-                                                    console.log(user);
-                                                    handleSubmitWithGoogle(
-                                                        user.user.email,
-                                                        user._tokenResponse.idtoken
-                                                    );
+                                                    console.log(user.user);
+                                                    handleSubmitWithGoogle(user.user.email, user.user.accessToken);
                                                     // history.push(location.state?.from ?? '/app/dashboard', { replace: true });
                                                 })
                                                 .catch((error) => {

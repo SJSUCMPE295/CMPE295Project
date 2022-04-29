@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { styled } from '@mui/material/styles';
 // import MuiAlert from '@mui/material/Alert';
 import Alert from '@mui/material/Alert';
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import {
     Avatar,
     Box,
@@ -19,6 +19,7 @@ import axios from 'axios';
 import serverUrl from '../../utils/config';
 import { useDispatch } from 'react-redux';
 import { createUserProfile, saveUserName } from '../../store/constants/action-types';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const metadata = {
     contentType: 'image/jpg',
@@ -51,19 +52,21 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
     const [image, setImage] = React.useState('');
     const [findImage, setFindImage] = React.useState(false);
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Profile Pic');
+    const [progress, setProgress] = useState(100);
     const uploadPicture = (event) => {
         if (image == null) return;
         const imageName = event.target.files[0].name;
         var file = event.target.files[0];
         // const storage = getStorage();
         // const storageRef = ref(storage, `/${user.userName}/profilePic/userPic`);
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot.metadata);
-            setFileUploadTitle(snapshot.metadata.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed', (snapshot) => {
+            setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setFileUploadTitle(imageName);
             downloadProfilePic();
             updateProfilePic();
-        });
-    };
+    }, (error) => {});
+    }
 
     const deletePicture = () => {
         // Delete the file
@@ -102,6 +105,7 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                 profilePic: avatar,
             },
         };
+        const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
         // make a post request with the user data
         axios.post(serverUrl + 'user/profilePicUpdate', payload).then(
@@ -146,6 +150,8 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                         flexDirection: 'column',
                     }}
                 >
+                    {progress>0 && progress<100&& <CircularProgress variant="determinate" value={progress} />}
+                    {progress==100 &&
                     <Avatar
                         src={avatar}
                         // src="https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/test114%40gmail.com%2FprofilePic%2FuserPic?alt=media&token=eb7bdbea-70e3-4b32-be11-712b56d56985"
@@ -153,7 +159,7 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                             height: 100,
                             width: 100,
                         }}
-                    />
+                    /> }
                     <Typography color="textPrimary" gutterBottom variant="h4">
                         {user?.firstName}
                     </Typography>
@@ -166,37 +172,24 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                 </Box>
             </CardContent>
             <Divider />
-            <CardActions
-                sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
-            >
-                <label htmlFor="contained-button-file">
-                    <Input
-                        accept="image/*"
-                        id="contained-button-file"
-                        multiple
-                        type="file"
-                        onChange={uploadPicture}
-                    />
-                    <Button color="primary" fullWidth variant="text" component="span">
-                        {findImage ? 'Update picture' : 'Upload picture'}
-                        <input type="image" hidden onChange={uploadPicture} />
-                    </Button>
-                </label>
-            </CardActions>
-            <Button
-                color="secondary"
-                fullWidth
-                variant="text"
-                component="span"
-                onClick={deletePicture}
-                style={{
-                    color: '#d11a2a',
-                }}
-            >
+        <CardActions
+            sx={{
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+        <label htmlFor="contained-button-file">
+            <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={uploadPicture}/>
+            <Button color="primary" fullWidth variant="text" component="span">
+                {findImage ? "Update picture" : "Upload picture"}
+                <input type="image" hidden onChange={uploadPicture} />
+            </Button>
+            </label>
+        </CardActions>
+            <Button color="secondary" fullWidth variant="text" component="span" onClick={deletePicture}
+            style={{
+                color: "#d11a2a"
+            }}>
                 Delete Picture
             </Button>
             {/* {showErrorMsg? (

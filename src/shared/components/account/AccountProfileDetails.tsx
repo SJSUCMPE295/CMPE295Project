@@ -78,32 +78,36 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                 zipCode: values.zipCode,
             },
         };
-
-        // set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.post(serverUrl + 'user/profileUpdate', payload).then(
-            (response) => {
-                console.log('axios call', response);
-                if (response.status === 200) {
-                    console.log('updated successfully');
-                    dispatch({
-                        type: saveUserName,
-                        firstName: response.data.data.firstName,
-                        lastName: response.data.data.lastName,
-                        userName: response.data.data.userName,
-                    });
-                    dispatch({
-                        type: createUserProfile,
-                        userMetaData: response.data.data.userMetaData,
-                        profile: response.data.data?.profile,
-                        address: response.data.data.address,
-                    });
-                    setSaveMsg('Yes');
-                }
-                if (response.status === 401) {
-                    setSaveMsg('No');
-                }
+        const token = localStorage.getItem('token');
+           // set the with credentials to true
+           axios.defaults.withCredentials = true;
+           // make a post request with the user data
+           axios.post(serverUrl + 'user/profileUpdate', payload,  {
+            headers : {
+                authtoken: token
+            }
+            }).then(
+               (response) => {
+                   console.log("axios call", response);
+               if (response.status === 200) {
+                   console.log("updated successfully");
+                   dispatch({
+                       type: saveUserName,
+                       firstName: response.data.data.firstName,
+                       lastName: response.data.data.lastName,
+                       userName: response.data.data.userName,
+                   });
+                   dispatch({
+                       type: createUserProfile,
+                       userMetaData: response.data.data.userMetaData,
+                       profile: response.data.data?.profile,
+                       address: response.data.data.address,
+                   });
+                   setSaveMsg("Yes");
+               }
+               if(response.status === 401) {
+                setSaveMsg("No");
+               }
             },
             (error) => {
                 console.log('register error');
@@ -195,12 +199,18 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                             />
                         </Grid>
                         <Grid item md={6} xs={12}>
-                            <TextField
+                        <TextField
                                 fullWidth
-                                label="Zipcode"
+                                label="ZipCode"
                                 name="zipcode"
                                 onChange={handleChange}
                                 type="number"
+                                InputProps={{
+                                    inputProps: {
+                                        max: 5,
+                                        min: 5,
+                                    },
+                                }}
                                 value={values.zipCode}
                                 variant="outlined"
                             />
