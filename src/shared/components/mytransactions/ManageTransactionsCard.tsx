@@ -16,6 +16,10 @@ import { withRouter,useLocation ,Link,useHistory} from 'react-router-dom';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import countries from 'i18n-iso-countries';
+const { getStates } = require('country-state-picker');
+const { getCode } =require('country-list');
+import CountryData from "./CountryData.json";
 const metadata = {
     contentType: 'image/jpeg',
 };
@@ -35,12 +39,16 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
+    
+    const [dialCode, setDialCode] = useState("+1");
     const [address, setAddress] = useState("");
     const [sku, setSku] = useState(0);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState("United States of America");
+    const [countryNames, setCountryNames] = useState(CountryData);
+    const [code,setCode] = useState('us');
     const [showErrorMsg, setShowErrorMsg] = React.useState('');
     const storage = getStorage();
     const [image, setImage] = useState(null);
@@ -49,6 +57,7 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
     const [findImage, setFindImage] = React.useState(false);
 
     const [resourceNameError, setResourceNameError] = useState("");
+    const [availabilityError, setAvailabilityError] = useState("");
     const [categoryError, setCategoryError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
     const [phoneNumError, setPhoneNumError] = useState("");
@@ -61,7 +70,7 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
     const [serviceName, setServiceName] = useState("");
     const [availability, setAvailability] = useState(new Date());
     const [datePickerIsOpen,togglePicker] = useState(false);
-    let validateForm = () => {
+    let validateFormResource = () => {
         if (resourceName === "" || resourceName === null) {
             setResourceNameError("Please enter resource name");
             return false;
@@ -105,7 +114,58 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
             return true;
         }
     };
+    let validateForm = () => {
+        if (serviceName === "" || serviceName === null) {
+            setServiceNameError("Please enter service name");
+            return false;
+        } else if(availability.getTime() < today.getTime()) {
+            setAvailabilityError("Please select a valid date!");
+        } else if (category === "" || category === null) {
+            setCategoryError("Please enter a category");
+            return false;
+        } else if (description === "" || description === null) {
+            setDescriptionError("Please enter description of service");
+            return false;
+        } else if (address === "" || address === null) {
+            setAddressError("Please enter a valid address");
+            return false;
+        }  else if (city === "" || city === null) {
+            setCityError("Please enter your city of residence");
+            return false;
+        } else if (state === "" || city === null) {
+            setCityError("Please enter your state of residence");
+            return false;
+        } else if (country === "" || country === null) {
+            setCountryError("Please enter your country of residence");
+            return false;
+        } else if (zipcode === null || zipcode === "") {
+            setZipcodeError("Please enter your zipcode");
+            return false;
+        } else if (zipcode.toString().length != 5) {
+            setZipcodeError("Please enter a valid zipcode!");
+            return false;
+        } else if (phoneNum === "" || phoneNum === null) {
+            setPhoneNumError("Please enter your contact number");
+            return false;
+        } else if (phoneNum.toString().length != 10) {
+            setPhoneNumError("Please enter a valid phone number!");
+            return false;
+        } else {
+            return true;
+        }
+    };
 
+   
+
+
+    countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
+    const countryObj = countries.getNames('en', { select: 'official' });
+    const countryArray = Object.entries(countryObj).map(([key, value]) => {
+        return {
+            label: key,
+            value: value,
+        };
+    });
 
     const handleNameChange = (e) => {
         console.log(e.target.value);
@@ -123,10 +183,10 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
         if (file == null || !file) {
             console.log('No image');
             setShowErrorMsg('Error: No image available');
-            setFindImage(false)
+            setFindImage(false);
         } else {
             setImage(file);
-            setFindImage(true)
+            setFindImage(true);
             console.log(file);
             const storageRef = ref(
                 storage,
@@ -135,6 +195,7 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
             uploadBytes(storageRef, file).then((snapshot) => {
                 console.log('Uploaded a blob or file!', snapshot.metadata);
                 setFileUploadTitle(snapshot.metadata.name);
+                setFindImage(true);
                 setShowErrorMsg('Image Uploaded successfully to firebase!');
                 getDownloadURL(storageRef)
                     .then((url) => {
@@ -164,7 +225,34 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
         }
     };
 
-    
+    const handleSetCheck = (e) => {
+        setAddressError("");
+        setCityError("");
+        setStateError("");
+        setCountryError("");
+        setZipcodeError("");
+        setPhoneNumError("");
+        setCheck(!check);
+        if (!check) {
+            const { address = {}, profile = {} } = userProfileReducer;
+            const obj = countryNames.find(({ code }) => code === getCode(address.country));
+            setAddress(address.location);
+            setCity(address.city);
+            setCountry(address.country);
+            setZipcode(address.zipCode);
+            setState(address.state);
+            setCode(getCode(address.country))
+            setDialCode(obj.dial_code)
+            setPhoneNum(profile.phoneNumber);
+        } else {
+            setAddress('');
+            setCity('');
+            setCountry('');
+            setZipcode('');
+            setState('');
+            setPhoneNum('');
+        }
+    };
             
       
 
@@ -211,15 +299,25 @@ const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,prop
     const handleCountryChange = (e) => {
         setCountryError("")
         setCountry(e.target.value)
+        const obj = countryNames.find(({ name }) => name === e.target.value);
+        setCode(getCode(e.target.value))
+        setDialCode(obj.dial_code)
     };
 
+    const stateObj = getStates(code.toLowerCase())   
+    const stateArray = Object.entries(stateObj).map(([key, value]) => {
+        return {
+            label: value,
+            value: value,
+        };
+    });
     const handleSubmit = async (e) => {
                 e.preventDefault();
                 const token = localStorage.getItem('token');
                 // set the with credentials to true
                 axios.defaults.withCredentials = true;
             if(service?.type=="resource"){
-                const isValid = validateForm();
+                const isValid = validateFormResource();
                 console.log(isValid);
 
                if (isValid) {
@@ -484,7 +582,7 @@ return (
                                                        <TableCell>{service.SKU}</TableCell>
                                                         <TableCell>{service.type==='resource'?service.availableDate:moment(service.availableDate).format(
                                                                 'MM/DD/YYYY' )}</TableCell>
-                                                        <TableCell>{service.Address+", "+service.City+", "+service.State+", "+service.Zipcode}</TableCell>
+                                                        <TableCell>{service.Address+", "+service.City+", "+service.State+", "+service.Country+", "+service.Zipcode}</TableCell>
                                                         <TableCell>{service.Phone_Number}</TableCell>
                                                         <TableCell><Button component={Link} to="/app/mytransactions" onClick={() => handleEdit(service)}>Edit</Button></TableCell>
                                                         <TableCell><Button component={Link} to="/app/mytransactions" onClick={() => handleDelete(service)}>Delete</Button></TableCell>
@@ -662,14 +760,16 @@ return (
                                 <div style={{ color: 'red' }}>{skuError}</div>
                                     <TextField
                                         required
-                                        id="outlined-required"
+                                        id="outlined-number"
                                         label="Quantity"
+                                        type="number"
                                         defaultValue={service?.SKU}
                                         onChange={handleSkuChange}
-                                        variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         helperText="Quanity should be greater than 0"
-                                        
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
                                     />
                                 </Grid>
                             </Grid>
@@ -721,6 +821,24 @@ return (
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
+                                        label="Select State"
+                                        name="state"
+                                        onChange={handleStateChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        defaultValue={service?.State}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {stateArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+
+                                    </TextField>
+                                   {/* <TextField
                                         required
                                         id="outlined-required"
                                         label="State"
@@ -729,12 +847,29 @@ return (
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         
-                                    />
+                                    />*/}
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{countryError}</div>
                                     <TextField
+                                        label="Select Country"
+                                        name="country"
+                                        onChange={handleCountryChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        defaultValue={service?.Country}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {countryArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+                                    </TextField> 
+                                    {/*<TextField
                                         required
                                         id="outlined-required-input"
                                         label="Country"
@@ -743,7 +878,7 @@ return (
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         
-                                    />
+                                        />*/}
                                 </Grid>
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -760,6 +895,17 @@ return (
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
+                                <Grid item xs={1}>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        sx={{ m: 1 }}
+                                        value={dialCode}
+                                        style = {{width: 70}}
+                                        // InputProps={{
+                                        //     readOnly: true,
+                                        // }}
+                                    />
+                                </Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{phoneNumError}</div>
                                     <TextField
@@ -961,6 +1107,24 @@ return (
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
+                                        label="State"
+                                        name="state"
+                                        onChange={handleStateChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        defaultValue={service?.State}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {stateArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+
+                                    </TextField>
+                                    {/*<TextField
                                         required
                                         id="outlined-required"
                                         label="State"
@@ -969,12 +1133,29 @@ return (
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         
-                                    />
+                                        />*/}
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{countryError}</div>
                                     <TextField
+                                        label="Country"
+                                        name="country"
+                                        onChange={handleCountryChange}
+                                        required
+                                        select
+                                        SelectProps={{ native: true }}
+                                        defaultValue={service?.Country}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                    >
+                                        {countryArray.map((option) => (
+                                            <option key={option.label} value={option.value}>
+                                                {option.value}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                   {/* <TextField
                                         required
                                         id="outlined-required-input"
                                         label="Country"
@@ -983,7 +1164,7 @@ return (
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         
-                                    />
+                                        />*/}
                                 </Grid>
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -1000,6 +1181,17 @@ return (
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
+                                <Grid item xs={1}>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        sx={{ m: 1 }}
+                                        value={dialCode}
+                                        style = {{width: 70}}
+                                        // InputProps={{
+                                        //     readOnly: true,
+                                        // }}
+                                    />
+                                </Grid>
                                 <Grid item xs={3}>
                                     <div style={{ color: 'red' }}>{phoneNumError}</div>
                                     <TextField

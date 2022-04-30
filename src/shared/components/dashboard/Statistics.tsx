@@ -39,7 +39,7 @@ import HealthNews from '../../components/dashboard/HealthNews';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WarningIcon from '@material-ui/icons/Warning';
 import axios from 'axios';
-
+import {formatDate, prettyDate } from "utils/json";
 const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
     const UserId =userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
     console.log(UserId);
@@ -204,7 +204,7 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
 
     const [page, setPage] = React.useState(0);
 
-const [rowsPerPage, setRowsPerPage] = React.useState(5);
+const [rowsPerPage, setRowsPerPage] = React.useState(8);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -454,7 +454,7 @@ const [rowsPerPage, setRowsPerPage] = React.useState(5);
                                             </TableBody>
                                         ) : null}
                                     </Table><TablePagination
-                                    rowsPerPageOptions={[5, 10, 25]}
+                                    rowsPerPageOptions={[8, 16, 24]}
           component="div"
           count={data?.services.length}
           rowsPerPage={rowsPerPage}
@@ -522,6 +522,7 @@ const [rowsPerPage, setRowsPerPage] = React.useState(5);
                                                     ({
                                                         doctor_name: doctor_name,
                                                         AppointmentDetails: AppointmentDetails,
+                                                        time:time,
                                                         _id:_id
                                                     }) => (
                                                         <Typography
@@ -529,7 +530,7 @@ const [rowsPerPage, setRowsPerPage] = React.useState(5);
                                                             variant="text" key={_id}
                                                         >
                                                             You have an appointment with{' '}
-                                                            {doctor_name} at {AppointmentDetails}
+                                                            <b>{doctor_name}</b> at <b>{prettyDate(time)}</b>
                                                         </Typography>
                                                     )
                                                 )

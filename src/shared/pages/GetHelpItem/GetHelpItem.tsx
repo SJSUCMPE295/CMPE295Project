@@ -2,11 +2,12 @@
 import React, { Component, useRef, useEffect, useState, FunctionComponent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Box, Grid,
 Container,Card,CardHeader,
 CardContent,TextField,CardActions,Divider,Button, CardMedia, Table,TableBody,
 TableCell,Dialog,DialogActions,DialogContent,DialogContentText,
-TableRow,TableContainer,Paper
+TableRow,TableContainer,Paper,Typography
 } from '@material-ui/core';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
@@ -35,6 +36,9 @@ const location=useLocation();
     const [directions,setDirections]= useState(null);
     const [open, setOpen] = React.useState(false);
     const [quantity,setQuantity]=useState(0);
+    const [pagetype, setPageType] = useState(null);
+    let ignoreStat=false;
+    const [UserCompleteAddress,setUserCompleteAddress]=useState(null);
 const containerStyle = {
     width: '1125px',
     height: '450px'
@@ -46,38 +50,44 @@ const containerStyle = {
   };
   //change start
   const UserId = userProfileReducer?.id;//'6225e61bf81d2541a4000bc9';
-    
+   let id;
+   let item_type;
+  // let pagetype; 
 React.useEffect(() => {
-  const id = param?.id?.substring(param?.id?.indexOf(':') + 1);
-  const item_type = param?.type?.substring(param?.type?.indexOf(':') + 1)+"s";
-  //alert(param.id);
-    //const id='62474b2f4a682270e03d0dfc';
-    //const item_type='resources';
-//alert(location.pathname);
-    //changeend
-    const token = localStorage.getItem('token');
-      // set the with credentials to true
-      axios.defaults.withCredentials = true;
-           axios
-            .get('/api/gethelp/search', { params: {item_type:item_type,id:id}},  {
-              headers : {
-                  authtoken: token
-              }
-              }) 
-            .then(
-                (response) => {
-                  
-                    setData(response?.data?.resources);
-                    //setCity(response.data.user_currentcity);
-                    setCurrentloc(response?.data?.user_currentaddress);
-                    getDirections(response?.data?.resources[0]);
-                },
-                (error) => {
-                    console.log(error);
-                    setError(error);
-                }
-            );
+  id = param?.id?.substring(param?.id?.indexOf(':') + 1);
+  item_type = param?.type?.substring(param?.type?.indexOf(':') + 1)+"s";
+  pagetype = param?.pagetype?.substring(param?.pagetype?.indexOf(':') + 1);
+  //console.log(pagetype);
+  setPageType(pagetype);
+    
        }, []);
+
+       const handlepageload=()=>{
+        const token = localStorage.getItem('token');
+        // set the with credentials to true
+        axios.defaults.withCredentials = true;
+      
+             axios
+              .get('/api/gethelp/search', { params: {item_type:item_type,id:id,user_location:UserCompleteAddress}},  {
+                headers : {
+                    authtoken: token
+                }
+                }) 
+              .then(
+                  (response) => {
+                    ignoreStat = true;
+                      setData(response?.data?.resources);
+                      //setCity(response.data.user_currentcity);
+                      //setCurrentloc(response?.data?.user_currentaddress);
+                      getDirections(response?.data?.resources[0]);
+                  },
+                  (error) => {
+                      console.log(error);
+                      setError(error);
+                  }
+              );
+       }
+
        const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: "AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw"
@@ -88,13 +98,55 @@ React.useEffect(() => {
       const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds();
         map.fitBounds(bounds);
-        setMap(map)
+        setMap(map);
+        if(ignoreStat ==false){
+          getCurrentUserLocation();
+           }
       }, [])
     
       const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
       }, [])
+      const getCurrentUserLocation=() =>{      
+        navigator.geolocation.getCurrentPosition(function(position) {
+        //console.log("position",position);
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+        let location={lat: position.coords.latitude, lng: position.coords.longitude}
+        setCurrentloc(location);currentloc=location;
+        console.log(currentloc);
+        var geocoder = new google.maps.Geocoder,
+      latitude = position.coords.latitude, //sub in your latitude
+      longitude =position.coords.longitude, //sub in your longitude
+      city="",
+      state="";
+      geocoder.geocode({'location': {lat:latitude, lng:longitude}}, function(results, status) {
+       if (status === google.maps.GeocoderStatus.OK) {
+      results.forEach(function(element){
+        element.address_components.forEach(function(element2){
+          element2.types.forEach(function(element3){
+            switch(element3){
+              case 'administrative_area_level_1':
+                state = element2.long_name;
+                break;
+              case 'locality':
+                city = element2.long_name;
+                break;
+            }
+          })
+        });
+      });
+      setUserCompleteAddress(results[0].formatted_address);UserCompleteAddress=results[0].formatted_address;
+      //setCity(city+", "+state);
+      handlepageload();
+    }
+  });
+  
     
+   
+        });
+  
+    };
       //function that is calling the directions service
      const getDirections = (resource) => {
         const directionsService = new google.maps.DirectionsService();
@@ -156,11 +208,11 @@ React.useEffect(() => {
            if(errorText===""){
             let resource=data[0];
             ///email to victim
-            let resource_email_quantity=resource.type=="resource"?quantity:resource.availableDate;
+            let resource_email_quantity=resource.type=="resource"?quantity:moment(resource.availableDate).format('MM-DD-YYYY');
             let qua_date=resource.type=="resource"?"Quantity":"Available Date";
             let email_subject=resource.type=="resource"?"Resource reservation details":"Service reservation details";
             let to_user_email=userProfileReducer.userName; //change later state.to_email;
-            let url ="http://localhost:8500"+location.pathname;console.log(url);
+            let url ="http://localhost:8500"+"/app/gethelp/:"+resource._id+"/:"+resource.type+"/:email"+resource_email_quantity;console.log(url);
             //serverUrl+'app/gethelp/:'+resource._id+'/:resource';console.log(url);console.log(location.pathname);
             const templateId = 'template_v9fkqmy';
           
@@ -239,13 +291,20 @@ setOpen(true);
       
     <Grid item  key={resource._id}>
         <Card  sx={{ display: 'flex' }} style={{ border: "none", boxShadow: "none" }}>
+        {resource.ImageUrl != "" ? 
             <CardMedia
         component="img"
-        height="475" 
+        height="475"
+        src={resource.ImageUrl}
+        alt={resource.Name} 
         sx={{ width:400 }}
-        image="/static/images/avatars/resource.png"
-        alt={resource.Name}
-      />
+      />: <CardMedia
+      component="img"
+      height="475"
+      alt={resource.Name} 
+      sx={{ width:400 }}
+      image="/static/images/avatars/resource.png"
+    />}
                 <CardContent>
                 <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -264,7 +323,8 @@ setOpen(true);
             >
               <TableCell component="th" scope="row"> {resource.type=="resource"?<b>Quantity</b>:<b>Available date</b>}
               </TableCell>
-              <TableCell align="left">:{resource.type=="resource"?<TextField
+              {pagetype?.substring(0,5)!="email"?
+              (resource.type=="resource"?<TableCell align="left">:<TextField
           id="standard-number"
           type="number"
           InputLabelProps={{
@@ -282,16 +342,8 @@ setOpen(true);
           helperText={errorText.length === 0 ? "Update required quantity":errorText}
           sx={{  width: '41ch' }}
           onChange={handleItemQuantityChange}
-        />: <TextField
-           InputLabelProps={{style : {color : 'blue'} }}
-           id="standard-read-only-input"
-           InputProps={{
-             readOnly: true,
-           }}
-           variant="standard"
-          defaultValue= {resource.availableDate}
-          sx={{  width: '41ch' }}
-        />}</TableCell>
+        /></TableCell>: <TableCell>:{moment(resource.availableDate).format('MM/DD/YYYY')}</TableCell>):
+        <TableCell>:{pagetype?.substring(5,pagetype.length)}</TableCell>}
             </TableRow>
             
 
@@ -394,7 +446,8 @@ setOpen(true);
 <CardActions>
   <Box style={{ marginLeft: "auto" }}>
   <Button component={Link} to={'/app/gethelp'} color="primary" variant="contained" size="medium">Cancel</Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- <Button color="primary" variant="contained" size="medium"  onClick={handleConfirm}>Confirm</Button>
+  {pagetype?.substring(0,5)!="email"?
+  <Button color="primary" variant="contained" size="medium"  onClick={handleConfirm}>Confirm</Button>:null}
           </Box></CardActions>
            </Card>
                 </Box> </Container></Box>

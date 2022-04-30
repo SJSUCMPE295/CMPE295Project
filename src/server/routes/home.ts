@@ -44,13 +44,13 @@ router.get('/', async (_req, res) => {
                         response.usertransactions = data_ut;
                         const userappointment = DoctorAppointment.aggregate( [
                             {
-                                $match: { userId: user },
+                                $match: { userId: user}//,status:true 
                             },
                             {
                                 $project: {
                                     doctorObjId: { $toObjectId: '$doctorId' },
                                     userId: 1,
-                                    AppointmentDetails: 1,
+                                    AppointmentDetails: 1,time:1,
                                     Status: 1,
                                     _id:1
                                 },
@@ -78,7 +78,7 @@ router.get('/', async (_req, res) => {
                                         ' ',
                                         '$doctor_appointments.lastName',
                                     ]},
-                                    AppointmentDetails: 1,
+                                    AppointmentDetails: 1,time:1,
                                     Status: 1,
                                 },
                             },
@@ -95,11 +95,10 @@ router.get('/', async (_req, res) => {
 
             }
         const resources =  Resources.aggregate(
-            [
-
+            [  
                 {
                     $group: {
-                        _id: '$Resource_Name',
+                        _id: { $toLower: '$Resource_Name' },
                         resource_SKU: { $sum: '$SKU' },
                     },
                 },

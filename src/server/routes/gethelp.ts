@@ -13,38 +13,12 @@ const calculateMiles = (kilometer) => {
     return (val * milesFactor).toFixed(2);
 };
 
-const getUserCurrentLocation= async () => {
-    const client = new Client({});
-   
-    const user_loc =  await client.geolocate({ params: {
-    key: 'AIzaSyAfhaFLcRPYsc7S9xdeiEZUE6xp-oFGH9Y',
-    },
-    timeout: 1000, // milliseconds
-    });
-  const current_address=await user_loc.data.location;
-  const current_city=await client.reverseGeocode({
-    params: {
-        latlng: await user_loc.data.location,
-        key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
-    },
-    timeout: 1000, // milliseconds
-    })
-    const user_currentcity=await current_city.data.results[0].address_components[3].short_name+', '+await current_city.data.results[0].address_components[5].short_name;
-   console.log(await current_address);
-   return  {
-       current_address:await current_address,
-       user_currentcity:await user_currentcity
-   };
-   /*return  {
-    current_address:'',
-    user_currentcity:''
-};*/
-}
 
-const getData= async (query_params_resource,query_params_service,user_location,miles,datafilter)=>{
+const getData= async (query_params_resource,query_params_service,user_location,city,miles,datafilter)=>{
    console.log("inside getdata");
    console.log(query_params_resource);
-   //console.log(datafilter);
+   console.log(user_location);console.log(city);
+   
     const resource_pipeline = [
         { $match: query_params_resource },
             { $project: {
@@ -107,7 +81,19 @@ const getData= async (query_params_resource,query_params_service,user_location,m
                   Availability:'',
                   type:'resource',
                   ImageUrl:1,
-                  owner_email:'$addresses.userName'
+                  owner_email:'$addresses.userName',
+                  markertitle:{
+                    $concat: ['$Resource_Name',
+                    ' at ',
+                        '$Address',
+                    ', ',
+                      '$City',
+                      ', ',
+                        '$State',
+                        ', ',
+                        { $toString: '$Zipcode' }
+                   ],
+               },
                 },
             },
             
@@ -182,7 +168,19 @@ const getData= async (query_params_resource,query_params_service,user_location,m
               Availability:1,
               type:'service',
               ImageUrl:1,
-              owner_email:'$addresses.userName'
+              owner_email:'$addresses.userName',
+              markertitle:{
+                $concat: ['$Service_Name',
+                ' at ',
+                    '$Address',
+                ', ',
+                  '$City',
+                  ', ',
+                    '$State',
+                    ', ',
+                    { $toString: '$Zipcode' }
+               ],
+           },
             },
         },
         ]
@@ -204,7 +202,7 @@ if (datafilter ==="resources")
    }
 
  
-
+//console.log(await resources);
        let destinations = [];
     for (var k = 0; k < resources.length; k++) {
         destinations.push(resources[k].address);
@@ -212,7 +210,6 @@ if (datafilter ==="resources")
     //let destination=new Set(destinations);
     destinations = Array.from(new Set(destinations));
     let geocodearray={};
-    let distancearray={};
     const client = new Client({});
     for (var j=0;j< destinations.length;j++) {
         let geocodedaddress=await client.geocode({
@@ -223,35 +220,55 @@ if (datafilter ==="resources")
             timeout: 1000, // milliseconds
             });
             geocodearray[destinations[j]]=await geocodedaddress.data.results[0].geometry?.location;
-            //console.log(await geocodedaddress.data.results[0]);
-            let distance_matrix = await client
+    } 
+            let distance_matrix_userlocation = await client
             .distancematrix({
                 params: {
-                    destinations: [destinations[j]],// ["San Francisco, CA, USA","Victoria, BC, Canada"],
-                    origins: [user_location],//["San Jose, CA"],
+                    destinations: await destinations,// ["San Francisco, CA, USA","Victoria, BC, Canada"],
+                    origins: [user_location],//["San Jose, CA"],let origin=[{lat:user_location["lat"],lng:user_location["lng"]}];
                     key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
                 },
                 timeout: 1000, // milliseconds
             });
-            distancearray[destinations[j]]=calculateMiles(await distance_matrix.data.rows[0].elements[0].distance.text);
-    }
-
-            //console.log("inside distance");
-            //console.log(geocodearray);
-            //console.log(distancearray);
-           
-       for (var j=0;j< resources.length;j++) {
-            resources[j]['distance'] = distancearray[resources[j].address] ;
-            resources[j]['location'] = geocodearray[resources[j].address] ;
-            
-
-        }
+            let distance_matrix_city;
+             if(miles!="" && city !=""){
+                distance_matrix_city = await client
+                .distancematrix({
+                    params: {
+                        destinations: await destinations,// ["San Francisco, CA, USA","Victoria, BC, Canada"],
+                        origins: [city],//["San Jose, CA"],
+                        key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+                    },
+                    timeout: 1000, // milliseconds
+                });
+            }
+            //console.log(await destinations);
+       // console.log(await distance_matrix_city.data.rows[0]);
+        //console.log(await distance_matrix_userlocation.data.rows[0]);
+  
         
+       for (var j=0;j< await resources.length;j++) {
+            resources[j]['location'] = await geocodearray[resources[j].address] ;
+           for (var i=0;i< await destinations.length;i++ ){
+               if(resources[j]['address']==destinations[i]){
+                  if (miles!="" && city !=''){ 
+                      
+                     resources[j]['distance_from_city'] = calculateMiles(await distance_matrix_city.data.rows[0].elements[i].distance.text); 
+                  };
+                  resources[j]['distance'] = calculateMiles(await distance_matrix_userlocation.data.rows[0].elements[i].distance.text);  
+               }
+            }
+        }
      
-    if(miles!='')
+    if(miles!='' && city !='')
+        {
+        resources = await resources.filter((m) => parseFloat(m['distance_from_city']) <= miles);
+        }  
+        if(miles!='' && city =='')
         {
         resources = await resources.filter((m) => parseFloat(m['distance']) <= miles);
         }  
+       // console.log(await resources);
     return await resources;
     
         
@@ -328,98 +345,64 @@ router.post('/', async (_req, res) => {
 router.get('/', async (_req, res) => {
    
     const response = {
-        resources:[{}],
-        user_currentcity:'',
-        user_currentaddress:''
+        resources:[{}]
     };
-    const type=_req.query.type;
-    let name;
-    let miles;
-    let city;
-    const datafilter=_req.query.datafilter;
+
+    
     var query_params_resource = {};
     var query_params_service = {};
-    //const destArray = {};
-    //console.log(type);
-    if (type=='pageload'){
-       name='';
-       
-       //console.log(getUserCurrentLocation());
-       getUserCurrentLocation().then(user_location =>{
-      if(user_location.user_currentcity!='')
-       {city= user_location.user_currentcity.slice(0,user_location.user_currentcity.indexOf(','));
-       //console.log(city);
-       response.user_currentcity=user_location.user_currentcity;
-       query_params_resource = { City:   {'$regex': city.trim(),$options:'i'} };
-       query_params_service = { City:   {'$regex': city.trim(),$options:'i'} };
-    }
-       if(user_location.current_address!='')
-       {response.user_currentaddress=user_location.current_address;}
-       miles='45';
-       
-       getData(query_params_resource,query_params_service,response.user_currentaddress,miles,datafilter).then(resources=>{response.resources=resources.filter(function(resource){
-        return (resource.type==='resource'?resource.SKU > 0  : (resource.availableDate >= Date.now()));
-    });;//console.log(response);*/
-        res.send(response);})
-        .catch(e=>{console.log(e);});
-       })
-       .catch(error => {console.log("error");})
-       
-    }
     
-    else if(type=='button')
-
-   {
-    name = _req.query.name;
-    city=_req.query.city;
-    miles = _req.query.miles;
-   //console.log("miles:"+miles);
-   //console.log("city"+city);
-    const user_address=await getUserCurrentLocation();
-   let user_loc=await user_address.current_address;
-    if (name != '' && city=='') {
-        query_params_resource = { Resource_Name: {'$regex': name.trim(),$options:'i'} };
-        query_params_service = { Service_Name: {'$regex': name.trim(),$options:'i'}};
+    let name = _req.query.name;
+    let city=_req.query.city;
+    let miles = _req.query.miles;
+    let datafilter = _req.query.datafilter;
+    let user_location = _req.query.user_location;
+    console.log(user_location);
+   if (name != '' && city=='' && miles==''){//name only
+    query_params_resource = { Resource_Name: {'$regex': name.trim(),$options:'i'} };
+    query_params_service = { Service_Name: {'$regex': name.trim(),$options:'i'}};
+   }
+   else if (name == '' && city!='' && miles=='') {//city only
+    city=city.slice(0,city.indexOf(','));
+        query_params_resource = { City:  {'$regex': city.trim(),$options:'i'} };
+        query_params_service = { City:  {'$regex': city.trim(),$options:'i'} };
         
        
     }
-    else if (name == '' && city!='') {
-        city=city.slice(0,city.indexOf(','));
-        query_params_resource = { City:  {'$regex': city.trim(),$options:'i'} };
-        query_params_service = { City:  {'$regex': city.trim(),$options:'i'} };
+   /* else if (name == '' && city!='' && miles!='') {//city and miles
+        
+        //update
        
     }
-    else if (name != '' && city!='') {
+    else if (name == '' && city=='' && miles!='') {//miles only ask to update
+        //update this
+       
+    }
+    else if (name != '' && city=='' && miles!=''){//name and miles ask to update
+        //update this
+        query_params_resource = { Resource_Name: {'$regex': name.trim(),$options:'i'} };
+        query_params_service = { Service_Name: {'$regex': name.trim(),$options:'i'}};
+    }*/
+    else if (name != '' && city!='' && miles==''){//name and city
         city=city.slice(0,city.indexOf(','));
         query_params_resource = {  Resource_Name:  {'$regex': name.trim(),$options:'i'}, City:  {'$regex': city.trim(),$options:'i'} };
         query_params_service = { Service_Name:  {'$regex': name.trim(),$options:'i'}, City: {'$regex': city.trim(),$options:'i'} };
-      
+    }
+    else if (name != '' && city!=''&& miles!='') {//name,city and miles
+        //update this
+        query_params_resource = { Resource_Name: {'$regex': name.trim(),$options:'i'} };
+        query_params_service = { Service_Name: {'$regex': name.trim(),$options:'i'}};
     }
 
    else{
-    name ='';
-    city='';
-    miles = '';
+    
    }
-   getData(query_params_resource,query_params_service,user_loc,miles,datafilter).then(resources=>{response.resources=resources.filter(function(resource){
+   getData(query_params_resource,query_params_service,user_location,city,miles,datafilter).then(resources=>{response.resources=resources.filter(function(resource){
     return (resource.type==='resource'?resource.SKU > 0  : (resource.availableDate >= Date.now()));
 });;//console.log(response);*/;console.log(response);
 
     res.send(response);})
     .catch(e=>{console.log(e);});  
-}
-else{
-    name ='';
-    city='';
-    miles = '';
-    const user_address=await getUserCurrentLocation();
-    let user_loc=await user_address.current_address;
-    getData(query_params_resource,query_params_service,user_loc,miles,datafilter).then(resources=>{response.resources=resources.filter(function(resource){
-        return (resource.type==='resource'?resource.SKU > 0  : (resource.availableDate >= Date.now()));
-    });;//console.log(response);*/;console.log(response);
-        res.send(response);})
-        .catch(e=>{console.log(e);});
-   }
    
 });
 //get item by id
@@ -427,32 +410,27 @@ router.get('/search', async (_req, res) => {
     //console.log("inside gethelpsearch");
     var ObjectId = require('mongodb').ObjectID;
     const id = _req.query.id;
+    const user_location = _req.query.user_location;
     const response = {
         resources:[{}],
         user_currentaddress:''
     };
-    let miles='';
+    let miles='';let city="";
     let datafilter=_req.query.item_type;
     let query_params_resource={};
     let query_params_service={};
-    getUserCurrentLocation().then(user_location =>{
-                if(user_location.user_currentcity!='')
-                 {
-                if (datafilter == 'resources') {
-                 query_params_resource = { "_id": new ObjectId(id) };query_params_service ={};
+    if (datafilter == 'resources') {
+        query_params_resource = { "_id": new ObjectId(id) };query_params_service ={};
                 }
-                else {
-                    query_params_service = { "_id": new ObjectId(id) };query_params_resource ={};
-                   }
-              }
-                 if(user_location.current_address!='')
-                 {response.user_currentaddress=user_location.current_address;}
-                  getData(query_params_resource,query_params_service,response.user_currentaddress,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
+    else {
+        query_params_service = { "_id": new ObjectId(id) };query_params_resource ={};
+        }
+            
+                
+    getData(query_params_resource,query_params_service,user_location,city,miles,datafilter).then(resources=>{response.resources=resources;console.log(response);
                     res.send(response);})
                     .catch(e=>{console.log(e);});
-               })
-    
-               .catch(e=>{console.log(e);});
+              
 
                 });
         
@@ -516,7 +494,7 @@ router.get('/search/userid', async (_req, res) => {
                 }
                 ];
 
-                
+              
     const query_params_getresource={"UserId": userid,"ServiceId":"","Type":"Get Help"};
     const query_params_getservice={"UserId": userid,"Type":"Get Help","ResourceId":""};
     //console.log(query_params_getresource);
@@ -558,6 +536,7 @@ const resource_get_pipeline =[{ $match: query_params_getresource },
                       ',',
                         '$transactions.State',
                      
+                        ',','$transactions.Country',
                         ',',
                         { $toString: '$transactions.Zipcode' }
                    ],
@@ -610,6 +589,8 @@ const resource_get_pipeline =[{ $match: query_params_getresource },
                           ',',
                             '$transactions.State',
                          
+                            ',',
+                            '$transactions.Country',
                             ',',
                             { $toString: '$transactions.Zipcode' }
                        ],
