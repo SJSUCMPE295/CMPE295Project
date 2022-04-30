@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+    Alert,
     Box,
     Button,
     Card,
@@ -9,13 +10,20 @@ import {
     Divider,
     FormControlLabel,
     Grid,
-    Typography,
-} from '@material-ui/core';
+    Typography
+} from "@material-ui/core";
 import { connect } from 'react-redux';
 import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
 
 const SettingsDoctor = ({ profile, userMetaData, id, ...rest }) => {
+    const [successAlert, setSuccessAlert] = React.useState('');
+    const setSuccessAlertWithTimer = (msg) => {
+        setSuccessAlert(msg);
+        setTimeout(() => {
+            setSuccessAlert('');
+        }, 6000);
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -28,6 +36,8 @@ const SettingsDoctor = ({ profile, userMetaData, id, ...rest }) => {
         profileUpdate({ id, userMetaData: { ...userMetaData, ...formProps } })
             .then((data) => {
                 rest?.updateUserProfile(data);
+                setSuccessAlertWithTimer('Saved');
+
             })
             .catch((err) => {
                 console.log(err);
@@ -35,6 +45,8 @@ const SettingsDoctor = ({ profile, userMetaData, id, ...rest }) => {
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
+            {successAlert && <Alert severity="success">{successAlert}</Alert>}
+
             <Card
                 sx={{
                     mb: 2,

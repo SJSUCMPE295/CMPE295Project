@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+    Alert,
     Box,
     Button,
     Card,
@@ -8,12 +9,19 @@ import {
     Checkbox,
     Divider,
     FormControlLabel,
-    Grid,
-} from '@material-ui/core';
+    Grid
+} from "@material-ui/core";
 import { connect } from 'react-redux';
 import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
 const SettingsProfileStatus = ({ profile, id, ...rest }) => {
+    const [successAlert, setSuccessAlert] = React.useState('');
+    const setSuccessAlertWithTimer = (msg) => {
+        setSuccessAlert(msg);
+        setTimeout(() => {
+            setSuccessAlert('');
+        }, 6000);
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -30,6 +38,8 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
             .then(({ data }) => {
                 rest?.updateUserProfile(data);
                 console.log(data);
+                setSuccessAlertWithTimer('Saved');
+
             })
             .catch((err) => {
                 console.log(err);
@@ -37,6 +47,8 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
     };
     return (
         <form onSubmit={handleSubmit} className="mb-2">
+            {successAlert && <Alert severity="success">{successAlert}</Alert>}
+
             <Card
                 sx={{
                     mb: 2,
