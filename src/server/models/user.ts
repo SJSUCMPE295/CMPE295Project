@@ -10,6 +10,9 @@ const UserModel = new Schema(
         userMetaData: {
             gender: { type: String, required: false },
             isDoctor: { type: Boolean, required: true },
+            appNotifications: { type: Boolean, required: true },
+            emailNotifications: { type: Boolean, required: true },
+            phoneCalls: { type: Boolean, required: true },
         },
         profile: {
             phoneNumber: { type: Number, required: true },

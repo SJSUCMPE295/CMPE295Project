@@ -42,9 +42,18 @@ export const getUserById = async (id) => {
         const user = await Users.findOne({ _id: userIdObject });
         if (user && user.toJSON()) {
             const doctor = await doctorModel.findOne({ userId });
-            const appointments = await doctorAppointmentModel.find(
+            const appointmentsData = await doctorAppointmentModel.find(
                 doctor ? { doctorId: userId } : { userId }
             );
+            const appointments =
+                appointmentsData?.map &&
+                appointmentsData?.map((appointment) => {
+                    const obj = appointment?.toJSON ? appointment.toJSON() : appointment;
+                    return {
+                        ...obj,
+                        id: appointment?._id || obj?._id || obj?.id,
+                    };
+                });
             return { ...user.toJSON(), doctor, appointments };
         }
     }
@@ -67,7 +76,7 @@ export const getUserByIdWithAppointments = async (id) => {
                 doctor: usersObject[appointment?.doctorId],
             };
         });
-    return { ...user, appointments }
+    return { ...user, appointments };
 };
 export const getUserData = async (user) => {
     const userId = user?._id.toString() || user?.userId;

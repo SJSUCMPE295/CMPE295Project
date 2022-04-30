@@ -2,9 +2,12 @@ import axios from 'axios';
 import * as ActionTypes from './constants/action-types';
 import { Locale } from './user/types';
 const api = axios.create({
-       withCredentials: true, headers : {
-        authtoken: typeof window !== 'undefined' && window.localStorage.getItem('token')
-    }
+    withCredentials: true,
+});
+api.interceptors.request.use((config) => {
+    config.headers.authtoken =
+        (typeof window !== 'undefined' && window.localStorage.getItem('token')) || null;
+    return config;
 });
 export const setLocale = (locale: Locale) => ({
     type: ActionTypes.SETLOCALE,
@@ -31,7 +34,7 @@ const jsonToQueryString = (json = {}) => {
 
 /* api */
 export const signUp = (data = {}) => api.post('/api/signup', data);
-export const login = (data = {}) => api.post('/api/login', data);
+export const loginApi = (data = {}) => api.post('/api/login', data);
 export const getHome = (data = {}) => api.get('/api/listing' + jsonToQueryString(data));
 
 export const getAllDoctorsAppointments = (id, data = {}) =>

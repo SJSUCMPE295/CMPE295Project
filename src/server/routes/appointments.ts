@@ -51,7 +51,8 @@ export const getAllAvailableDoctorsHandler = async (req, res) => {
             const users = await getAllUsers(userIds, { userName, firstName, lastName });
             const doctorsList = data
                 .map((doctor) => {
-                    let user = users.find((x) => x?._id.toString() === doctor?.userId) || {};
+                    let user =
+                        users.find((x) => (x?.id || x?._id?.toString()) === doctor?.userId) || {};
                     user = user?.toJSON ? user.toJSON() : user;
                     return { ...user, doctor, password: '' };
                 })

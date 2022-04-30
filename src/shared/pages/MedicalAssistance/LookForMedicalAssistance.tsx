@@ -18,14 +18,11 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText,
-    TextareaAutosize,
-    DialogActions,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { DataGrid } from '@material-ui/data-grid';
 import { createAppointment, getAvailableDoctors, setGetHelp, getProfileData } from 'store/actions';
-import { getDate, formatDate, prettyDate } from "utils/json";
+import { getDate, formatDate, prettyDate } from 'utils/json';
 const steps = ['Select time', 'Select Doctor', 'Notes', 'Overview'];
 export const LookForMedicalAssistance = (props) => {
     const [open, setOpen] = React.useState(false);
@@ -54,7 +51,7 @@ export const LookForMedicalAssistance = (props) => {
         setSelectedDoctor('');
         setActiveStep(0);
         setAlert('');
-        setOpen(false)
+        setOpen(false);
     };
     const setSuccessAlertWithTimer = (msg) => {
         setSuccessAlert(msg);
@@ -217,7 +214,7 @@ export const LookForMedicalAssistance = (props) => {
             case 3: {
                 const date = new Date(selectedTime).toLocaleDateString();
                 const day = new Date(selectedTime).toLocaleTimeString();
-                const formattedDate = `${date}  ${day}`
+                const formattedDate = `${date}  ${day}`;
                 return (
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader
