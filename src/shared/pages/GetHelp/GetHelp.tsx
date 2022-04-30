@@ -31,8 +31,8 @@ import { withRouter,useLocation ,Link} from 'react-router-dom';
 
 
 const containerStyle = {
-    width: '550px',
-    height: '825px'
+    width: '570px',
+    height: '770px'
   };
   
   const center = {
@@ -44,7 +44,8 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
     const UserId = userProfileReducer?.id;
     
     //console.log(UserId);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
+    const [CityError, setCityError] = useState("");
     const [name, setName] = useState("");
     const [city, setCity] = useState("");
     const [miles, setMiles] = useState('45');
@@ -52,14 +53,16 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
     const [directions,setDirections]= useState(null);
     const [datafilter,setDataFilter]=React.useState("all");
     const [data, setData] = useState(null);
+    let ignoreStat=false;
     let origin = {};
-    
+    const [UserCompleteAddress,setUserCompleteAddress]=useState(null);
 
     ////Pagination code
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
-    const [pageSize, setPageSize] = useState(6);
-    let pageSizes = [6, 12, 24];
+    const [totalitem, setTotalItem] = useState(0);
+    const [pageSize, setPageSize] = useState(4);
+    let pageSizes = [4, 8, 16];
     const handlePageChange = (event, newPage) => {
       setPage(newPage);
     };
@@ -68,80 +71,143 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
       setPage(1);
   };
     
+  
     
-    useEffect(() => {
-      const token = localStorage.getItem('token');
-      // set the with credentials to true
-      axios.defaults.withCredentials = true;
-        axios
-            .get('/api/gethelp', { params: {type:'pageload',datafilter:datafilter} },  {
-              headers : {
-                  authtoken: token
-              }
-              }) //change later filter_value.substring(filter_value.indexOf(':') + 1)
-            .then(
-                (response) => {
-                 // console.log(response.data.resources);
-                    setData(response?.data?.resources);
-                    setCity(response?.data?.user_currentcity);
-                    setCurrentloc(response?.data?.user_currentaddress);
-                    setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
-                    
-                },
-                (error) => {
-                    console.log(error);
-                    setError(error);
-                }
-            );
-    }, []);
-    //if (loading) return "Loading...."
-    //if (error) return "Error"
     
     const handleChangeName = (event) => {
         setName(event.target.value)
     };
     const handleChangeCity = (event) => {
-
+      setCityError("");
         setCity(event.target.value);
     };
     const handleChangeMiles = (event) => {
         setMiles(event.target.value);
         
     };
+    const handlePageLoad= () => {
+      const token = localStorage.getItem('token');
+      // set the with credentials to true
+      axios.defaults.withCredentials = true;
+     axios
+      .get('/api/gethelp', { params: { name: name , miles : miles, city :"",datafilter:datafilter,user_location:UserCompleteAddress}}, {
+        headers : {
+            authtoken: token
+        }
+        }) 
+      .then(
+          (response) => {
+            ignoreStat = true;
+              setData(response?.data?.resources);
+              setDirections(null);
+              
+              setTotalItem(Object.keys(response?.data?.resources).length);
+              setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
+              setPage(1);
+              
+          },
+          (error) => {
+              console.log(error);
+              setError(error);
+          }
+      );
+  };
     
     const handleSearch= (event) => {
         event.preventDefault();
-        //console.log("inside button fn");
+        setData(null);setTotalItem(0);
+       if(miles!="" && city==""){
+        setCityError("Please enter a city to search");
+         setData(null);
+         setDirections(null);
+                
+          setTotalItem(0);
+                setCount(0);
+                setPage(1);
+       }
+       else{
+        setCityError("");
+        const token = localStorage.getItem('token');
+        // set the with credentials to true
+        axios.defaults.withCredentials = true;
+
         axios
-        .get('/api/gethelp', { params: { name: name , miles : miles, city :city,datafilter:datafilter,type:'button'} }) 
+        .get('/api/gethelp', { params: { name: name , miles : miles, city :city,datafilter:datafilter,user_location:UserCompleteAddress} }, {
+          headers : {
+              authtoken: token
+          }
+          }) 
         .then(
             (response) => {
-              
                 setData(response?.data?.resources);
                 setDirections(null);
-                setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
                 
-               //setCity(response.data.user_currentcity)
-                //console.log(user_loc);
+                setTotalItem(Object.keys(response?.data?.resources).length);
+                setCount(Math.ceil((Object.keys(response?.data?.resources).length) / pageSize));
+                setPage(1);
             },
             (error) => {
                 console.log(error);
                 setError(error);
             }
         );
+          }
     };
    
     const { isLoaded } = useJsApiLoader({
       id: 'google-map-script',
       googleMapsApiKey: "AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw"
     })
+    const getCurrentUserLocation=() =>{      
+      navigator.geolocation.getCurrentPosition(function(position) {
+      //console.log("position",position);
+      console.log("Latitude is :", position.coords.latitude);
+      console.log("Longitude is :", position.coords.longitude);
+      let location={lat: position.coords.latitude, lng: position.coords.longitude}
+      setCurrentloc(location);currentloc=location;
+      console.log(currentloc);
+      var geocoder = new google.maps.Geocoder,
+    latitude = position.coords.latitude, //sub in your latitude
+    longitude =position.coords.longitude, //sub in your longitude
+    city="",
+    state="";
+    geocoder.geocode({'location': {lat:latitude, lng:longitude}}, function(results, status) {
+     if (status === google.maps.GeocoderStatus.OK) {
+    results.forEach(function(element){
+      element.address_components.forEach(function(element2){
+        element2.types.forEach(function(element3){
+          switch(element3){
+            case 'administrative_area_level_1':
+              state = element2.long_name;
+              break;
+            case 'locality':
+              city = element2.long_name;
+              break;
+          }
+        })
+      });
+    });
+    setUserCompleteAddress(results[0].formatted_address);UserCompleteAddress=results[0].formatted_address;
+    setCity(city+", "+state);handlePageLoad();
+  }
+});
+
+  
+ 
+      });
+
+  };
   
     const [map, setMap] = React.useState(null);
   
     const onLoad = React.useCallback(function callback(map) {
       const bounds = new window.google.maps.LatLngBounds();
       map.fitBounds(bounds);
-      setMap(map)
+      setMap(map);
+      if(ignoreStat ==false){
+      getCurrentUserLocation();
+       }
+      
     }, [])
   
     const onUnmount = React.useCallback(function callback(map) {
@@ -152,9 +218,6 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
    const getDirections = (resource) => {
       const directionsService = new google.maps.DirectionsService();
      let destination=resource.address;
-     //let origin="2239 McLaughlin Ave,San Jose,95122"
-    // console.log(destination);
-    // console.log(currentloc);
   if (origin !== null && destination !== null) {
       directionsService.route(
         {
@@ -270,7 +333,8 @@ onChange={handleRadioChange}
                             />
                             
                             <br />
-                            <br />            
+                            <br />    
+                            <div style={{ color: 'red' }}>{CityError}</div>     
                            
                            
                             
@@ -333,7 +397,7 @@ onChange={handleRadioChange}
         {resource.Description}
         </Typography> 
         <Typography variant="body2" color="text.secondary">
-        {resource.type != "resource" ? ("Available on " +resource.availableDate) :(resource.SKU)+" item(s) available"}
+        {resource.type != "resource" ? ("Available on " +moment(resource.availableDate).format('MM/DD/YYYY')) :(resource.SKU)+" item(s) available"}
         </Typography>
         <Typography   variant="body2" color="text.secondary">
             {resource.distance+"miles"}</Typography>
@@ -345,14 +409,14 @@ onChange={handleRadioChange}
       <CardActions>
        
         <Box style={{ marginLeft: "auto" }}>
-        <Button size="large" component={Link} to={`/app/gethelp/:${resource._id}/:${resource.type}`}>Reserve</Button></Box>
+        <Button size="large" component={Link} to={`/app/gethelp/:${resource._id}/:${resource.type}/:gethelpitem`}>Reserve</Button></Box>
       </CardActions>
       
                 
                     </Card>
                     </Grid>))}
                     </Grid>):null}
-                </Box><div><br></br>{"Items per Page: "}<select onChange={handlePageSizeChange} value={pageSize}>
+                </Box><div><br></br>{"Total Items: "}{totalitem} &nbsp;&nbsp;{"Items per Page: "}<select onChange={handlePageSizeChange} value={pageSize}>
               {pageSizes.map((size) => (
                 <option key={size} value={size}>
                   {size}
@@ -378,13 +442,13 @@ onChange={handleRadioChange}
         onUnmount={onUnmount}
       >
           {currentloc !== null && (<Marker  title="Your current location" key="marker_1" position={currentloc} />)}
-          {data != null ? (data.map((resource) => (<Marker title={resource.Name} key={resource._id} position={resource.location} />))):null}
+          {data != null && directions == null ? (data.map((resource) => (<Marker title={resource.markertitle} key={resource._id} position={resource.location} />))):null}
         { /* Child components, such as markers, info windows, etc. */ }
         {directions !== null && (
                 <DirectionsRenderer
                   directions={directions}
                   defaultOptions={{
-                    suppressMarkers: true
+                    suppressMarkers: false
                   }}
                 />
                 

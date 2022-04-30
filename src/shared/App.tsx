@@ -45,10 +45,11 @@ const App: React.FC<any> = ({ _id }) => {
                                 <DashboardLayout>
                                     <Switch>
                                         <Route path={'/app/account'} component={Account} />
-                                        <Route
-                                            path={'/app/gethelp/:id/:type'}
-                                            component={GetHelpItem}
-                                        />
+                                        
+                                        <Route 
+                                            path={'/app/gethelp/:id/:type/:pagetype'} 
+                                            component={GetHelpItem} 
+                                        /> 
                                         <Route path={'/app/gethelp'} component={GetHelp} />
                                         <Route path={'/app/dashboard'} component={Dashboard} />
                                         <Route
