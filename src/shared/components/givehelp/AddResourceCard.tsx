@@ -57,12 +57,14 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [findImage, setFindImage] = React.useState(false);
 
     const [resourceNameError, setResourceNameError] = useState("");
+    const [resourceError, setResourceError] = useState(false);
     const [categoryError, setCategoryError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
     const [phoneNumError, setPhoneNumError] = useState("");
     const [addressError, setAddressError] = useState("");
     const [skuError, setSkuError] = useState("");
     const [cityError, setCityError] = useState("");
+    const [cityErr, setCityErr] = useState(false);
     const [stateError, setStateError] = useState("");
     const [zipcodeError, setZipcodeError] = useState("");
     const [countryError, setCountryError] = useState("");
@@ -70,6 +72,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     let validateForm = () => {
         if (resourceName === "" || resourceName === null) {
             setResourceNameError("Please enter resource name");
+            setResourceError(true);
             return false;
         } else if (category === "" || category === null) {
             setCategoryError("Please enter a category");
@@ -88,6 +91,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             return false;
         }  else if (city === "" || city === null) {
             setCityError("Please enter your city of residence");
+            setCityErr(true)
             return false;
         } else if (state === "" || city === null) {
             setCityError("Please enter your state of residence");
@@ -125,6 +129,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleNameChange = (e) => {
         setResourceNameError("")
+        setResourceError(false);
         setResourceName(e.target.value)
     };
 
@@ -232,6 +237,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleCityChange = (e) => {
         setCityError("")
+        setCityErr(false);
         setCity(e.target.value)
     };
 
@@ -347,15 +353,16 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 <Grid item xs={3}>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{resourceNameError}</div>
+                                    {/* <div style={{ color: 'red' }}>{resourceNameError}</div> */}
                                     <TextField
                                         required
+                                        error={resourceError}
                                         label="Resource Name"
                                         defaultValue={resourceName}
                                         onChange={handleNameChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                        helperText="Mask, Oxygen Cylinder, Sanitizer etc."
+                                        helperText={resourceNameError}
                                         
                                     />
                                 </Grid>
@@ -430,14 +437,16 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{cityError}</div>
+                                    {/* <div style={{ color: 'red' }}>{cityError}</div> */}
                                     <TextField
                                         required
+                                        error={cityErr}
                                         id="outlined-required"
                                         label="City"
                                         value={city}
                                         onChange={handleCityChange}
                                         variant="outlined"
+                                        helperText={cityError}
                                         sx={{ m: 1, width: '50ch' }}
                                         
                                     />

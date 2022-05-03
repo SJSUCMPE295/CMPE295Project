@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { withStyles} from '@material-ui/styles'
+import { styled } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -41,6 +42,10 @@ const BorderLinearProgress = withStyles((theme) => ({
       backgroundColor: '#1a90ff',
     },
   }))(LinearProgress);
+
+  const Input = styled('input')({
+    display: 'none',
+  });
 function getModalStyle() {
     // const top = 50 + rand();
     // const left = 50 + rand();
@@ -79,6 +84,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
     const [progress, setProgress] = useState(0);
     const [errMessage, setErrMessage] = useState('');
+    const [fileErrMessage, setFileErrMessage] = useState('');
     useEffect(() => {
         // set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -133,6 +139,9 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
 
     const handleSubmit = (values) => {
         console.log(values);
+        if(fileUrl == '') {
+            setFileErrMessage("License upload is required");
+        } else {
         userMetaData.isDoctor = values.isDoctor;
         const payload = {
             userId: doctorProfile.userId,
@@ -180,6 +189,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                     setErrMessage('System Error, contact Administrator!');
                }
            );
+            }
     }
     return (
         <>
@@ -191,6 +201,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                             qualification: userProfileReducer?.doctor?.qualification,
                             experience: userProfileReducer?.doctor?.experience,
                             description: userProfileReducer?.doctor?.description,
+                            file: null,
                             isSubmitting: false,
                         }}
                         validationSchema={Yup.object().shape({
@@ -216,8 +227,8 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                                 is: true,
                                 then: Yup.string().required('Description is required')})
                         })}
-                        onSubmit={(values) => {
-                            console.log('insde submit');
+                        onSubmit={(values, errors) => {
+                            console.log('insde submit', errors);
                             values.isSubmitting = true;
                             handleSubmit(values);
                         }}
@@ -348,7 +359,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                                 style={{ marginRight: '50px' }}
                             >
                                 {fileUploadTitle}
-                            <input type="file" hidden onChange={saveFile} />
+                            <input type="file" hidden onChange={saveFile}  />
                         </Button>
                         }
                         {progress>0 && progress<100 && (
@@ -386,7 +397,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                     }}
                 >
                     <Button color="primary" variant="contained" 
-                    onClick={handleSubmit}
+                        onClick={handleSubmit}
                     >
                             Save details
                     </Button>
