@@ -198,7 +198,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         } else {
             setAddress('');
             setCity('');
-            setCountry('');
+            setCountry('United States of America');
             setZipcode('');
             setState('');
             setPhoneNum('');
@@ -251,6 +251,8 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         const obj = countryNames.find(({ name }) => name === e.target.value);
         setCode(getCode(e.target.value))
         setDialCode(obj.dial_code)
+        console.log("Getting dial code")
+        console.log(obj.dial_code)
     };
 
 
@@ -443,7 +445,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
                                         label="Select State"
                                         name="state"
@@ -454,6 +455,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value={state}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        InputLabelProps={{ shrink: true }} 
                                     >
                                         {stateArray.map((option) => (
                                             <option key={option.label} value={option.value}>
@@ -474,7 +476,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{countryError}</div>
+                                    {/* <div style={{ color: 'red' }}>{countryError}</div> */}
                                     <TextField
                                         label="Select Country"
                                         name="country"
@@ -484,7 +486,8 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         SelectProps={{ native: true }}
                                         value={country}
                                         variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
+                                        sx={{ m: 1, width: '400px' }}
+                                        InputLabelProps={{ shrink: true }} 
                                     >
                                         {countryArray.map((option) => (
                                             <option key={option.label} value={option.value}>
@@ -504,7 +507,9 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value={zipcode}
                                         onChange={handleZipcodeChange}
                                         variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
+                                        sx={{ m: 1, width: '400px' }}
+                                        InputLabelProps={{ shrink: zipcode?true:false }}
+                                        
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
@@ -514,9 +519,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         sx={{ m: 1 }}
                                         value={dialCode}
                                         style = {{width: 70}}
-                                        // InputProps={{
-                                        //     readOnly: true,
-                                        // }}
                                     />
                                 </Grid>
                                 <Grid item xs={3}>
