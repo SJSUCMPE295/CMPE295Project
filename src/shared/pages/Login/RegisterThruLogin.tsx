@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
 import countries from 'i18n-iso-countries';
+import { connect } from 'react-redux';
 // import './Register.css';
 import {
     Box,
@@ -30,10 +31,9 @@ import { createUserProfile, saveUserName } from '../../store/constants/action-ty
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 // import RootState from '../../store/rootReducer';
 
-const RegisterThruLogin = () => {
+const RegisterThruLogin = ({userProfileReducer}) => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(true);
     countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
     const countryObj = countries.getNames('en', { select: 'official' });
     const countryArray = Object.entries(countryObj).map(([key, value]) => {
@@ -42,73 +42,48 @@ const RegisterThruLogin = () => {
             value: value,
         };
     });
-    const [user, setUser] = React.useState(useSelector((state: any) => state.loginReducer.email));
+    const [user, setUser] = React.useState(userProfileReducer.email);
     const genderOptions = [
         {
             key: 1,
             value: 'Female',
         },
         {
-            key: 1,
+            key: 2,
             value: 'Male',
         },
         {
-            key: 1,
+            key: 3,
             value: 'Do not want to specify',
         },
     ];
-    const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
-    const [speciality, setSpeciality] = React.useState('');
-    const [specialityOptions, setSpecialityOptions] = React.useState([]);
-    useEffect(() => {
-        // set the with credentials to true
-        axios.defaults.withCredentials = true;
-        // make a post request with the user data
-        axios.get(serverUrl + 'static/speciality').then(
-            (response) => {
-                console.log('axios call');
-                if (response.status === 200) {
-                    console.log('updated successfully', response.data[0].name);
-                    setSpecialityOptions(response.data[0].name);
-                    setLoading(false);
-                }
-            },
-            (error) => {
-                console.log('register error');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
-            }
-        );
-    }, [1]);
-
     const handleSubmit = (values) => {
         console.log('inside submit');
         console.log('first page data', user);
         const isDoctor = checked;
         const payload = {
             userName: user,
-            //password = 005',
             firstName: values.firstName,
             lastName: values.lastName,
             userMetaData: {
                 isDoctor: checked,
                 gender: values.gender,
+                appNotifications: true,
+                emailNotifications: true,
+                phoneCalls: true,
             },
             profile: {
-                phoneNumber: values.phoneNumber,
+                phoneNumber: values.phonenumber,
                 profileActive: true,
                 profilePic: '',
             },
             address: {
                 location: values.address1,
-                // address2: address2,
                 city: values.city,
                 state: values.state,
                 country: values.country,
-                zipCode: values.zipCode,
+                zipCode: values.zipcode,
             },
         };
         console.log("payload", payload);
@@ -151,24 +126,6 @@ const RegisterThruLogin = () => {
         );
     };
 
-    const handleChangeSpeciality = (event) => {
-        setSpeciality(event.target.value);
-    };
-
-    const saveFile = (event) => {
-        if (event.target.files[0] === null) {
-            return;
-        }
-        const fileName = event.target.files[0].name;
-        const storage = getStorage();
-        const storageRef = ref(storage, `/${user}/${fileName}`);
-
-        const file = event.target.files[0];
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot);
-            setFileUploadTitle(snapshot.metadata.name);
-        });
-    };
     return (
         <>
             <Helmet>
@@ -204,17 +161,18 @@ const RegisterThruLogin = () => {
                             city: Yup.string().max(255).required('City is required'),
                             country: Yup.string().max(255).required('Country is required'),
                             state: Yup.string().max(255).required('State is required'),
-                            zipcode: Yup.string().max(255).required('Zipcode is required'),
-                            gender: Yup.string().max(255).required('Gender is required'),
-                            phonenumber: Yup.string().test(
-                                'len',
-                                'Phone Number should be 10 digits',
-                                (val) => val.length === 10
-                            ),
-                            // policy: Yup.boolean().oneOf([true], 'This field must be checked'),
+                            zipcode: Yup.string().required('ZipCode is required')
+                                .matches(/^[0-9]+$/, "Must be a number")
+                                .min(5, "Must be exactly 5 digits")
+                                .max(5, "Must be exactly 5 digits"),
+                            gender: Yup.string().max(255),
+                            phonenumber: Yup.string().required('Phone Number is required')
+                                .matches(/^[0-9]+$/, "Must be a number")
+                                .min(10, "Must be exactly 10 digits")
+                                .max(10, "Must be exactly 10 digits")
                         })}
                         onSubmit={(values) => {
-                            console.log('insde submit');
+                            console.log('insde submit', values);
                             values.isSubmitting = true;
                             handleSubmit(values);
                         }}
@@ -251,7 +209,6 @@ const RegisterThruLogin = () => {
                                         onChange={handleChange}
                                         value={values.firstName}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -266,7 +223,6 @@ const RegisterThruLogin = () => {
                                         onChange={handleChange}
                                         value={values.lastName}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -285,51 +241,6 @@ const RegisterThruLogin = () => {
                                         }
                                     />
                                 </div>
-                                {checked ? (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                        }}
-                                    >
-                                        <FormControl
-                                            variant="standard"
-                                            sx={{ m: 1, minWidth: 120 }}
-                                        >
-                                            <InputLabel id="demo-simple-select-standard-label">
-                                                Speciality
-                                            </InputLabel>
-
-                                            <Select
-                                                labelId="demo-simple-select-standard-label"
-                                                id="demo-simple-select-standard"
-                                                value={speciality}
-                                                onChange={handleChangeSpeciality}
-                                                label="Speciality"
-                                                style={{ width: '250px' }}
-                                            >
-                                                isLoading ? (<div>Loading ...</div>) : (
-                                                {specialityOptions.map((speciality) => (
-                                                    <MenuItem key={speciality} value={speciality}>
-                                                        {speciality}
-                                                    </MenuItem>
-                                                ))}
-                                                )
-                                            </Select>
-                                        </FormControl>
-                                        <Button
-                                            variant="text"
-                                            component="label"
-                                            size="small"
-                                            style={{ marginRight: '50px' }}
-                                        >
-                                            {fileUploadTitle}
-                                            <input type="file" hidden onChange={saveFile} />
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    ''
-                                )}
                                 <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                                     <div
                                         style={{
@@ -348,7 +259,6 @@ const RegisterThruLogin = () => {
                                             value={values.gender}
                                             variant="outlined"
                                             fullWidth
-                                            required
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
@@ -368,10 +278,6 @@ const RegisterThruLogin = () => {
                                         label="Phone Number"
                                         margin="normal"
                                         name="phonenumber"
-                                        type="number"
-                                        // onInput={(e)=>{
-                                        //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                                        // }}
                                         style={{
                                             width: '250px',
                                             height: '60px',
@@ -394,7 +300,6 @@ const RegisterThruLogin = () => {
                                         value={values.address1}
                                         variant="outlined"
                                         fullWidth
-                                        required
                                     />
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -408,7 +313,6 @@ const RegisterThruLogin = () => {
                                         onChange={handleChange}
                                         value={values.city}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -426,7 +330,6 @@ const RegisterThruLogin = () => {
                                             value={values.country}
                                             variant="outlined"
                                             fullWidth
-                                            required
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
@@ -450,7 +353,6 @@ const RegisterThruLogin = () => {
                                         onChange={handleChange}
                                         value={values.state}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -465,40 +367,11 @@ const RegisterThruLogin = () => {
                                         onChange={handleChange}
                                         value={values.zipcode}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
                                     />
                                 </div>
-                                {/* <Box
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        ml: 3.5,
-                                    }}
-                                >
-                                    <Checkbox
-                                        checked={values.policy}
-                                        name="policy"
-                                        onChange={handleChange}
-                                    />
-                                    <Typography color="textSecondary" variant="body1">
-                                        I have read the{' '}
-                                        <Link
-                                            color="primary"
-                                            component={RouterLink}
-                                            to="#"
-                                            underline="always"
-                                            variant="h6"
-                                        >
-                                            Terms and Conditions
-                                        </Link>
-                                    </Typography>
-                                </Box> */}
-                                {/* {Boolean(touched.policy && errors.policy) && (
-                                    <FormHelperText error>{errors.policy}</FormHelperText>
-                                )} */}
                                 <Box sx={{ py: 2, alignItems: 'center', display: 'flex', ml: 5 }}>
                                     <Button
                                         color="primary"
@@ -528,40 +401,6 @@ const RegisterThruLogin = () => {
                                         Sign in
                                     </Link>
                                 </Typography>
-                                {/* <Box
-                                    sx={{
-                                        pb: 1,
-                                        pt: 3,
-                                    }}
-                                >
-                                    <Typography
-                                        align="center"
-                                        color="textSecondary"
-                                        variant="body1"
-                                    >
-                                        or signup with social platform
-                                    </Typography>
-                                </Box> */}
-                                {/* <Grid
-                                    container
-                                    spacing={3}
-                                    display="flex"
-                                    flexDirection="column"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    <Grid item xs={12} md={6}>
-                                        <Button
-                                            fullWidth
-                                            startIcon={<GoogleIcon />}
-                                            onClick={handleSubmit}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Login with Google
-                                        </Button>
-                                    </Grid>
-                                </Grid> */}
                             </form>
                         )}
                     </Formik>
@@ -570,5 +409,14 @@ const RegisterThruLogin = () => {
         </>
     );
 };
+const mapStateToProps = ({ userProfileReducer }) => ({
+    userProfileReducer,
+});
 
-export default RegisterThruLogin;
+const mapDispatchToProps = {};
+
+const ConnectedRegisterThruLoginDetails = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(RegisterThruLogin);
+export default ConnectedRegisterThruLoginDetails;

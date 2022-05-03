@@ -62,7 +62,7 @@ const Login = () => {
                 if (response.data.status === 401) {
                     //redirect to register page
                     history.push('/login2register', { replace: true });
-                }
+                } else
                 if (response.status === 200) {
                     const user = response?.data?.user || response?.data;
                     console.log('login successful', user);
@@ -83,22 +83,6 @@ const Login = () => {
                 console.log('login error', error);
             }
         );
-    };
-
-    const downloadProfilePic = (email) => {
-        const storage = getStorage();
-        const storageRef = ref(storage, `/${email}/profilePic/userPic`);
-        getDownloadURL(storageRef)
-            .then((url) => {
-                setPicUrl(url);
-            })
-            .catch((error) => {
-                switch (error.code) {
-                    case 'storage/object-not-found':
-                        setPicUrl('');
-                        break;
-                }
-            });
     };
     return (
         <>
