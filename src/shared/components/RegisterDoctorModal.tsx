@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import { withStyles} from '@material-ui/styles'
+import { styled } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import {  useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -41,6 +42,10 @@ const BorderLinearProgress = withStyles((theme) => ({
       backgroundColor: '#1a90ff',
     },
   }))(LinearProgress);
+
+  const Input = styled('input')({
+    display: 'none',
+  });
 function getModalStyle() {
     // const top = 50 + rand();
     // const left = 50 + rand();
@@ -222,8 +227,8 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                                 is: true,
                                 then: Yup.string().required('Description is required')})
                         })}
-                        onSubmit={(values) => {
-                            console.log('insde submit');
+                        onSubmit={(values, errors) => {
+                            console.log('insde submit', errors);
                             values.isSubmitting = true;
                             handleSubmit(values);
                         }}
