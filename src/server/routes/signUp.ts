@@ -17,6 +17,9 @@ router.post('/user', async (req, res) => {
         userMetaData = {
             isDoctor: false,
             gender: '',
+            appNotifications: true,
+            emailNotifications: true,
+            phoneCalls: true,
         },
         profile = {
             phoneNumber: 0,
@@ -70,30 +73,37 @@ router.post('/user/register', async (req, res) => {
     console.log('req.body : ', req.body);
     const { userName, userMetaData, profile, address } = req.body;
     console.log('address', address);
-    try {
-        // console.log('data', userdata);
-        userModel.findOneAndUpdate(
-            { userName },
-            { userMetaData, profile, address },
-            { new: true },
-            (error, user) => {
-                if (user) {
-                    console.log('success', user);
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain',
-                    });
-                    res.end(JSON.stringify({ message: 'Register successful', data: user }));
-                } else {
-                    res.writeHead(404, {
-                        'Content-Type': 'text/plain',
-                    });
-                    res.end('UserName does not exists');
+    if(userName != undefined){
+        try {
+            // console.log('data', userdata);
+            userModel.findOneAndUpdate(
+                { userName },
+                { userMetaData, profile, address },
+                { new: true },
+                (error, user) => {
+                    if (user) {
+                        console.log('success', user);
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain',
+                        });
+                        res.end(JSON.stringify({ message: 'Register successful', data: user }));
+                    } else {
+                        res.writeHead(404, {
+                            'Content-Type': 'text/plain',
+                        });
+                        res.end('UserName does not exists');
+                    }
                 }
-            }
-        );
-    } catch (err) {
-        console.log('Exception Error', err);
-        res.json({ message: err });
+            );
+        } catch (err) {
+            console.log('Exception Error', err);
+            res.json({ message: err });
+        }
+    } else {
+        res.writeHead(404, {
+            'Content-Type': 'text/plain',
+        });
+        res.end('UserName is incorrect');
     }
 });
 

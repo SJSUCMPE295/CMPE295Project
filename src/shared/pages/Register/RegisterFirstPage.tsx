@@ -102,7 +102,7 @@ const RegisterFirstPage = () => {
                                 .required('Email is required'),
                             firstName: Yup.string().max(255).required('First name is required'),
                             lastName: Yup.string().max(255).required('Last name is required'),
-                            password: Yup.string().max(255).required('password is required'),
+                            password: Yup.string().max(255).required('Password is required'),
                         })}
                         onSubmit={(values) => {
                             console.log(values);
