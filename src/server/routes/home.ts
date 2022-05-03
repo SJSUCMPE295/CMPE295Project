@@ -44,7 +44,7 @@ router.get('/', async (_req, res) => {
                         response.usertransactions = data_ut;
                         const userappointment = DoctorAppointment.aggregate( [
                             {
-                                $match: { userId: user}//,status:true 
+                                $match: { userId: user,status:true }
                             },
                             {
                                 $project: {
