@@ -76,6 +76,9 @@ React.useEffect(() => {
               .then(
                   (response) => {
                     ignoreStat = true;
+                       if(response?.data?.resources[0].type=="resource"){
+                      setQuantity(response?.data?.resources[0].SKU);
+                    }
                       setData(response?.data?.resources);
                       //setCity(response.data.user_currentcity);
                       //setCurrentloc(response?.data?.user_currentaddress);
@@ -122,6 +125,7 @@ React.useEffect(() => {
       state="";
       geocoder.geocode({'location': {lat:latitude, lng:longitude}}, function(results, status) {
        if (status === google.maps.GeocoderStatus.OK) {
+            ignoreStat = true;
       results.forEach(function(element){
         element.address_components.forEach(function(element2){
           element2.types.forEach(function(element3){
