@@ -246,7 +246,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
         } else {
             setAddress('');
             setCity('');
-            setCountry('');
+            setCountry('United States of America');
             setZipcode('');
             setState('');
             setPhoneNum('');
@@ -460,7 +460,6 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{stateError}</div>
                                     <TextField
                                         label="Select State"
                                         name="state"
@@ -471,6 +470,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         value={state}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        InputLabelProps={{ shrink: true }}
                                     >
                                         {stateArray.map((option) => (
                                             <option key={option.label} value={option.value}>
@@ -489,7 +489,6 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                     /> */}
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{countryError}</div>
                                     <TextField
                                         label="Select Country"
                                         name="country"
@@ -500,6 +499,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         value={country}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        InputLabelProps={{ shrink: true }}
                                     >
                                         {countryArray.map((option) => (
                                             <option key={option.label} value={option.value}>
@@ -529,6 +529,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                             onChange={handleZipcodeChange}
                                             variant="outlined"
                                             sx={{ m: 1, width: '50ch' }}
+                                            InputLabelProps={{ shrink: zipcode?true:false }}
                                         />
                                     </Grid>
                                     <Grid item xs={3}></Grid>
