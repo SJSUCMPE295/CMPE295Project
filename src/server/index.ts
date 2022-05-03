@@ -19,7 +19,7 @@ import giveHelpRouter from './routes/givehelp';
 import signUpRouter from './routes/signUp';
 import loginRouter from './routes/login';
 import userRouter from './routes/user';
-import staticRouter from './routes/static';
+import commonRouter from './routes/common';
 import checkAuth from './middleware/auth';
 
 const mongoose = require('mongoose');
@@ -54,7 +54,7 @@ app.use('/api/home', homeRouter);
 app.use('/api/signup', checkAuth, signUpRouter);
 app.use('/api/login', checkAuth, loginRouter);
 app.use('/api/appointments', appointmentsRouter);
-app.use('/api/static', staticRouter);
+app.use('/api/common', commonRouter);
 app.use('/api/user', checkAuth, userRouter);
 
 /* End: Api routes*/

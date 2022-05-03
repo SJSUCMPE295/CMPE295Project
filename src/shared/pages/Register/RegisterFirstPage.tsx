@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
+import { deleteUser } from "firebase/auth";
 import {
     Box,
     Button,
@@ -31,8 +32,9 @@ const RegisterFirstPage = () => {
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
     const [error, setError] = useState('');
+    const [userExists, setUserExists] = useState(false);
 
-    const { register, signinWithGoogle } = useAuth();
+    const { login, register, signinWithGoogle } = useAuth();
     const mounted = useMounted();
 
     const handleSubmit = (userName, firstName, lastName, token) => {
@@ -40,6 +42,19 @@ const RegisterFirstPage = () => {
        apiCall(userName, firstName, lastName, token);
     };
 
+    const checkUser = (userName) => {
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios.post(serverUrl + 'common/exists', userName).then(
+          (response) => {
+              console.log("axios call")
+            if (response.status === 200) {
+                setUserExists(true);
+            } else if(response.status === 404) {
+                setUserExists(false);
+            }
+          });
+    }
     const apiCall = (userName, firstName, lastName, token) => {
         const payload = {
             userName: userName,
@@ -118,7 +133,13 @@ const RegisterFirstPage = () => {
                                     setAlert(true);
                                     switch (error.code) {
                                         case 'auth/email-already-in-use': {
-                                            setError('User Name already exists');
+                                            setError('User Name already registered');
+                                            // checkUser(values.userName);
+                                            // if(userExists) {
+                                                
+                                            // } else {
+                                          
+                                            // }
                                             break;
                                         }
                                     }

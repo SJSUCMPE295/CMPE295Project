@@ -83,7 +83,7 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
         // set the with credentials to true
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.get(serverUrl + 'static/speciality').then(
+        axios.get(serverUrl + 'common/speciality').then(
           (response) => {
               console.log("axios call")
             if (response.status === 200) {
