@@ -173,6 +173,7 @@ const GetHelp : FunctionComponent<any> = ({userProfileReducer,props }) => {
     state="";
     geocoder.geocode({'location': {lat:latitude, lng:longitude}}, function(results, status) {
      if (status === google.maps.GeocoderStatus.OK) {
+          ignoreStat = true;
     results.forEach(function(element){
       element.address_components.forEach(function(element2){
         element2.types.forEach(function(element3){
