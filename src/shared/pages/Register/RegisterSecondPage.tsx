@@ -39,11 +39,22 @@ const RegisterSecondPage = () => {
             value: value,
         };
     });
-    const genderOptions = ['Female', 'Male', 'Do not want to specify'];
+    const genderOptions = [
+        {
+            key: 1,
+            value: 'Female',
+        },
+        {
+            key: 2,
+            value: 'Male',
+        },
+        {
+            key: 3,
+            value: 'Do not want to specify',
+        },
+    ];
 
-    // const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     var [checked, setChecked] = React.useState(false);
-    const [speciality, setSpeciality] = React.useState('');
    
     const handleSubmit = (address1, city, zipCode, phoneNumber, state, gender, country) => {
         const payload = {
@@ -51,6 +62,9 @@ const RegisterSecondPage = () => {
             userMetaData: {
                 isDoctor: checked,
                 gender: gender,
+                appNotifications: true,
+                emailNotifications: true,
+                phoneCalls: true,
             },
             profile: {
                 phoneNumber: phoneNumber,
@@ -135,13 +149,15 @@ const RegisterSecondPage = () => {
                             city: Yup.string().max(255).required('City is required'),
                             country: Yup.string().max(255).required('Country is required'),
                             state: Yup.string().max(255).required('State is required'),
-                            zipcode: Yup.string().max(255).required('Zipcode is required'),
-                            gender: Yup.string().max(255).required('Gender is required'),
-                            phonenumber: Yup.string().test(
-                                'len',
-                                'Phone Number should be 10 digits',
-                                (val) => val.length === 10
-                            ),
+                            zipcode: Yup.string().required('ZipCode is required')
+                                .matches(/^[0-9]+$/, "Must be a number")
+                                .min(5, "Must be exactly 5 digits")
+                                .max(5, "Must be exactly 5 digits"),
+                            gender: Yup.string().max(255),
+                            phonenumber: Yup.string().required('Phone Number is required')
+                                .matches(/^[0-9]+$/, "Must be a number")
+                                .min(10, "Must be exactly 10 digits")
+                                .max(10, "Must be exactly 10 digits")
                         })}
                         onSubmit={(values) => {
                             values.isSubmitting = true;
@@ -206,13 +222,14 @@ const RegisterSecondPage = () => {
                                             value={values.gender}
                                             variant="outlined"
                                             fullWidth
-                                            required
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
                                             {genderOptions.map((state) => (
-                                                <MenuItem value={state}>{state}</MenuItem>
+                                                <MenuItem key={state.key} value={state.value}>
+                                                    {state.value}
+                                                </MenuItem>
                                             ))}
                                         </TextField>
                                     </div>
@@ -224,10 +241,6 @@ const RegisterSecondPage = () => {
                                         label="Phone Number"
                                         margin="normal"
                                         name="phonenumber"
-                                        type="number"
-                                        // onInput={(e)=>{
-                                        //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,10)
-                                        // }}
                                         style={{
                                             width: '250px',
                                             height: '60px',
@@ -250,7 +263,6 @@ const RegisterSecondPage = () => {
                                         value={values.address1}
                                         variant="outlined"
                                         fullWidth
-                                        required
                                     />
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -264,7 +276,6 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.city}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -286,7 +297,6 @@ const RegisterSecondPage = () => {
                                             value={values.country}
                                             variant="outlined"
                                             fullWidth
-                                            required
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
@@ -310,7 +320,6 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.state}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}
@@ -325,7 +334,6 @@ const RegisterSecondPage = () => {
                                         onChange={handleChange}
                                         value={values.zipcode}
                                         variant="outlined"
-                                        required
                                         style={{
                                             width: '250px',
                                         }}

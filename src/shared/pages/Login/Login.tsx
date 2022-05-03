@@ -25,10 +25,8 @@ import { loginAction, createUserProfile, saveUserName } from '../../store/consta
 
 const Login = () => {
     const history = useHistory();
-    const location = useLocation();
     const dispatch = useDispatch();
     const [alert, setAlert] = useState(false);
-    const [picUrl, setPicUrl] = useState('');
     const [error, setError] = useState('');
     const { login, signinWithGoogle } = useAuth();
     const mounted = useMounted();

@@ -25,7 +25,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
         userName: userProfileReducer.userName,
         phone: userProfileReducer?.profile?.phoneNumber,
         address: userProfileReducer?.address?.location,
-        zipCode: userProfileReducer?.address?.zipCode,
+        zipcode: userProfileReducer?.address?.zipCode,
         city: userProfileReducer?.address?.city,
         state: userProfileReducer?.address?.state,
         country: userProfileReducer?.address?.country,
@@ -75,7 +75,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                 city: values.city,
                 state: values.state,
                 country: values.country,
-                zipCode: values.zipCode,
+                zipCode: values.zipcode,
             },
         };
         const token = localStorage.getItem('token');
@@ -204,14 +204,13 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 label="ZipCode"
                                 name="zipcode"
                                 onChange={handleChange}
-                                type="number"
                                 InputProps={{
                                     inputProps: {
                                         max: 5,
                                         min: 5,
                                     },
                                 }}
-                                value={values.zipCode}
+                                value={values.zipcode}
                                 variant="outlined"
                             />
                         </Grid>
@@ -221,7 +220,6 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 label="State"
                                 name="state"
                                 onChange={handleChange}
-                                required
                                 value={values.state}
                                 variant="outlined"
                             />
