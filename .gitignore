@@ -106,6 +106,7 @@ dist
 # ------------------------------------
 node_modules
 node_modules/
+build/
 logs/*.log
 /.vagrant
 .webpack-cache
