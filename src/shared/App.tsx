@@ -31,7 +31,8 @@ import './styles.css';
 const App: React.FC<any> = ({ _id, id }) => {
     const history = useHistory();
     React.useEffect(() => {
-        const isSignedIn = _id || id;
+        const token = typeof window !== 'undefined' && window.localStorage.getItem('token');
+        const isSignedIn = _id || id || token;
         if (!isSignedIn) {
             history.push('/login');
         }
