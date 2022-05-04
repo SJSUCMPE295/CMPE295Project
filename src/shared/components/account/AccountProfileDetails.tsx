@@ -23,9 +23,9 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
         firstName: userProfileReducer.firstName,
         lastName: userProfileReducer.lastName,
         userName: userProfileReducer.userName,
-        phone: userProfileReducer?.profile?.phoneNumber,
+        // phone: userProfileReducer?.profile?.phoneNumber,
         address: userProfileReducer?.address?.location,
-        zipcode: userProfileReducer?.address?.zipCode,
+        // zipcode: userProfileReducer?.address?.zipCode,
         city: userProfileReducer?.address?.city,
         state: userProfileReducer?.address?.state,
         country: userProfileReducer?.address?.country,
@@ -36,6 +36,12 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
     console.log('Values', values);
     const dispatch = useDispatch();
     const [saveMsg, setSaveMsg] = useState('');
+    const [phone, setPhone] = useState(userProfileReducer?.profile?.phoneNumber)
+    const [phoneNumbeErr, setPhoneNumberErr] = useState(false);
+    const [phoneNumbeErrMsg, setPhoneNumberErrMsg] = useState('');
+    const [zipcode, setZipcode] = useState(userProfileReducer?.address?.zipCode)
+    const [zipcodeErr, setZipcodeErr] = useState(false);
+    const [zipcodeErrMsg, setZipcodeErrMsg] = useState('');
     countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
     const countryObj = countries.getNames('en', { select: 'official' });
     const countryArray = Object.entries(countryObj).map(([key, value]) => {
@@ -51,22 +57,43 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
         });
     };
 
-    // const handleChangePhone = (event) => {
-    //     setValues({
-    //         ...values,
-    //         [event.target.name]: event.target.value,
-    //     });
-    //     if(values.phone)
-    // };
+    const validation = () => {
+        console.log('phone length', phone.toString().length);
+        if(phone.toString().length != 10) {
+            setPhoneNumberErr(true);
+            setPhoneNumberErrMsg('Phone Number should be 10 digits');
+            return false;
+        } else if(zipcode.toString().length != 5){
+            setZipcodeErr(true);
+            setZipcodeErrMsg('ZipCode should be 5 digits');
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    const handleChangePhone = (event) => {
+        setPhoneNumberErr(false);
+        setPhoneNumberErrMsg('');
+        setPhone(event.target.value);
+    };
+
+    const handleChangeZipcode = (event) => {
+        setZipcodeErr(false);
+        setZipcodeErrMsg('');
+        setZipcode(event.target.value);
+    };
 
     const handleSave = () => {
+        const isValid = validation();
+        if(isValid) {
         const payload = {
             userName: values.userName,
             firstName: values.firstName,
             lastName: values.lastName,
             userMetaData: values.userMetaData,
             profile: {
-                phoneNumber: values.phone,
+                phoneNumber: phone,
                 profileActive: values?.profileActive,
                 profilePic: values?.profilePic,
             },
@@ -75,7 +102,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                 city: values.city,
                 state: values.state,
                 country: values.country,
-                zipCode: values.zipcode,
+                zipCode: zipcode,
             },
         };
         const token = localStorage.getItem('token');
@@ -118,6 +145,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                 //   });
             }
         );
+        }
     };
 
     return (
@@ -134,7 +162,6 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 label="First name"
                                 name="firstName"
                                 onChange={handleChange}
-                                required
                                 value={values.firstName}
                                 variant="outlined"
                             />
@@ -145,28 +172,18 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 label="Last name"
                                 name="lastName"
                                 onChange={handleChange}
-                                required
                                 value={values.lastName}
                                 variant="outlined"
                             />
                         </Grid>
-                        {/* <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Email Address"
-                                name="email"
-                                onChange={handleChange}
-                                required
-                                value={values.email}
-                                variant="outlined"
-                            />
-                        </Grid> */}
                         <Grid item md={6} xs={12}>
                             <TextField
                                 fullWidth
                                 label="Phone Number"
+                                error={phoneNumbeErr}
+                                helperText={phoneNumbeErrMsg}
                                 name="phone"
-                                onChange={handleChange}
+                                onChange={handleChangePhone}
                                 type="number"
                                 InputProps={{
                                     inputProps: {
@@ -174,7 +191,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                         min: 10,
                                     },
                                 }}
-                                value={values.phone}
+                                value={phone}
                                 variant="outlined"
                             />
                         </Grid>
@@ -203,14 +220,16 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 fullWidth
                                 label="ZipCode"
                                 name="zipcode"
-                                onChange={handleChange}
+                                error={zipcodeErr}
+                                helperText={zipcodeErrMsg}
+                                onChange={handleChangeZipcode}
                                 InputProps={{
                                     inputProps: {
                                         max: 5,
                                         min: 5,
                                     },
                                 }}
-                                value={values.zipcode}
+                                value={zipcode}
                                 variant="outlined"
                             />
                         </Grid>
