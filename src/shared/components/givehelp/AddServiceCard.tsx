@@ -98,7 +98,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             setCityError('Please enter your city of residence');
             setIfCityError(true);
             return false;
-        } else if (state === '' || city === null) {
+        } else if (state === '' || state === null) {
             setCityError('Please enter your state of residence');
             setIfCityError(true);
             return false;
@@ -108,7 +108,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
         } else if (zipcode === null || zipcode === '') {
             setZipcodeError('Please enter your zipcode');
             return false;
-        } else if (zipcode.toString().length != 5) {
+        } else if ((zipcode?.toString ? zipcode.toString() : zipcode)?.length != 5) {
             setZipcodeError('Please enter a valid zipcode!');
             setIfZipcodeError(true);
             return false;
@@ -116,7 +116,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             setPhoneNumError('Please enter your contact number');
             setIfPhoneNumError(true);
             return false;
-        } else if (phoneNum.toString().length != 10) {
+        } else if ((phoneNum?.toString ? phoneNum.toString() : phoneNum)?.length != 10) {
             setPhoneNumError('Please enter a valid phone number!');
             setIfPhoneNumError(true);
             return false;
