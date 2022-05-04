@@ -68,7 +68,8 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
     // const [open, setOpen] = React.useState(false);
     const [modalStyle] = React.useState(getModalStyle);
     const [isLoading, setLoading] = useState(true);
-    const[saveMsg, setSaveMsg] = useState('');
+    const[fileErr, setFileErr] = useState(false);
+    const [fileErrMsg, setFileErrMsg] = useState('');
     const dispatch = useDispatch();
     var userMetaData = userProfileReducer.userMetaData;
     const [doctorProfile, setDoctorProfile] = React.useState({
@@ -78,13 +79,14 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
         licenseUrl: ''
 
     });
+    var fileName = '';
     const [fileUrl, setFileUrl] = useState('');
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload License');
     const [fileLink, setFileLink] = React.useState('');
     const [specialityOptions, setSpecialityOptions] = React.useState([]);
     const [progress, setProgress] = useState(0);
     const [errMessage, setErrMessage] = useState('');
-    const [fileErrMessage, setFileErrMessage] = useState('');
+    // const [fileErrMsg, setFileErrMsg] = useState('');
     useEffect(() => {
         // set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -109,10 +111,9 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
       },[1]);
 
     const saveFile = (event) => {
-        if (event.target.files[0] === null) {
-            return;
-        }
-        const fileName = event.target.files[0].name;
+        setFileErr(false);
+        setFileErrMsg('');
+        fileName = event.target.files[0].name;
         const storage = getStorage();
         const storageRef = ref(storage, `/${doctorProfile.user}/license/${fileName}`);
 
@@ -139,9 +140,15 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
 
     const handleSubmit = (values) => {
         console.log(values);
-        if(fileUrl == '') {
-            setFileErrMessage("License upload is required");
+        console.log('filename', fileName);
+        if(fileLink == '' && values.isDoctor) {
+            setFileErr(true);
+            setFileErrMsg('Please upload the license');
+            return;
         } else {
+            setFileErr(false);
+            setFileErrMsg('');
+       
         userMetaData.isDoctor = values.isDoctor;
         const payload = {
             userId: doctorProfile.userId,
@@ -189,14 +196,16 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                     setErrMessage('System Error, contact Administrator!');
                }
            );
-            }
-    }
+        }
+     }
+    
     return (
         <>
                 <Formik
+                // userProfileReducer?.doctor?.speciality
                         initialValues={{
                             isDoctor: userProfileReducer?.userMetaData?.isDoctor,
-                            speciality: userProfileReducer?.userMetaData?.speciality,
+                            speciality: '',
                             license: userProfileReducer?.doctor?.license,
                             qualification: userProfileReducer?.doctor?.qualification,
                             experience: userProfileReducer?.doctor?.experience,
@@ -355,6 +364,8 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                                 variant="outlined"
                                 component="label"
                                 size="small"
+                                onClick={()=>{setFileErr(false);
+                                    setFileErrMsg('');}}
                                 disabled={!values.isDoctor}
                                 style={{ marginRight: '50px' }}
                             >
@@ -362,6 +373,8 @@ export const RegisterDoctorModal = ({closeModal, open, userProfileReducer, ...pr
                             <input type="file" hidden onChange={saveFile}  />
                         </Button>
                         }
+                        
+                        {fileErr && <div style={{font:"sans-serif", color:"red"}}> {fileErrMsg}</div>}
                         {progress>0 && progress<100 && (
                         <Box className="mb25" display="flex" alignItems="center">
                             <Box width="100%" mr={1}>
