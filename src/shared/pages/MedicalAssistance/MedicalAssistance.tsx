@@ -98,7 +98,7 @@ export const DoctorSchedule = (props) => {
         const formData = new FormData(e.target);
         const formProps = objectWithBoolean(Object.fromEntries(formData));
         if (!formProps?.available) {
-            formProps?.availability = '';
+            formProps.availability = '';
         }
         console.log(formProps);
         setDoctorsAvailability({ ...formProps, id: props?.id })
