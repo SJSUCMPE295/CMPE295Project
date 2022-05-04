@@ -28,13 +28,15 @@ import GiveHelpScreen from './pages/GiveHelp/LandingPage';
 import AddResourceScreen from './pages/GiveHelp/AddResource';
 import MyTransactions from './pages/MyTransactions/MyTransactions';
 import './styles.css';
-const App: React.FC<any> = ({ _id }) => {
+const App: React.FC<any> = ({ _id, id }) => {
     const history = useHistory();
-    // React.useEffect(() => {
-    //     if (!_id) {
-    //         history.push('/login');
-    //     }
-    // }, [_id]);
+    React.useEffect(() => {
+        const token = typeof window !== 'undefined' && window.localStorage.getItem('token');
+        const isSignedIn = _id || id || token;
+        if (!isSignedIn) {
+            history.push('/login');
+        }
+    }, [_id, id]);
     return (
         <AuthContextProvider>
             <StyledEngineProvider injectFirst>
