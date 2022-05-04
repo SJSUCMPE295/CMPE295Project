@@ -35,14 +35,14 @@ const metadata = {
 
 const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = userProfileReducer.id;
+    const userId = userProfileReducer._id;
     const [resourceName, setResourceName] = useState("");
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
     const [dialCode, setDialCode] = useState("+1");
     const [address, setAddress] = useState("");
-    const [sku, setSku] = useState(0);
+    const [sku, setSku] = useState(null);
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zipcode, setZipcode] = useState(null);
@@ -57,59 +57,74 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [findImage, setFindImage] = React.useState(false);
 
     const [resourceNameError, setResourceNameError] = useState("");
-    const [resourceError, setResourceError] = useState(false);
+    const [ifResourceError, setIfResourceError] = useState(false);
     const [categoryError, setCategoryError] = useState("");
+    const [ifCategoryError, setIfCategoryError] = useState(false);
     const [descriptionError, setDescriptionError] = useState("");
+    const [ifDescriptionError, setIfDescriptionError] = useState(false);
     const [phoneNumError, setPhoneNumError] = useState("");
+    const [ifPhoneNumError, setIfPhoneNumError] = useState(false);
     const [addressError, setAddressError] = useState("");
+    const [ifAddressError, setIfAddressError] = useState(false);
     const [skuError, setSkuError] = useState("");
+    const [ifSkuError, setIfSkuError] = useState(false);
     const [cityError, setCityError] = useState("");
-    const [cityErr, setCityErr] = useState(false);
+    const [ifCityError, setIfCityError] = useState(false);
     const [stateError, setStateError] = useState("");
     const [zipcodeError, setZipcodeError] = useState("");
+    const [ifZipcodeError, setIfZipcodeError] = useState(false);
     const [countryError, setCountryError] = useState("");
 
     let validateForm = () => {
         if (resourceName === "" || resourceName === null) {
             setResourceNameError("Please enter resource name");
-            setResourceError(true);
+            setIfResourceError(true);
             return false;
         } else if (category === "" || category === null) {
             setCategoryError("Please enter a category");
+            setIfCategoryError(true);
             return false;
         } else if (sku.toString() === "0" || sku === null) {
             setSkuError("Please enter valid quantity");
+            setIfSkuError(true);
             return false;
         } else if (sku < 0) {
             setSkuError("Please enter a valid quantity");
+            setIfSkuError(true);
             return false;
         } else if (description === "" || description === null) {
             setDescriptionError("Please enter description of resource");
+            setIfDescriptionError(true);
             return false;
         } else if (address === "" || address === null) {
             setAddressError("Please enter a valid address");
+            setIfAddressError(true);
             return false;
         }  else if (city === "" || city === null) {
             setCityError("Please enter your city of residence");
-            setCityErr(true)
+            setIfCityError(true)
             return false;
         } else if (state === "" || city === null) {
-            setCityError("Please enter your state of residence");
+            setStateError("Please enter your state of residence");
             return false;
         } else if (country === "" || country === null) {
             setCountryError("Please enter your country of residence");
             return false;
         } else if (zipcode === null || zipcode === "") {
             setZipcodeError("Please enter your zipcode");
+            setIfZipcodeError(true);
             return false;
         } else if (zipcode.toString().length != 5) {
             setZipcodeError("Please enter a valid zipcode!");
+            setIfZipcodeError(true);
             return false;
         } else if (phoneNum === "" || phoneNum === null) {
             setPhoneNumError("Please enter your contact number");
+            setIfPhoneNumError(true);
             return false;
         } else if (phoneNum.toString().length != 10) {
             setPhoneNumError("Please enter a valid phone number!");
+            setIfPhoneNumError(true);
             return false;
         } else {
             return true;
@@ -129,7 +144,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleNameChange = (e) => {
         setResourceNameError("")
-        setResourceError(false);
+        setIfResourceError(false);
         setResourceName(e.target.value)
     };
 
@@ -212,32 +227,37 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleCategoryChange = (e) => {
         setCategoryError("")
+        setIfCategoryError(false)
         setCategory(e.target.value)
     };
 
     const handleDescriptionChange = (e) => {
         setDescriptionError("")
+        setIfDescriptionError(false)
         setDescription(e.target.value)
     };
 
     const handlePhoneNumChange = (e) => {
         setPhoneNumError("")
+        setIfPhoneNumError(false)
         setPhoneNum(e.target.value)
     };
 
     const handleAddressChange = (e) => {
         setAddressError("")
+        setIfAddressError(false)
         setAddress(e.target.value)
     };
 
     const handleSkuChange = (e) => {
         setSkuError("")
+        setIfSkuError(false)
         setSku(e.target.value)
     };
 
     const handleCityChange = (e) => {
         setCityError("")
-        setCityErr(false);
+        setIfCityError(false);
         setCity(e.target.value)
     };
 
@@ -248,6 +268,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleZipcodeChange = (e) => {
         setZipcodeError("")
+        setIfZipcodeError(false)
         setZipcode(e.target.value)
     };
 
@@ -257,8 +278,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         const obj = countryNames.find(({ name }) => name === e.target.value);
         setCode(getCode(e.target.value))
         setDialCode(obj.dial_code)
-        console.log("Getting dial code")
-        console.log(obj.dial_code)
     };
 
 
@@ -356,7 +375,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     {/* <div style={{ color: 'red' }}>{resourceNameError}</div> */}
                                     <TextField
                                         required
-                                        error={resourceError}
+                                        error={ifResourceError}
                                         label="Resource Name"
                                         defaultValue={resourceName}
                                         onChange={handleNameChange}
@@ -369,31 +388,35 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             </Grid>
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
                                 <Grid item xs={3}>
-                                <div style={{ color: 'red' }}>{categoryError}</div>
+                                {/* <div style={{ color: 'red' }}>{categoryError}</div> */}
                                     <TextField
                                         required
+                                        error={ifCategoryError}
                                         id="outlined-required"
                                         label="Category Name"
                                         defaultValue={category}
                                         onChange={handleCategoryChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={categoryError}
                                         
                                     />
                                 </Grid>
                                 <Grid item xs={3}>
                                 </Grid>
                                 <Grid item xs={3}>
-                                <div style={{ color: 'red' }}>{skuError}</div>
+                                {/* <div style={{ color: 'red' }}>{skuError}</div> */}
                                     <TextField
                                         required
+                                        error={ifSkuError}
                                         id="outlined-number"
                                         label="Quantity"
                                         type="number"
                                         defaultValue={sku}
                                         onChange={handleSkuChange}
                                         sx={{ m: 1, width: '50ch' }}
-                                        helperText="Quanity should not be less than or equal to 0"
+                                        placeholder="Quanity should not be less than or equal to 0."
+                                        helperText={skuError}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}     
@@ -402,14 +425,16 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             </Grid>
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
                                 <Grid item xs={4}>
-                                    <div style={{ color: 'red' }}>{descriptionError}</div>
+                                    {/* <div style={{ color: 'red' }}>{descriptionError}</div> */}
                                     <TextField
                                         id="outlined-decsription-input"
+                                        error={ifDescriptionError}
                                         label="Description"
                                         value={description}
                                         onChange={handleDescriptionChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '106ch' }}
+                                        helperText={descriptionError}
                                         
                                     />
                                 </Grid>
@@ -423,15 +448,17 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{addressError}</div>
+                                    {/* <div style={{ color: 'red' }}>{addressError}</div> */}
                                     <TextField
                                         required
+                                        error={ifAddressError}
                                         id="outlined-required"
                                         label="Address"
                                         value={address}
                                         onChange={handleAddressChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={addressError}
                                         
                                     />
                                 </Grid>
@@ -440,7 +467,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     {/* <div style={{ color: 'red' }}>{cityError}</div> */}
                                     <TextField
                                         required
-                                        error={cityErr}
+                                        error={ifCityError}
                                         id="outlined-required"
                                         label="City"
                                         value={city}
@@ -473,15 +500,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         ))}
 
                                     </TextField>
-                                    {/* <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="State"
-                                        value={state}
-                                        onChange={handleStateChange}
-                                        variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
-                                    /> */}
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
@@ -508,9 +526,10 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{zipcodeError}</div>
+                                    {/* <div style={{ color: 'red' }}>{zipcodeError}</div> */}
                                     <TextField
                                         required
+                                        error={ifZipcodeError}
                                         id="outlined-required-input"
                                         label="Zipcode"
                                         value={zipcode}
@@ -518,7 +537,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         sx={{ m: 1, width: '400px' }}
                                         InputLabelProps={{ shrink: zipcode?true:false }}
-                                        
+                                        helperText={zipcodeError}   
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
@@ -531,16 +550,17 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     />
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{phoneNumError}</div>
-                                    
+                                    {/* <div style={{ color: 'red' }}>{phoneNumError}</div> */}
                                     <TextField
                                         required
+                                        error={ifPhoneNumError}
                                         id="outlined-required-input"
                                         label="Phone Number"
                                         value={phoneNum}
                                         onChange={handlePhoneNumChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '41ch' }}
+                                        helperText={phoneNumError}
                                     />
                                 </Grid>
                             </Grid>

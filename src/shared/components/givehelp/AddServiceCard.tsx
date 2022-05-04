@@ -29,7 +29,9 @@ const metadata = {
 
 const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...props }) => {
     const [check, setCheck] = useState(false);
-    const userId = userProfileReducer.id;
+    const userId = userProfileReducer._id;
+    // console.log("User Id")
+    // console.log(userProfileReducer._id)
     const [serviceName, setServiceName] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
@@ -53,36 +55,52 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const today=new Date();
 
     const [serviceNameError, setServiceNameError] = useState("");
+    const [ifServiceError, setIfServiceError] = useState(false);
     const [availabilityError, setAvailabilityError] = useState("");
+    const [ifAvailabilityError, setIfAvailabilityError] = useState(false);
     const [categoryError, setCategoryError] = useState("");
+    const [ifCategoryError, setIfCategoryError] = useState(false);
     const [descriptionError, setDescriptionError] = useState("");
+    const [ifDescriptionError, setIfDescriptionError] = useState(false);
     const [phoneNumError, setPhoneNumError] = useState("");
+    const [ifPhoneNumError, setIfPhoneNumError] = useState(false);
     const [addressError, setAddressError] = useState("");
+    const [ifAddressError, setIfAddressError] = useState(false);
     const [cityError, setCityError] = useState("");
+    const [ifCityError, setIfCityError] = useState(false);
     const [stateError, setStateError] = useState("");
     const [zipcodeError, setZipcodeError] = useState("");
+    const [ifZipcodeError, setIfZipcodeError] = useState(false);
     const [countryError, setCountryError] = useState("");
 
     let validateForm = () => {
         if (serviceName === "" || serviceName === null) {
             setServiceNameError("Please enter service name");
+            setIfServiceError(true);
             return false;
         } else if(availability.getTime() < today.getTime()) {
             setAvailabilityError("Please select a valid date!");
+            setIfAvailabilityError(true);
+            return false;
         } else if (category === "" || category === null) {
             setCategoryError("Please enter a category");
+            setIfCategoryError(true);
             return false;
         } else if (description === "" || description === null) {
             setDescriptionError("Please enter description of service");
+            setIfDescriptionError(true);
             return false;
         } else if (address === "" || address === null) {
             setAddressError("Please enter a valid address");
+            setIfAddressError(true);
             return false;
         }  else if (city === "" || city === null) {
             setCityError("Please enter your city of residence");
+            setIfCityError(true)
             return false;
         } else if (state === "" || city === null) {
             setCityError("Please enter your state of residence");
+            setIfCityError(true)
             return false;
         } else if (country === "" || country === null) {
             setCountryError("Please enter your country of residence");
@@ -92,12 +110,15 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             return false;
         } else if (zipcode.toString().length != 5) {
             setZipcodeError("Please enter a valid zipcode!");
+            setIfZipcodeError(true);
             return false;
         } else if (phoneNum === "" || phoneNum === null) {
             setPhoneNumError("Please enter your contact number");
+            setIfPhoneNumError(true);
             return false;
         } else if (phoneNum.toString().length != 10) {
             setPhoneNumError("Please enter a valid phone number!");
+            setIfPhoneNumError(true);
             return false;
         } else {
             return true;
@@ -165,31 +186,37 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
 
     const handleNameChange = (e) => {
         setServiceNameError("")
+        setIfServiceError(false)
         setServiceName(e.target.value);
     };
 
     const handleCategoryChange = (e) => {
         setCategoryError("")
+        setIfCategoryError(false)
         setCategory(e.target.value);
     };
 
     const handleDescriptionChange = (e) => {
         setDescriptionError("")
+        setIfDescriptionError(false)
         setDescription(e.target.value);
     };
 
     const handlePhoneNumChange = (e) => {
         setPhoneNumError("")
+        setIfPhoneNumError(false)
         setPhoneNum(e.target.value);
     };
 
     const handleAddressChange = (e) => {
         setAddressError("")
+        setIfAddressError(false)
         setAddress(e.target.value);
     };
 
     const handleCityChange = (e) => {
         setCityError("")
+        setIfCityError(false)
         setCity(e.target.value);
     };
 
@@ -200,11 +227,13 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
 
     const handleZipcodeChange = (e) => {
         setZipcodeError("")
+        setIfZipcodeError(false)
         setZipcode(e.target.value);
     };
 
     const handleAvailabilityChange = (date) => {
         setAvailabilityError("")
+        setIfAvailabilityError(false)
         setAvailability(date);
     };
 
@@ -341,20 +370,27 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                     />
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <div style={{ color: 'red' }}>{serviceNameError}</div>
+                                    {/* <div style={{ color: 'red' }}>{serviceNameError}</div> */}
                                     <TextField
                                         required
+                                        error={ifServiceError}
                                         id="outlined-required"
                                         label="Service Name"
                                         defaultValue={serviceName}
                                         onChange={handleNameChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '30ch' }}
-                                        helperText="Car pool, Accomodation etc. "
+                                        placeholder="Car Pool, Accomodation etc"
+                                        helperText={serviceNameError}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}  
+
                                     />
+                                    <FormHelperText style={{color: 'red'}}></FormHelperText>
                                 </Grid>
                                 <Grid item xs={4} alignItems="right">
-                                    <div style={{ color: 'red' }}>{availabilityError}</div>
+                                    {/* <div style={{ color: 'red' }}>{availabilityError}</div> */}
                                     <Button
                                         color="primary"
                                         variant="contained"
@@ -377,6 +413,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         cancelBtnText="Cancel"
                                     />
                                     <FormHelperText>*Only dates from future are valid</FormHelperText>
+                                    <FormHelperText style={{color: 'red'}}>{availabilityError}</FormHelperText>
                                 </Grid>
                             </Grid>
 
@@ -388,28 +425,32 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                 justify-content="center"
                             >
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{categoryError}</div>
+                                    {/* <div style={{ color: 'red' }}>{categoryError}</div> */}
                                     <TextField
                                         required
+                                        error={ifCategoryError}
                                         id="outlined-required"
                                         label="Category Name"
                                         defaultValue={category}
                                         onChange={handleCategoryChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={categoryError}
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
-                                    <div style={{ color: 'red' }}>{descriptionError}</div>
+                                    {/* <div style={{ color: 'red' }}>{descriptionError}</div> */}
                                     <TextField
                                         required
+                                        error={ifDescriptionError}
                                         id="outlined-required"
                                         label="Description"
                                         defaultValue={description}
                                         onChange={handleDescriptionChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={descriptionError}
                                     />
                                 </Grid>
                             </Grid>
@@ -423,11 +464,6 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         />
                                     </FormGroup>
                                 </Grid>
-                                {/* <Grid item xs={4} >
-                                    <Button color="primary" variant="contained" size="large">
-                                        Upload Image
-                                    </Button>
-                                </Grid> */}
                             </Grid>
                             <Grid
                                 container
@@ -436,27 +472,31 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                 zIndex={1}
                             >
                                 <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{addressError}</div>
+                                    {/* <div style={{ color: 'red' }}>{addressError}</div> */}
                                     <TextField
                                         required
+                                        error={ifAddressError}
                                         id="outlined-required"
                                         label="Address"
                                         value={address}
                                         onChange={handleAddressChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={addressError}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <div style={{ color: 'red' }}>{cityError}</div>
+                                    {/* <div style={{ color: 'red' }}>{cityError}</div> */}
                                     <TextField
                                         required
+                                        error={ifCityError}
                                         id="outlined-required"
                                         label="City"
                                         value={city}
                                         onChange={handleCityChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
+                                        helperText={cityError}
                                     />
                                 </Grid>
                                 <Grid item xs={6}>
@@ -478,15 +518,6 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                             </option>
                                         ))}
                                     </TextField>
-                                    {/* <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="State"
-                                        value={state}
-                                        onChange={handleStateChange}
-                                        variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
-                                    /> */}
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
@@ -507,22 +538,14 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                             </option>
                                         ))}
                                     </TextField>
-                                    {/* <TextField
-                                        required
-                                        id="outlined-required-input"
-                                        label="Country"
-                                        value={country}
-                                        onChange={handleCountryChange}
-                                        variant="outlined"
-                                        sx={{ m: 1, width: '50ch' }}
-                                    /> */}
                                 </Grid>
                             </Grid>
                                 <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                     <Grid item xs={3}>
-                                        <div style={{ color: 'red' }}>{zipcodeError}</div>
+                                        {/* <div style={{ color: 'red' }}>{zipcodeError}</div> */}
                                         <TextField
                                             required
+                                            error={ifZipcodeError}
                                             id="outlined-required-input"
                                             label="Zipcode"
                                             value={zipcode}
@@ -530,6 +553,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                             variant="outlined"
                                             sx={{ m: 1, width: '50ch' }}
                                             InputLabelProps={{ shrink: zipcode?true:false }}
+                                            helperText={zipcodeError}
                                         />
                                     </Grid>
                                     <Grid item xs={3}></Grid>
@@ -539,21 +563,20 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                             sx={{ m: 1 }}
                                             value={dialCode}
                                             style = {{width: 70}}
-                                            // InputProps={{
-                                            //     readOnly: true,
-                                            // }}
                                         />
                                     </Grid>
                                     <Grid item xs={3}>
-                                        <div style={{ color: 'red' }}>{phoneNumError}</div>
+                                        {/* <div style={{ color: 'red' }}>{phoneNumError}</div> */}
                                         <TextField
                                             required
+                                            error={ifPhoneNumError}
                                             id="outlined-required-input"
                                             label="Phone Number"
                                             value={phoneNum}
                                             onChange={handlePhoneNumChange}
                                             variant="outlined"
                                             sx={{ m: 1, width: '41ch' }}
+                                            helperText={phoneNumError}
                                         />
                                     </Grid>
                                 </Grid>
