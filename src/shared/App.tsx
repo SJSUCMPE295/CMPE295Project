@@ -30,9 +30,11 @@ import MyTransactions from './pages/MyTransactions/MyTransactions';
 import './styles.css';
 const App: React.FC<any> = ({ _id, id }) => {
     const history = useHistory();
+    const { search } = useLocation();
     React.useEffect(() => {
         const token = typeof window !== 'undefined' && window.localStorage.getItem('token');
-        const isSignedIn = _id || id || token;
+        const query = new URLSearchParams(search);
+        const isSignedIn = _id || id || token || query.get('mode');
         if (!isSignedIn) {
             history.push('/login');
         }
