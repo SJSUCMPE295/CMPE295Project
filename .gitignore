@@ -117,7 +117,6 @@ react-codemod
 coverage
 .env
 stuff
-build/*
 yarn-error.log
 tmp
 bundle-stats.json
