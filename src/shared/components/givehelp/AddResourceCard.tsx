@@ -43,7 +43,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [address, setAddress] = useState('');
     const [sku, setSku] = useState(null);
     const [city, setCity] = useState('');
-    const [state, setState] = useState('');
+    const [state, setState] = useState('California');
     const [zipcode, setZipcode] = useState(null);
     const [country, setCountry] = useState('United States of America');
     const [countryNames, setCountryNames] = useState(CountryData);

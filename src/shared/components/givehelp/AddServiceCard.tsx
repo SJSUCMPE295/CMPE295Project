@@ -39,7 +39,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [dialCode, setDialCode] = useState('+1');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
-    const [state, setState] = useState('');
+    const [state, setState] = useState('California');
     const [zipcode, setZipcode] = useState(null);
     const [country, setCountry] = useState('United States of America');
     const [countryNames, setCountryNames] = useState(CountryData);
@@ -74,6 +74,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [countryError, setCountryError] = useState('');
 
     let validateForm = () => {
+        console.log(state, country)
         if (serviceName === '' || serviceName === null) {
             setServiceNameError('Please enter service name');
             setIfServiceError(true);
@@ -99,14 +100,15 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             setIfCityError(true);
             return false;
         } else if (state === '' || state === null) {
-            setCityError('Please enter your state of residence');
-            setIfCityError(true);
+            setStateError('Please enter your state of residence');
+            //setifStateError(true);
             return false;
         } else if (country === '' || country === null) {
             setCountryError('Please enter your country of residence');
             return false;
         } else if (zipcode === null || zipcode === '') {
             setZipcodeError('Please enter your zipcode');
+            setIfZipcodeError(true);
             return false;
         } else if ((zipcode?.toString ? zipcode.toString() : zipcode)?.length != 5) {
             setZipcodeError('Please enter a valid zipcode!');
