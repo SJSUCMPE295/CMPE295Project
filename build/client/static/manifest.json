@@ -1,7 +1,0 @@
-{
-  "bundle.css": "http://localhost:8501/static/bundle.css",
-  "bundle.js": "http://localhost:8501/static/bundle.js",
-  "vendor.css": "http://localhost:8501/static/vendor.css",
-  "vendor.js": "http://localhost:8501/static/vendor.0e5c3dcf.chunk.js",
-  "assets/logo.png": "http://localhost:8501/static/assets/logo.56dd12f6.png"
-}

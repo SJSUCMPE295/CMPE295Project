@@ -16,9 +16,9 @@ import { useState, FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import countries from 'i18n-iso-countries';
+import CountryData from './CountryData.json';
 const { getStates } = require('country-state-picker');
 const { getCode } = require('country-list');
-import CountryData from './CountryData.json';
 
 // const Input = styled('input')({
 //     display: 'none',
@@ -74,7 +74,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [ifZipcodeError, setIfZipcodeError] = useState(false);
     const [countryError, setCountryError] = useState('');
 
-    let validateForm = () => {
+    const validateForm = () => {
         if (resourceName === '' || resourceName === null) {
             setResourceNameError('Please enter resource name');
             setIfResourceError(true);
@@ -83,7 +83,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setCategoryError('Please enter a category');
             setIfCategoryError(true);
             return false;
-        } else if (sku.toString() === '0' || sku === null) {
+        } else if (sku === null || (sku?.toString ? sku.toString() : sku) === '0') {
             setSkuError('Please enter valid quantity');
             setIfSkuError(true);
             return false;
@@ -103,7 +103,8 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setCityError('Please enter your city of residence');
             setIfCityError(true);
             return false;
-        } else if (state === '' || city === null) {
+        } else if (state === '' || state === null) {
+            console.log(state);
             setStateError('Please enter your state of residence');
             return false;
         } else if (country === '' || country === null) {
@@ -113,7 +114,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setZipcodeError('Please enter your zipcode');
             setIfZipcodeError(true);
             return false;
-        } else if (zipcode.toString().length != 5) {
+        } else if ((zipcode?.toString ? zipcode.toString() : zipcode)?.length != 5) {
             setZipcodeError('Please enter a valid zipcode!');
             setIfZipcodeError(true);
             return false;
@@ -121,13 +122,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setPhoneNumError('Please enter your contact number');
             setIfPhoneNumError(true);
             return false;
-        } else if (phoneNum.toString().length != 10) {
+        } else if ((phoneNum?.toString ? phoneNum.toString() : phoneNum)?.length != 10) {
             setPhoneNumError('Please enter a valid phone number!');
             setIfPhoneNumError(true);
             return false;
-        } else {
-            return true;
         }
+        return true;
     };
 
     countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
@@ -147,7 +147,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
 
     const handleImageUpload = (event) => {
         console.log('Reached upload image task');
-        var file = event.target.files[0];
+        const file = event.target.files[0];
         if (file == null || !file) {
             console.log('No image');
             setShowErrorMsg('Error: No image available');
@@ -287,7 +287,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validateForm();
-
+        console.log(isValid);
         if (isValid) {
             const res = await fetch('/api/givehelp/resource', {
                 method: 'POST',
@@ -368,7 +368,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value="Resource"
                                     />
                                 </Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3} />
                                 <Grid item xs={3}>
                                     {/* <div style={{ color: 'red' }}>{resourceNameError}</div> */}
                                     <TextField
@@ -398,7 +398,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         helperText={categoryError}
                                     />
                                 </Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3} />
                                 <Grid item xs={3}>
                                     {/* <div style={{ color: 'red' }}>{skuError}</div> */}
                                     <TextField
@@ -459,7 +459,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         helperText={addressError}
                                     />
                                 </Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3} />
                                 <Grid item xs={3}>
                                     {/* <div style={{ color: 'red' }}>{cityError}</div> */}
                                     <TextField
@@ -489,6 +489,9 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         sx={{ m: 1, width: '50ch' }}
                                         InputLabelProps={{ shrink: true }}
                                     >
+                                        {/*<option key={'none'} value="">*/}
+                                        {/*    Please Select State*/}
+                                        {/*</option>*/}
                                         {stateArray.map((option) => (
                                             <option key={option.label} value={option.value}>
                                                 {option.value}
@@ -496,7 +499,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         ))}
                                     </TextField>
                                 </Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3} />
                                 <Grid item xs={3}>
                                     {/* <div style={{ color: 'red' }}>{countryError}</div> */}
                                     <TextField
@@ -535,7 +538,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         helperText={zipcodeError}
                                     />
                                 </Grid>
-                                <Grid item xs={3}></Grid>
+                                <Grid item xs={3} />
                                 <Grid item xs={1}>
                                     <TextField
                                         id="outlined-read-only-input"
@@ -575,7 +578,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     ): ''} */}
                                     {/* <Modal setOpenModal={showModal} onClose={() => setShowModal(false)} /> */}
                                 </Grid>
-                                <Grid item xs={1}></Grid>
+                                <Grid item xs={1} />
                                 <Grid item xs={3}>
                                     <Button
                                         color="primary"
@@ -587,7 +590,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                     </Button>
                                 </Grid>
 
-                                <Grid item xs={2}></Grid>
+                                <Grid item xs={2} />
                                 <Grid item xs={3}>
                                     <Button
                                         color="primary"

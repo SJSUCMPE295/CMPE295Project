@@ -361,7 +361,7 @@ router.get('/', async (_req, res) => {
         query_params_resource = { City: { $regex: city.trim(), $options: 'i' } };
         query_params_service = { City: { $regex: city.trim(), $options: 'i' } };
     } else if (name != '' && city != '' && miles == '') {
-    /* else if (name == '' && city!='' && miles!='') {//city and miles
+        /* else if (name == '' && city!='' && miles!='') {//city and miles
         
         //update
        
