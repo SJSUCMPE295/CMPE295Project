@@ -220,6 +220,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                                 fullWidth
                                 label="ZipCode"
                                 name="zipcode"
+                                type="number"
                                 error={zipcodeErr}
                                 helperText={zipcodeErrMsg}
                                 onChange={handleChangeZipcode}
