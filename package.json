@@ -226,7 +226,7 @@
     "stylelint-config-prettier": "^8.0.1",
     "stylelint-order": "^4.0.0",
     "stylelint-prettier": "^1.1.2",
-    "swc-loader": "^0.1.15",
+    "swc-loader": "0.1.15",
     "terser-webpack-plugin": "^3.0.1",
     "ts-jest": "^27.0.7",
     "ts-loader": "8.2",
