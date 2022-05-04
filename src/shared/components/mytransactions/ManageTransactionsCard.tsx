@@ -24,7 +24,7 @@ const metadata = {
     contentType: 'image/jpeg',
 };
 const ManageTransactionsCard: FunctionComponent<any> = ({userProfileReducer,props}) => {
-    const token = localStorage.getItem('token');
+    const token = (typeof window !== 'undefined' && window.localStorage.getItem('token')) || null;
            // set the with credentials to true
            axios.defaults.withCredentials = true;
     const history = useHistory();
