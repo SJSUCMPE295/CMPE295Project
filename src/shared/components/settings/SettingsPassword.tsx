@@ -19,7 +19,7 @@ const SettingsPassword = ({ userMetaData }) => {
             });
     };
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         console.log(values);
         profileUpdate({})
             .then((data) => {
@@ -90,6 +90,6 @@ const SettingsPassword = ({ userMetaData }) => {
 const mapStateToProps = ({ userProfileReducer }) => ({
     ...userProfileReducer,
 });
-const mapDispatchToProps = {  };
+const mapDispatchToProps = {};
 const ConnectedSettingsPassword = connect(mapStateToProps, mapDispatchToProps)(SettingsPassword);
 export default ConnectedSettingsPassword;

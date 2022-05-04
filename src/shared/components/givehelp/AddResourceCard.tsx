@@ -17,9 +17,8 @@ import { connect } from 'react-redux';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import countries from 'i18n-iso-countries';
 const { getStates } = require('country-state-picker');
-const { getCode } =require('country-list');
-import CountryData from "./CountryData.json";
-
+const { getCode } = require('country-list');
+import CountryData from './CountryData.json';
 
 // const Input = styled('input')({
 //     display: 'none',
@@ -36,19 +35,19 @@ const metadata = {
 const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...props }) => {
     const [check, setCheck] = useState(false);
     const userId = userProfileReducer._id;
-    const [resourceName, setResourceName] = useState("");
-    const [category, setCategory] = useState("");
-    const [description, setDescription] = useState("");
-    const [phoneNum, setPhoneNum] = useState("");
-    const [dialCode, setDialCode] = useState("+1");
-    const [address, setAddress] = useState("");
+    const [resourceName, setResourceName] = useState('');
+    const [category, setCategory] = useState('');
+    const [description, setDescription] = useState('');
+    const [phoneNum, setPhoneNum] = useState('');
+    const [dialCode, setDialCode] = useState('+1');
+    const [address, setAddress] = useState('');
     const [sku, setSku] = useState(null);
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState("United States of America");
+    const [country, setCountry] = useState('United States of America');
     const [countryNames, setCountryNames] = useState(CountryData);
-    const [code,setCode] = useState('us');
+    const [code, setCode] = useState('us');
     const [showErrorMsg, setShowErrorMsg] = React.useState('');
     const storage = getStorage();
     const [image, setImage] = useState(null);
@@ -56,74 +55,74 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Resource Pic');
     const [findImage, setFindImage] = React.useState(false);
 
-    const [resourceNameError, setResourceNameError] = useState("");
+    const [resourceNameError, setResourceNameError] = useState('');
     const [ifResourceError, setIfResourceError] = useState(false);
-    const [categoryError, setCategoryError] = useState("");
+    const [categoryError, setCategoryError] = useState('');
     const [ifCategoryError, setIfCategoryError] = useState(false);
-    const [descriptionError, setDescriptionError] = useState("");
+    const [descriptionError, setDescriptionError] = useState('');
     const [ifDescriptionError, setIfDescriptionError] = useState(false);
-    const [phoneNumError, setPhoneNumError] = useState("");
+    const [phoneNumError, setPhoneNumError] = useState('');
     const [ifPhoneNumError, setIfPhoneNumError] = useState(false);
-    const [addressError, setAddressError] = useState("");
+    const [addressError, setAddressError] = useState('');
     const [ifAddressError, setIfAddressError] = useState(false);
-    const [skuError, setSkuError] = useState("");
+    const [skuError, setSkuError] = useState('');
     const [ifSkuError, setIfSkuError] = useState(false);
-    const [cityError, setCityError] = useState("");
+    const [cityError, setCityError] = useState('');
     const [ifCityError, setIfCityError] = useState(false);
-    const [stateError, setStateError] = useState("");
-    const [zipcodeError, setZipcodeError] = useState("");
+    const [stateError, setStateError] = useState('');
+    const [zipcodeError, setZipcodeError] = useState('');
     const [ifZipcodeError, setIfZipcodeError] = useState(false);
-    const [countryError, setCountryError] = useState("");
+    const [countryError, setCountryError] = useState('');
 
     let validateForm = () => {
-        if (resourceName === "" || resourceName === null) {
-            setResourceNameError("Please enter resource name");
+        if (resourceName === '' || resourceName === null) {
+            setResourceNameError('Please enter resource name');
             setIfResourceError(true);
             return false;
-        } else if (category === "" || category === null) {
-            setCategoryError("Please enter a category");
+        } else if (category === '' || category === null) {
+            setCategoryError('Please enter a category');
             setIfCategoryError(true);
             return false;
-        } else if (sku.toString() === "0" || sku === null) {
-            setSkuError("Please enter valid quantity");
+        } else if (sku.toString() === '0' || sku === null) {
+            setSkuError('Please enter valid quantity');
             setIfSkuError(true);
             return false;
         } else if (sku < 0) {
-            setSkuError("Please enter a valid quantity");
+            setSkuError('Please enter a valid quantity');
             setIfSkuError(true);
             return false;
-        } else if (description === "" || description === null) {
-            setDescriptionError("Please enter description of resource");
+        } else if (description === '' || description === null) {
+            setDescriptionError('Please enter description of resource');
             setIfDescriptionError(true);
             return false;
-        } else if (address === "" || address === null) {
-            setAddressError("Please enter a valid address");
+        } else if (address === '' || address === null) {
+            setAddressError('Please enter a valid address');
             setIfAddressError(true);
             return false;
-        }  else if (city === "" || city === null) {
-            setCityError("Please enter your city of residence");
-            setIfCityError(true)
+        } else if (city === '' || city === null) {
+            setCityError('Please enter your city of residence');
+            setIfCityError(true);
             return false;
-        } else if (state === "" || city === null) {
-            setStateError("Please enter your state of residence");
+        } else if (state === '' || city === null) {
+            setStateError('Please enter your state of residence');
             return false;
-        } else if (country === "" || country === null) {
-            setCountryError("Please enter your country of residence");
+        } else if (country === '' || country === null) {
+            setCountryError('Please enter your country of residence');
             return false;
-        } else if (zipcode === null || zipcode === "") {
-            setZipcodeError("Please enter your zipcode");
+        } else if (zipcode === null || zipcode === '') {
+            setZipcodeError('Please enter your zipcode');
             setIfZipcodeError(true);
             return false;
         } else if (zipcode.toString().length != 5) {
-            setZipcodeError("Please enter a valid zipcode!");
+            setZipcodeError('Please enter a valid zipcode!');
             setIfZipcodeError(true);
             return false;
-        } else if (phoneNum === "" || phoneNum === null) {
-            setPhoneNumError("Please enter your contact number");
+        } else if (phoneNum === '' || phoneNum === null) {
+            setPhoneNumError('Please enter your contact number');
             setIfPhoneNumError(true);
             return false;
         } else if (phoneNum.toString().length != 10) {
-            setPhoneNumError("Please enter a valid phone number!");
+            setPhoneNumError('Please enter a valid phone number!');
             setIfPhoneNumError(true);
             return false;
         } else {
@@ -140,14 +139,11 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         };
     });
 
-    
-
     const handleNameChange = (e) => {
-        setResourceNameError("")
+        setResourceNameError('');
         setIfResourceError(false);
-        setResourceName(e.target.value)
+        setResourceName(e.target.value);
     };
-
 
     const handleImageUpload = (event) => {
         console.log('Reached upload image task');
@@ -155,10 +151,10 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         if (file == null || !file) {
             console.log('No image');
             setShowErrorMsg('Error: No image available');
-            setFindImage(false)
+            setFindImage(false);
         } else {
             setImage(file);
-            setFindImage(true)
+            setFindImage(true);
             console.log(file);
             const storageRef = ref(
                 storage,
@@ -197,12 +193,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     };
 
     const handleSetCheck = (e) => {
-        setAddressError("");
-        setCityError("");
-        setStateError("");
-        setCountryError("");
-        setZipcodeError("");
-        setPhoneNumError("");
+        setAddressError('');
+        setCityError('');
+        setStateError('');
+        setCountryError('');
+        setZipcodeError('');
+        setPhoneNumError('');
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
@@ -212,8 +208,8 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setCountry(address.country);
             setZipcode(address.zipCode);
             setState(address.state);
-            setCode(getCode(address.country))
-            setDialCode(obj.dial_code)
+            setCode(getCode(address.country));
+            setDialCode(obj.dial_code);
             setPhoneNum(profile.phoneNumber);
         } else {
             setAddress('');
@@ -226,63 +222,61 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
     };
 
     const handleCategoryChange = (e) => {
-        setCategoryError("")
-        setIfCategoryError(false)
-        setCategory(e.target.value)
+        setCategoryError('');
+        setIfCategoryError(false);
+        setCategory(e.target.value);
     };
 
     const handleDescriptionChange = (e) => {
-        setDescriptionError("")
-        setIfDescriptionError(false)
-        setDescription(e.target.value)
+        setDescriptionError('');
+        setIfDescriptionError(false);
+        setDescription(e.target.value);
     };
 
     const handlePhoneNumChange = (e) => {
-        setPhoneNumError("")
-        setIfPhoneNumError(false)
-        setPhoneNum(e.target.value)
+        setPhoneNumError('');
+        setIfPhoneNumError(false);
+        setPhoneNum(e.target.value);
     };
 
     const handleAddressChange = (e) => {
-        setAddressError("")
-        setIfAddressError(false)
-        setAddress(e.target.value)
+        setAddressError('');
+        setIfAddressError(false);
+        setAddress(e.target.value);
     };
 
     const handleSkuChange = (e) => {
-        setSkuError("")
-        setIfSkuError(false)
-        setSku(e.target.value)
+        setSkuError('');
+        setIfSkuError(false);
+        setSku(e.target.value);
     };
 
     const handleCityChange = (e) => {
-        setCityError("")
+        setCityError('');
         setIfCityError(false);
-        setCity(e.target.value)
+        setCity(e.target.value);
     };
 
     const handleStateChange = (e) => {
-        setStateError("")
-        setState(e.target.value)
+        setStateError('');
+        setState(e.target.value);
     };
 
     const handleZipcodeChange = (e) => {
-        setZipcodeError("")
-        setIfZipcodeError(false)
-        setZipcode(e.target.value)
+        setZipcodeError('');
+        setIfZipcodeError(false);
+        setZipcode(e.target.value);
     };
 
     const handleCountryChange = (e) => {
-        setCountryError("")
-        setCountry(e.target.value)
+        setCountryError('');
+        setCountry(e.target.value);
         const obj = countryNames.find(({ name }) => name === e.target.value);
-        setCode(getCode(e.target.value))
-        setDialCode(obj.dial_code)
+        setCode(getCode(e.target.value));
+        setDialCode(obj.dial_code);
     };
 
-
-    
-    const stateObj = getStates(code.toLowerCase())   
+    const stateObj = getStates(code.toLowerCase());
     const stateArray = Object.entries(stateObj).map(([key, value]) => {
         return {
             label: value,
@@ -290,44 +284,49 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
         };
     });
 
-
     const handleSubmit = async (e) => {
-                e.preventDefault();
-                const isValid = validateForm();
+        e.preventDefault();
+        const isValid = validateForm();
 
-                if (isValid) {
-                    const res = await fetch("/api/givehelp/resource", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type" : "application/json"
-                            
-                        },
-                        body: JSON.stringify({
-                        UserId:userId, Resource_Name:resourceName, Category:category, Description:description, Phone_Number:phoneNum, Address:address, SKU:sku, 
-                        City:city, State:state, Zipcode:zipcode, Country:country, ImageUrl:url, 
-                        })
-                    })
-            
-                    const data = await res.json();
-                    console.log(data);
-            
-                    if (res.status === 200){
-                        window.alert("Resource added!");
-                        console.log("Resource added!");
-                        window.location.reload();
-                    } else if (!findImage){
-                        window.alert("Please select an image to upload!");
-                        console.log("Please select an image to upload!");
-                    } else {
-                        window.alert("Failed to upload resource data! Please try again.");
-                        console.log("Failed to upload resource data! Please try again.");
-                        window.location.reload();
-                    }
-                }
-                
+        if (isValid) {
+            const res = await fetch('/api/givehelp/resource', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    UserId: userId,
+                    Resource_Name: resourceName,
+                    Category: category,
+                    Description: description,
+                    Phone_Number: phoneNum,
+                    Address: address,
+                    SKU: sku,
+                    City: city,
+                    State: state,
+                    Zipcode: zipcode,
+                    Country: country,
+                    ImageUrl: url,
+                }),
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 200) {
+                window.alert('Resource added!');
+                console.log('Resource added!');
+                window.location.reload();
+            } else if (!findImage) {
+                window.alert('Please select an image to upload!');
+                console.log('Please select an image to upload!');
+            } else {
+                window.alert('Failed to upload resource data! Please try again.');
+                console.log('Failed to upload resource data! Please try again.');
+                window.location.reload();
             }
- 
-    
+        }
+    };
 
     return (
         <Box {...props}>
@@ -369,8 +368,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value="Resource"
                                     />
                                 </Grid>
-                                <Grid item xs={3}>
-                                </Grid>
+                                <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
                                     {/* <div style={{ color: 'red' }}>{resourceNameError}</div> */}
                                     <TextField
@@ -382,13 +380,12 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         helperText={resourceNameError}
-                                        
                                     />
                                 </Grid>
                             </Grid>
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 3, sm: 9, md: 3 }}>
                                 <Grid item xs={3}>
-                                {/* <div style={{ color: 'red' }}>{categoryError}</div> */}
+                                    {/* <div style={{ color: 'red' }}>{categoryError}</div> */}
                                     <TextField
                                         required
                                         error={ifCategoryError}
@@ -399,13 +396,11 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         helperText={categoryError}
-                                        
                                     />
                                 </Grid>
+                                <Grid item xs={3}></Grid>
                                 <Grid item xs={3}>
-                                </Grid>
-                                <Grid item xs={3}>
-                                {/* <div style={{ color: 'red' }}>{skuError}</div> */}
+                                    {/* <div style={{ color: 'red' }}>{skuError}</div> */}
                                     <TextField
                                         required
                                         error={ifSkuError}
@@ -419,7 +414,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         helperText={skuError}
                                         InputLabelProps={{
                                             shrink: true,
-                                        }}     
+                                        }}
                                     />
                                 </Grid>
                             </Grid>
@@ -435,14 +430,17 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         sx={{ m: 1, width: '106ch' }}
                                         helperText={descriptionError}
-                                        
                                     />
                                 </Grid>
                             </Grid>
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 <Grid item xs={6}>
                                     <FormGroup>
-                                        <FormControlLabel control={<Checkbox/>} label="Use my profile address" onChange={handleSetCheck} />
+                                        <FormControlLabel
+                                            control={<Checkbox />}
+                                            label="Use my profile address"
+                                            onChange={handleSetCheck}
+                                        />
                                     </FormGroup>
                                 </Grid>
                             </Grid>
@@ -459,7 +457,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
                                         helperText={addressError}
-                                        
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
@@ -475,7 +472,6 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         variant="outlined"
                                         helperText={cityError}
                                         sx={{ m: 1, width: '50ch' }}
-                                        
                                     />
                                 </Grid>
                             </Grid>
@@ -491,14 +487,13 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value={state}
                                         variant="outlined"
                                         sx={{ m: 1, width: '50ch' }}
-                                        InputLabelProps={{ shrink: true }} 
+                                        InputLabelProps={{ shrink: true }}
                                     >
                                         {stateArray.map((option) => (
                                             <option key={option.label} value={option.value}>
                                                 {option.value}
                                             </option>
                                         ))}
-
                                     </TextField>
                                 </Grid>
                                 <Grid item xs={3}></Grid>
@@ -514,7 +509,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         value={country}
                                         variant="outlined"
                                         sx={{ m: 1, width: '400px' }}
-                                        InputLabelProps={{ shrink: true }} 
+                                        InputLabelProps={{ shrink: true }}
                                     >
                                         {countryArray.map((option) => (
                                             <option key={option.label} value={option.value}>
@@ -536,8 +531,8 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         onChange={handleZipcodeChange}
                                         variant="outlined"
                                         sx={{ m: 1, width: '400px' }}
-                                        InputLabelProps={{ shrink: zipcode?true:false }}
-                                        helperText={zipcodeError}   
+                                        InputLabelProps={{ shrink: zipcode ? true : false }}
+                                        helperText={zipcodeError}
                                     />
                                 </Grid>
                                 <Grid item xs={3}></Grid>
@@ -546,7 +541,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                         id="outlined-read-only-input"
                                         sx={{ m: 1 }}
                                         value={dialCode}
-                                        style = {{width: 70}}
+                                        style={{ width: 70 }}
                                     />
                                 </Grid>
                                 <Grid item xs={3}>
@@ -574,7 +569,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                             >
                                 <Grid item xs={3}>
                                     <input type="file" onChange={handleImageUpload} />
-                                    
+
                                     {/* {showErrorMsg? (
                                         <Alert severity="error">This is an error message!</Alert>
                                     ): ''} */}
@@ -583,15 +578,15 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
                                 <Grid item xs={1}></Grid>
                                 <Grid item xs={3}>
                                     <Button
-                                            color="primary"
-                                            variant="contained"
-                                            size="medium"
-                                            onClick={handleImageChange}
-                                        >
-                                            Upload Image
-                                        </Button>
+                                        color="primary"
+                                        variant="contained"
+                                        size="medium"
+                                        onClick={handleImageChange}
+                                    >
+                                        Upload Image
+                                    </Button>
                                 </Grid>
-                                
+
                                 <Grid item xs={2}></Grid>
                                 <Grid item xs={3}>
                                     <Button

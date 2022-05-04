@@ -18,7 +18,7 @@ import {
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useAuth } from 'contexts/AuthContext';
-import { loginApi, updateApiToken } from "store/actions";
+import { loginApi, updateApiToken } from 'store/actions';
 import GoogleIcon from '../../icons/Google';
 import useMounted from '../hooks/useMounted';
 import { loginAction, createUserProfile, saveUserName } from '../../store/constants/action-types';
@@ -60,8 +60,7 @@ const Login = () => {
                 if (response.data.status === 401) {
                     //redirect to register page
                     history.push('/login2register', { replace: true });
-                } else
-                if (response.status === 200) {
+                } else if (response.status === 200) {
                     const user = response?.data?.user || response?.data;
                     console.log('login successful', user);
                     dispatch({

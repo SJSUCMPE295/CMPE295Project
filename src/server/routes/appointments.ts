@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
 import { getUserByIdWithAppointments, getAllUsers, getUserById } from 'utils/dao';
+import mongoose from 'mongoose';
 const router = Router();
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
@@ -104,10 +105,27 @@ export const deleteAppointmentHandler = async (req, res) => {
             res.status(500).json({ message: err.message });
         });
 };
+
+export const setAppointmentHandler = async (req, res) => {
+    doctorAppointmentModel
+        .findOneAndUpdate({ _id: new mongoose.Types.ObjectId(req?.params?.id) }, req?.body)
+        .then((data) => {
+            const dataJson = data?.toJSON ? data.toJSON() : data;
+            const updatedData = { ...dataJson, ...req?.body };
+            if (dataJson) {
+                return res.send({ updatedData });
+            }
+            return res.status(500).json({ message: 'no data' });
+        })
+        .catch((err) => {
+            res.status(500).json({ message: err.message });
+        });
+};
 router.get('/doctors', getAllAvailableDoctorsHandler);
 router.get('/doctors/:id', getAllDoctorsAppointmentHandler);
 router.post('/doctors/:id', setDoctorsAvailabilityHandler);
 
 router.post('/', createAppointmentHandler);
+router.put('/:id', setAppointmentHandler);
 router.delete('/:id', deleteAppointmentHandler);
 export default router;

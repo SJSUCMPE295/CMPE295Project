@@ -23,8 +23,9 @@ import {
     setDoctorsAvailability,
     setGetHelp,
     getProfileData,
+    setAppointment,
 } from 'store/actions';
-import { objectWithBoolean, formatDate, prettyDate } from "utils/json";
+import { objectWithBoolean, formatDate, prettyDate } from 'utils/json';
 
 const columns = [
     {
@@ -93,6 +94,21 @@ export const DoctorSchedule = (props) => {
     const handleToggleAvailability = (e, checked) => {
         setAvailable(checked);
     };
+    const handleSubmitActiveUser = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formProps = objectWithBoolean(Object.fromEntries(formData));
+        console.log(formProps, activeUser);
+        setAppointment(activeUser?.id, formProps)
+            .then((data) => {
+                setSuccessAlertWithTimer('Updated');
+                props?.id && props.getProfileData({ id: props?.id });
+                handleClose(false);
+            })
+            .catch((err) => {
+                console.log('Db issue');
+            });
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -113,7 +129,7 @@ export const DoctorSchedule = (props) => {
             });
     };
     const DataTable = ({ rows }) => {
-        if (rows?.length) {
+        if (rows) {
             return (
                 <div style={{ height: '100vh', width: '100%' }}>
                     {!rows.length ? (
@@ -130,8 +146,7 @@ export const DoctorSchedule = (props) => {
                 </div>
             );
         }
-        return null;
-        //return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
+        return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
     };
     return (
         <>
@@ -163,24 +178,25 @@ export const DoctorSchedule = (props) => {
                 </Container>
             </Box>
             <Dialog open={!!activeUser} onClose={handleClose} fullWidth>
-                <DialogTitle>{activeUser?.user?.firstName}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>Notes</DialogContentText>
-                    <form className="" noValidate>
+                <form className="" noValidate onSubmit={handleSubmitActiveUser}>
+                    <DialogTitle>{activeUser?.user?.firstName}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Notes</DialogContentText>
                         <Box sx={{ my: 2 }}>
                             <TextareaAutosize
                                 id="datetime-local"
+                                name="notes"
                                 minRows={10}
-                                defaultValue={activeUser?.user?.notes}
+                                defaultValue={activeUser?.notes}
                                 className="full-width"
                             />
                         </Box>
-                    </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Save</Button>
-                </DialogActions>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button type="submit">Save Details</Button>
+                    </DialogActions>
+                </form>
             </Dialog>
             <Dialog open={open} onClose={handleClose}>
                 <form className="" noValidate onSubmit={handleSubmit}>

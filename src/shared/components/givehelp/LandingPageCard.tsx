@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Box, Card, CardContent, CardHeader, Divider, Button, Grid } from '@material-ui/core';
 import Stack from '@mui/material/Stack';
 import { Link } from 'react-router-dom';
-const giveHelpLogo = 'https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/givehelp-landing-page-logo.jpeg?alt=media&token=e39dac41-4437-473c-bfaf-7939037ec9ed';
-
+const giveHelpLogo =
+    'https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/givehelp-landing-page-logo.jpeg?alt=media&token=e39dac41-4437-473c-bfaf-7939037ec9ed';
 
 const LandingPageCard = (props) => (
     <Box {...props}>
@@ -56,14 +56,15 @@ const LandingPageCard = (props) => (
                             </Button>
                         </Link>
                     </Box>
-                    <Divider sx={{ pt: 3 }}/>
+                    <Divider sx={{ pt: 3 }} />
                     <div>
-                        <img src={giveHelpLogo} 
-                        alt="GiveHelp logo"
-                        style= {{
-                            width: 865,
-                            verticalAlign: "center"
-                        }}
+                        <img
+                            src={giveHelpLogo}
+                            alt="GiveHelp logo"
+                            style={{
+                                width: 865,
+                                verticalAlign: 'center',
+                            }}
                         />
                     </div>
                 </CardContent>

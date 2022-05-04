@@ -28,7 +28,7 @@ router.put('/exists', async (req, res) => {
     const { userName } = req.body;
     try {
         await userModel.findOne(userName, (error, user) => {
-            if(user) {
+            if (user) {
                 return res.json(200).send('User already registered');
             } else {
                 return res.json(404).send('User is not registered');

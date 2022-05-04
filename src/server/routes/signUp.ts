@@ -73,7 +73,7 @@ router.post('/user/register', async (req, res) => {
     console.log('req.body : ', req.body);
     const { userName, userMetaData, profile, address } = req.body;
     console.log('address', address);
-    if(userName != undefined){
+    if (userName != undefined) {
         try {
             // console.log('data', userdata);
             userModel.findOneAndUpdate(
@@ -109,39 +109,52 @@ router.post('/user/register', async (req, res) => {
 
 //API for doctor signup
 router.post('/doctor', async (req, res) => {
-    const query = { userId: req.body.userId}
+    const query = { userId: req.body.userId };
     const update = {
-        speciality: req.body.speciality, 
-        license: req.body.license, 
-        qualification: req.body.qualification, 
-        experience: req.body.experience, 
+        speciality: req.body.speciality,
+        license: req.body.license,
+        qualification: req.body.qualification,
+        experience: req.body.experience,
         description: req.body.description,
         licenseUrl: req.body.licenseUrl,
-        availability: req.body.availability
-    }
+        availability: req.body.availability,
+    };
     const options = {
-        upsert: true, new: true, setDefaultsOnInsert: true
-    }
-    
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+    };
+
     try {
-        doctorModel.findOneAndUpdate(query, update, options,(error, doctor) => {
+        doctorModel.findOneAndUpdate(query, update, options, (error, doctor) => {
             if (error) {
                 console.log('System Error', error);
                 return res.json(500).send('System Error');
             } else {
-                userModel.findOneAndUpdate({_id: req.body.userId}, {userMetaData : req.body.userMetaData}, options,(error, user) => {
-                    if(error) {
-                        console.log('System Error', error);
-                        return res.status(500).send('System Error');
-                    } else {
-                        res.writeHead(200, {
-                            'Content-Type': 'text/plain',
-                        });
-                        res.end(JSON.stringify({doctor, user, message: "Doctor information is added!"}));
+                userModel.findOneAndUpdate(
+                    { _id: req.body.userId },
+                    { userMetaData: req.body.userMetaData },
+                    options,
+                    (error, user) => {
+                        if (error) {
+                            console.log('System Error', error);
+                            return res.status(500).send('System Error');
+                        } else {
+                            res.writeHead(200, {
+                                'Content-Type': 'text/plain',
+                            });
+                            res.end(
+                                JSON.stringify({
+                                    doctor,
+                                    user,
+                                    message: 'Doctor information is added!',
+                                })
+                            );
                         }
-                })
+                    }
+                );
             }
-        });                                
+        });
     } catch (err) {
         console.log('Exception Error', err);
         res.json({ message: err });

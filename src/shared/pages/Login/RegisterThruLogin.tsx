@@ -31,7 +31,7 @@ import { createUserProfile, saveUserName } from '../../store/constants/action-ty
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 // import RootState from '../../store/rootReducer';
 
-const RegisterThruLogin = ({userProfileReducer}) => {
+const RegisterThruLogin = ({ userProfileReducer }) => {
     const history = useHistory();
     const dispatch = useDispatch();
     countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
@@ -86,44 +86,46 @@ const RegisterThruLogin = ({userProfileReducer}) => {
                 zipCode: values.zipcode,
             },
         };
-        console.log("payload", payload);
+        console.log('payload', payload);
         const token = localStorage.getItem('token');
         // set the with credentials to true
-          axios.defaults.withCredentials = true;
-          // make a post request with the user data
-          axios.post(serverUrl + 'signup/user', payload, {
-            headers : {
-                authtoken: token
-            }
-        }).then(
-            (response) => {
-                console.log('axios call', response);
-                if (response.status === 200) {
-                    console.log('updated successfully');
-                    dispatch({
-                        type: saveUserName,
-                        firstName: response.data.data.firstName,
-                        lastName: response.data.data.lastName,
-                        userName: response.data.data.userName,
-                    });
-                    dispatch({
-                        type: createUserProfile,
-                        id: response.data.data._id,
-                        userMetaData: response.data.data.userMetaData,
-                        profile: response.data.data.profile,
-                        address: response.data.data.address,
-                    });
-                    history.push('app/dashboard', { replace: true });
+        axios.defaults.withCredentials = true;
+        // make a post request with the user data
+        axios
+            .post(serverUrl + 'signup/user', payload, {
+                headers: {
+                    authtoken: token,
+                },
+            })
+            .then(
+                (response) => {
+                    console.log('axios call', response);
+                    if (response.status === 200) {
+                        console.log('updated successfully');
+                        dispatch({
+                            type: saveUserName,
+                            firstName: response.data.data.firstName,
+                            lastName: response.data.data.lastName,
+                            userName: response.data.data.userName,
+                        });
+                        dispatch({
+                            type: createUserProfile,
+                            id: response.data.data._id,
+                            userMetaData: response.data.data.userMetaData,
+                            profile: response.data.data.profile,
+                            address: response.data.data.address,
+                        });
+                        history.push('app/dashboard', { replace: true });
+                    }
+                },
+                (error) => {
+                    console.log('register error');
+                    //   this.setState({
+                    //     errorMessage: error.response.data,
+                    //     signupFailed: true,
+                    //   });
                 }
-            },
-            (error) => {
-                console.log('register error');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
-            }
-        );
+            );
     };
 
     return (
@@ -161,15 +163,17 @@ const RegisterThruLogin = ({userProfileReducer}) => {
                             city: Yup.string().max(255).required('City is required'),
                             country: Yup.string().max(255).required('Country is required'),
                             state: Yup.string().max(255).required('State is required'),
-                            zipcode: Yup.string().required('ZipCode is required')
-                                .matches(/^[0-9]+$/, "Must be a number")
-                                .min(5, "Must be exactly 5 digits")
-                                .max(5, "Must be exactly 5 digits"),
+                            zipcode: Yup.string()
+                                .required('ZipCode is required')
+                                .matches(/^[0-9]+$/, 'Must be a number')
+                                .min(5, 'Must be exactly 5 digits')
+                                .max(5, 'Must be exactly 5 digits'),
                             gender: Yup.string().max(255),
-                            phonenumber: Yup.string().required('Phone Number is required')
-                                .matches(/^[0-9]+$/, "Must be a number")
-                                .min(10, "Must be exactly 10 digits")
-                                .max(10, "Must be exactly 10 digits")
+                            phonenumber: Yup.string()
+                                .required('Phone Number is required')
+                                .matches(/^[0-9]+$/, 'Must be a number')
+                                .min(10, 'Must be exactly 10 digits')
+                                .max(10, 'Must be exactly 10 digits'),
                         })}
                         onSubmit={(values) => {
                             console.log('insde submit', values);

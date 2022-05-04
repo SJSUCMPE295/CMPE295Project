@@ -43,6 +43,7 @@ export const getAvailableDoctors = (data = {}) =>
     api.get('/api/appointments/doctors' + jsonToQueryString(data));
 export const setDoctorsAvailability = (data) =>
     api.post(`/api/appointments/doctors/${data?.userId || data?.id}`, data);
+export const setAppointment = (id, data) => api.put(`/api/appointments/${id}`, data);
 export const createAppointment = (data) => api.post('/api/appointments', data);
 export const getHelp = (data = {}) => api.get('/api/gethelp' + jsonToQueryString(data));
 export const giveHelp = (data = {}) => api.post('/api/gethelp', data);

@@ -20,8 +20,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import countries from 'i18n-iso-countries';
 const { getStates } = require('country-state-picker');
-const { getCode } =require('country-list');
-import CountryData from "./CountryData.json";
+const { getCode } = require('country-list');
+import CountryData from './CountryData.json';
 
 const metadata = {
     contentType: 'image/jpeg',
@@ -36,14 +36,14 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [phoneNum, setPhoneNum] = useState('');
-    const [dialCode, setDialCode] = useState("+1");
+    const [dialCode, setDialCode] = useState('+1');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState(null);
-    const [country, setCountry] = useState("United States of America");
+    const [country, setCountry] = useState('United States of America');
     const [countryNames, setCountryNames] = useState(CountryData);
-    const [code,setCode] = useState('us');
+    const [code, setCode] = useState('us');
     const [availability, setAvailability] = useState(new Date());
     const [datePickerIsOpen, togglePicker] = useState(false);
     const [showErrorMsg, setShowErrorMsg] = React.useState('');
@@ -52,72 +52,72 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [url, setUrl] = useState('');
     const [fileUploadTitle, setFileUploadTitle] = React.useState('Upload Resource Pic');
     const [findImage, setFindImage] = React.useState(false);
-    const today=new Date();
+    const today = new Date();
 
-    const [serviceNameError, setServiceNameError] = useState("");
+    const [serviceNameError, setServiceNameError] = useState('');
     const [ifServiceError, setIfServiceError] = useState(false);
-    const [availabilityError, setAvailabilityError] = useState("");
+    const [availabilityError, setAvailabilityError] = useState('');
     const [ifAvailabilityError, setIfAvailabilityError] = useState(false);
-    const [categoryError, setCategoryError] = useState("");
+    const [categoryError, setCategoryError] = useState('');
     const [ifCategoryError, setIfCategoryError] = useState(false);
-    const [descriptionError, setDescriptionError] = useState("");
+    const [descriptionError, setDescriptionError] = useState('');
     const [ifDescriptionError, setIfDescriptionError] = useState(false);
-    const [phoneNumError, setPhoneNumError] = useState("");
+    const [phoneNumError, setPhoneNumError] = useState('');
     const [ifPhoneNumError, setIfPhoneNumError] = useState(false);
-    const [addressError, setAddressError] = useState("");
+    const [addressError, setAddressError] = useState('');
     const [ifAddressError, setIfAddressError] = useState(false);
-    const [cityError, setCityError] = useState("");
+    const [cityError, setCityError] = useState('');
     const [ifCityError, setIfCityError] = useState(false);
-    const [stateError, setStateError] = useState("");
-    const [zipcodeError, setZipcodeError] = useState("");
+    const [stateError, setStateError] = useState('');
+    const [zipcodeError, setZipcodeError] = useState('');
     const [ifZipcodeError, setIfZipcodeError] = useState(false);
-    const [countryError, setCountryError] = useState("");
+    const [countryError, setCountryError] = useState('');
 
     let validateForm = () => {
-        if (serviceName === "" || serviceName === null) {
-            setServiceNameError("Please enter service name");
+        if (serviceName === '' || serviceName === null) {
+            setServiceNameError('Please enter service name');
             setIfServiceError(true);
             return false;
-        } else if(availability.getTime() < today.getTime()) {
-            setAvailabilityError("Please select a valid date!");
+        } else if (availability.getTime() < today.getTime()) {
+            setAvailabilityError('Please select a valid date!');
             setIfAvailabilityError(true);
             return false;
-        } else if (category === "" || category === null) {
-            setCategoryError("Please enter a category");
+        } else if (category === '' || category === null) {
+            setCategoryError('Please enter a category');
             setIfCategoryError(true);
             return false;
-        } else if (description === "" || description === null) {
-            setDescriptionError("Please enter description of service");
+        } else if (description === '' || description === null) {
+            setDescriptionError('Please enter description of service');
             setIfDescriptionError(true);
             return false;
-        } else if (address === "" || address === null) {
-            setAddressError("Please enter a valid address");
+        } else if (address === '' || address === null) {
+            setAddressError('Please enter a valid address');
             setIfAddressError(true);
             return false;
-        }  else if (city === "" || city === null) {
-            setCityError("Please enter your city of residence");
-            setIfCityError(true)
+        } else if (city === '' || city === null) {
+            setCityError('Please enter your city of residence');
+            setIfCityError(true);
             return false;
-        } else if (state === "" || city === null) {
-            setCityError("Please enter your state of residence");
-            setIfCityError(true)
+        } else if (state === '' || city === null) {
+            setCityError('Please enter your state of residence');
+            setIfCityError(true);
             return false;
-        } else if (country === "" || country === null) {
-            setCountryError("Please enter your country of residence");
+        } else if (country === '' || country === null) {
+            setCountryError('Please enter your country of residence');
             return false;
-        } else if (zipcode === null || zipcode === "") {
-            setZipcodeError("Please enter your zipcode");
+        } else if (zipcode === null || zipcode === '') {
+            setZipcodeError('Please enter your zipcode');
             return false;
         } else if (zipcode.toString().length != 5) {
-            setZipcodeError("Please enter a valid zipcode!");
+            setZipcodeError('Please enter a valid zipcode!');
             setIfZipcodeError(true);
             return false;
-        } else if (phoneNum === "" || phoneNum === null) {
-            setPhoneNumError("Please enter your contact number");
+        } else if (phoneNum === '' || phoneNum === null) {
+            setPhoneNumError('Please enter your contact number');
             setIfPhoneNumError(true);
             return false;
         } else if (phoneNum.toString().length != 10) {
-            setPhoneNumError("Please enter a valid phone number!");
+            setPhoneNumError('Please enter a valid phone number!');
             setIfPhoneNumError(true);
             return false;
         } else {
@@ -185,67 +185,67 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     };
 
     const handleNameChange = (e) => {
-        setServiceNameError("")
-        setIfServiceError(false)
+        setServiceNameError('');
+        setIfServiceError(false);
         setServiceName(e.target.value);
     };
 
     const handleCategoryChange = (e) => {
-        setCategoryError("")
-        setIfCategoryError(false)
+        setCategoryError('');
+        setIfCategoryError(false);
         setCategory(e.target.value);
     };
 
     const handleDescriptionChange = (e) => {
-        setDescriptionError("")
-        setIfDescriptionError(false)
+        setDescriptionError('');
+        setIfDescriptionError(false);
         setDescription(e.target.value);
     };
 
     const handlePhoneNumChange = (e) => {
-        setPhoneNumError("")
-        setIfPhoneNumError(false)
+        setPhoneNumError('');
+        setIfPhoneNumError(false);
         setPhoneNum(e.target.value);
     };
 
     const handleAddressChange = (e) => {
-        setAddressError("")
-        setIfAddressError(false)
+        setAddressError('');
+        setIfAddressError(false);
         setAddress(e.target.value);
     };
 
     const handleCityChange = (e) => {
-        setCityError("")
-        setIfCityError(false)
+        setCityError('');
+        setIfCityError(false);
         setCity(e.target.value);
     };
 
     const handleStateChange = (e) => {
-        setStateError("")
+        setStateError('');
         setState(e.target.value);
     };
 
     const handleZipcodeChange = (e) => {
-        setZipcodeError("")
-        setIfZipcodeError(false)
+        setZipcodeError('');
+        setIfZipcodeError(false);
         setZipcode(e.target.value);
     };
 
     const handleAvailabilityChange = (date) => {
-        setAvailabilityError("")
-        setIfAvailabilityError(false)
+        setAvailabilityError('');
+        setIfAvailabilityError(false);
         setAvailability(date);
     };
 
     const handleCountryChange = (e) => {
-        setCountryError("")
+        setCountryError('');
         setCountry(e.target.value);
         const obj = countryNames.find(({ name }) => name === e.target.value);
-        setCode(getCode(e.target.value))
-        setDialCode(obj.dial_code)
+        setCode(getCode(e.target.value));
+        setDialCode(obj.dial_code);
     };
 
-    const stateObj = getStates(code.toLowerCase())   
+    const stateObj = getStates(code.toLowerCase());
     const stateArray = Object.entries(stateObj).map(([key, value]) => {
         return {
             label: value,
@@ -254,12 +254,12 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     });
 
     const handleSetCheck = (e) => {
-        setAddressError("");
-        setCityError("");
-        setStateError("");
-        setCountryError("");
-        setZipcodeError("");
-        setPhoneNumError("");
+        setAddressError('');
+        setCityError('');
+        setStateError('');
+        setCountryError('');
+        setZipcodeError('');
+        setPhoneNumError('');
         setCheck(!check);
         if (!check) {
             const { address = {}, profile = {} } = userProfileReducer;
@@ -270,8 +270,8 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             setZipcode(address.zipCode);
             setState(address.state);
             setPhoneNum(profile.phoneNumber);
-            setCode(getCode(address.country))
-            setDialCode(obj.dial_code)
+            setCode(getCode(address.country));
+            setDialCode(obj.dial_code);
         } else {
             setAddress('');
             setCity('');
@@ -318,9 +318,9 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                 window.alert('Service added!');
                 console.log('Service added!');
                 window.location.reload();
-            } else if (!findImage){
-                window.alert("Please select an image to upload!");
-                console.log("Please select an image to upload!");
+            } else if (!findImage) {
+                window.alert('Please select an image to upload!');
+                console.log('Please select an image to upload!');
             } else {
                 window.alert('Failed to upload service data!');
                 console.log('Failed to upload service data!');
@@ -384,10 +384,9 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         helperText={serviceNameError}
                                         InputLabelProps={{
                                             shrink: true,
-                                        }}  
-
+                                        }}
                                     />
-                                    <FormHelperText style={{color: 'red'}}></FormHelperText>
+                                    <FormHelperText style={{ color: 'red' }}></FormHelperText>
                                 </Grid>
                                 <Grid item xs={4} alignItems="right">
                                     {/* <div style={{ color: 'red' }}>{availabilityError}</div> */}
@@ -412,8 +411,12 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                         confirmBtnText="OK"
                                         cancelBtnText="Cancel"
                                     />
-                                    <FormHelperText>*Only dates from future are valid</FormHelperText>
-                                    <FormHelperText style={{color: 'red'}}>{availabilityError}</FormHelperText>
+                                    <FormHelperText>
+                                        *Only dates from future are valid
+                                    </FormHelperText>
+                                    <FormHelperText style={{ color: 'red' }}>
+                                        {availabilityError}
+                                    </FormHelperText>
                                 </Grid>
                             </Grid>
 
@@ -540,46 +543,46 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                     </TextField>
                                 </Grid>
                             </Grid>
-                                <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                                    <Grid item xs={3}>
-                                        {/* <div style={{ color: 'red' }}>{zipcodeError}</div> */}
-                                        <TextField
-                                            required
-                                            error={ifZipcodeError}
-                                            id="outlined-required-input"
-                                            label="Zipcode"
-                                            value={zipcode}
-                                            onChange={handleZipcodeChange}
-                                            variant="outlined"
-                                            sx={{ m: 1, width: '50ch' }}
-                                            InputLabelProps={{ shrink: zipcode?true:false }}
-                                            helperText={zipcodeError}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}></Grid>
-                                    <Grid item xs={1}>
-                                        <TextField
-                                            id="outlined-read-only-input"
-                                            sx={{ m: 1 }}
-                                            value={dialCode}
-                                            style = {{width: 70}}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        {/* <div style={{ color: 'red' }}>{phoneNumError}</div> */}
-                                        <TextField
-                                            required
-                                            error={ifPhoneNumError}
-                                            id="outlined-required-input"
-                                            label="Phone Number"
-                                            value={phoneNum}
-                                            onChange={handlePhoneNumChange}
-                                            variant="outlined"
-                                            sx={{ m: 1, width: '41ch' }}
-                                            helperText={phoneNumError}
-                                        />
-                                    </Grid>
+                            <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid item xs={3}>
+                                    {/* <div style={{ color: 'red' }}>{zipcodeError}</div> */}
+                                    <TextField
+                                        required
+                                        error={ifZipcodeError}
+                                        id="outlined-required-input"
+                                        label="Zipcode"
+                                        value={zipcode}
+                                        onChange={handleZipcodeChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '50ch' }}
+                                        InputLabelProps={{ shrink: zipcode ? true : false }}
+                                        helperText={zipcodeError}
+                                    />
                                 </Grid>
+                                <Grid item xs={3}></Grid>
+                                <Grid item xs={1}>
+                                    <TextField
+                                        id="outlined-read-only-input"
+                                        sx={{ m: 1 }}
+                                        value={dialCode}
+                                        style={{ width: 70 }}
+                                    />
+                                </Grid>
+                                <Grid item xs={3}>
+                                    {/* <div style={{ color: 'red' }}>{phoneNumError}</div> */}
+                                    <TextField
+                                        required
+                                        error={ifPhoneNumError}
+                                        id="outlined-required-input"
+                                        label="Phone Number"
+                                        value={phoneNum}
+                                        onChange={handlePhoneNumChange}
+                                        variant="outlined"
+                                        sx={{ m: 1, width: '41ch' }}
+                                        helperText={phoneNumError}
+                                    />
+                                </Grid>
+                            </Grid>
                             <Divider sx={{ pt: 4 }} />
                             <Grid
                                 container
@@ -594,13 +597,13 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
                                 <Grid item xs={1}></Grid>
                                 <Grid item xs={3}>
                                     <Button
-                                            color="primary"
-                                            variant="contained"
-                                            size="medium"
-                                            onClick={handleImageChange}
-                                        >
-                                            Upload Image
-                                        </Button>
+                                        color="primary"
+                                        variant="contained"
+                                        size="medium"
+                                        onClick={handleImageChange}
+                                    >
+                                        Upload Image
+                                    </Button>
                                 </Grid>
                                 <Grid item xs={2}></Grid>
                                 <Grid item xs={3}>

@@ -36,10 +36,10 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
     console.log('Values', values);
     const dispatch = useDispatch();
     const [saveMsg, setSaveMsg] = useState('');
-    const [phone, setPhone] = useState(userProfileReducer?.profile?.phoneNumber)
+    const [phone, setPhone] = useState(userProfileReducer?.profile?.phoneNumber);
     const [phoneNumbeErr, setPhoneNumberErr] = useState(false);
     const [phoneNumbeErrMsg, setPhoneNumberErrMsg] = useState('');
-    const [zipcode, setZipcode] = useState(userProfileReducer?.address?.zipCode)
+    const [zipcode, setZipcode] = useState(userProfileReducer?.address?.zipCode);
     const [zipcodeErr, setZipcodeErr] = useState(false);
     const [zipcodeErrMsg, setZipcodeErrMsg] = useState('');
     countries.registerLocale(require('i18n-iso-countries/langs/en.json'));
@@ -59,19 +59,18 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
 
     const validation = () => {
         console.log('phone length', phone.toString().length);
-        if(phone.toString().length != 10) {
+        if (phone.toString().length != 10) {
             setPhoneNumberErr(true);
             setPhoneNumberErrMsg('Phone Number should be 10 digits');
             return false;
-        } else if(zipcode.toString().length != 5){
+        } else if (zipcode.toString().length != 5) {
             setZipcodeErr(true);
             setZipcodeErrMsg('ZipCode should be 5 digits');
             return false;
-        }
-        else {
+        } else {
             return true;
         }
-    }
+    };
     const handleChangePhone = (event) => {
         setPhoneNumberErr(false);
         setPhoneNumberErrMsg('');
@@ -86,65 +85,67 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
 
     const handleSave = () => {
         const isValid = validation();
-        if(isValid) {
-        const payload = {
-            userName: values.userName,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            userMetaData: values.userMetaData,
-            profile: {
-                phoneNumber: phone,
-                profileActive: values?.profileActive,
-                profilePic: values?.profilePic,
-            },
-            address: {
-                location: values.address,
-                city: values.city,
-                state: values.state,
-                country: values.country,
-                zipCode: zipcode,
-            },
-        };
-        const token = localStorage.getItem('token');
-           // set the with credentials to true
-           axios.defaults.withCredentials = true;
-           // make a post request with the user data
-           axios.post(serverUrl + 'user/profileUpdate', payload,  {
-            headers : {
-                authtoken: token
-            }
-            }).then(
-               (response) => {
-                   console.log("axios call", response);
-               if (response.status === 200) {
-                   console.log("updated successfully");
-                   dispatch({
-                       type: saveUserName,
-                       firstName: response.data.data.firstName,
-                       lastName: response.data.data.lastName,
-                       userName: response.data.data.userName,
-                   });
-                   dispatch({
-                       type: createUserProfile,
-                       userMetaData: response.data.data.userMetaData,
-                       profile: response.data.data?.profile,
-                       address: response.data.data.address,
-                   });
-                   setSaveMsg("Yes");
-               }
-               if(response.status === 401) {
-                setSaveMsg("No");
-               }
-            },
-            (error) => {
-                console.log('register error');
-                setSaveMsg('No');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
-            }
-        );
+        if (isValid) {
+            const payload = {
+                userName: values.userName,
+                firstName: values.firstName,
+                lastName: values.lastName,
+                userMetaData: values.userMetaData,
+                profile: {
+                    phoneNumber: phone,
+                    profileActive: values?.profileActive,
+                    profilePic: values?.profilePic,
+                },
+                address: {
+                    location: values.address,
+                    city: values.city,
+                    state: values.state,
+                    country: values.country,
+                    zipCode: zipcode,
+                },
+            };
+            const token = localStorage.getItem('token');
+            // set the with credentials to true
+            axios.defaults.withCredentials = true;
+            // make a post request with the user data
+            axios
+                .post(serverUrl + 'user/profileUpdate', payload, {
+                    headers: {
+                        authtoken: token,
+                    },
+                })
+                .then(
+                    (response) => {
+                        console.log('axios call', response);
+                        if (response.status === 200) {
+                            console.log('updated successfully');
+                            dispatch({
+                                type: saveUserName,
+                                firstName: response.data.data.firstName,
+                                lastName: response.data.data.lastName,
+                                userName: response.data.data.userName,
+                            });
+                            dispatch({
+                                type: createUserProfile,
+                                userMetaData: response.data.data.userMetaData,
+                                profile: response.data.data?.profile,
+                                address: response.data.data.address,
+                            });
+                            setSaveMsg('Yes');
+                        }
+                        if (response.status === 401) {
+                            setSaveMsg('No');
+                        }
+                    },
+                    (error) => {
+                        console.log('register error');
+                        setSaveMsg('No');
+                        //   this.setState({
+                        //     errorMessage: error.response.data,
+                        //     signupFailed: true,
+                        //   });
+                    }
+                );
         }
     };
 
@@ -216,7 +217,7 @@ const AccountProfileDetails = ({ userProfileReducer, ...props }) => {
                             />
                         </Grid>
                         <Grid item md={6} xs={12}>
-                        <TextField
+                            <TextField
                                 fullWidth
                                 label="ZipCode"
                                 name="zipcode"

@@ -17,7 +17,7 @@ import {
     CreditCard as CreditCardIcon,
 } from 'react-feather';
 import { connect } from 'react-redux';
-import { RegisterDoctorModal} from './RegisterDoctorModal';
+import { RegisterDoctorModal } from './RegisterDoctorModal';
 
 // const items = [
 //     {
@@ -50,7 +50,7 @@ import { RegisterDoctorModal} from './RegisterDoctorModal';
 //         icon: SettingsIcon,
 //         title: 'Settings',
 //     },
-    /*
+/*
     {
         href: '/login',
         icon: LockIcon,
@@ -85,11 +85,11 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
 
     const registerDoctor = () => {
         setOpen(true);
-    }
+    };
 
     const closeModal = () => {
         setOpen(false);
-    }
+    };
 
     const items = [
         {
@@ -222,7 +222,13 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
 
     return (
         <>
-        {open && <RegisterDoctorModal closeModal={closeModal} open={open} userProfileReducer={userProfileReducer}/> }
+            {open && (
+                <RegisterDoctorModal
+                    closeModal={closeModal}
+                    open={open}
+                    userProfileReducer={userProfileReducer}
+                />
+            )}
             <Hidden mdUp>
                 <Drawer
                     anchor="left"
@@ -235,7 +241,6 @@ const DashboardSidebar = ({ onMobileClose, openMobile, userProfileReducer }) => 
                         },
                     }}
                 >
-                    
                     {content}
                 </Drawer>
             </Hidden>

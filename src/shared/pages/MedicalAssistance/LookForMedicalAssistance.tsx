@@ -273,7 +273,7 @@ export const LookForMedicalAssistance = (props) => {
                 flex: 1,
             },
         ];
-        if (rows?.length) {
+        if (rows) {
             return (
                 <div style={{ height: '100vh', width: '100%' }}>
                     {!rows.length ? (
@@ -292,8 +292,7 @@ export const LookForMedicalAssistance = (props) => {
                 </div>
             );
         }
-        return null;
-        //return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
+        return <Typography sx={{ mt: 2, mb: 1 }}>Loading</Typography>;
     };
     return (
         <Box

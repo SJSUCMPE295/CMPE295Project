@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import axios from 'axios';
 import serverUrl from '../../utils/config';
-import { deleteUser } from "firebase/auth";
+import { deleteUser } from 'firebase/auth';
 import {
     Box,
     Button,
@@ -38,23 +38,22 @@ const RegisterFirstPage = () => {
     const mounted = useMounted();
 
     const handleSubmit = (userName, firstName, lastName, token) => {
-       localStorage.setItem("token", token); 
-       apiCall(userName, firstName, lastName, token);
+        localStorage.setItem('token', token);
+        apiCall(userName, firstName, lastName, token);
     };
 
     const checkUser = (userName) => {
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'common/exists', userName).then(
-          (response) => {
-              console.log("axios call")
+        axios.post(serverUrl + 'common/exists', userName).then((response) => {
+            console.log('axios call');
             if (response.status === 200) {
                 setUserExists(true);
-            } else if(response.status === 404) {
+            } else if (response.status === 404) {
                 setUserExists(false);
             }
-          });
-    }
+        });
+    };
     const apiCall = (userName, firstName, lastName, token) => {
         const payload = {
             userName: userName,
@@ -63,20 +62,21 @@ const RegisterFirstPage = () => {
         };
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'signup/user', payload, {
-            headers : {
-                authtoken: token
-            }
-        }).then(
-          (response) => {
-              console.log("axios call")
-            if (response.status === 200) {
-                console.log("updated successfully", response);
-                dispatch({ type: saveUserName, firstName, lastName, userName });
-                history.push('/register2', { replace: true });
-            }
-          });
-    }
+        axios
+            .post(serverUrl + 'signup/user', payload, {
+                headers: {
+                    authtoken: token,
+                },
+            })
+            .then((response) => {
+                console.log('axios call');
+                if (response.status === 200) {
+                    console.log('updated successfully', response);
+                    dispatch({ type: saveUserName, firstName, lastName, userName });
+                    history.push('/register2', { replace: true });
+                }
+            });
+    };
     const handleSubmitWithGoogle = (userName, firstName, lastName, token) => {
         localStorage.setItem('token', token);
         apiCall(userName, firstName, lastName, token);
@@ -124,8 +124,13 @@ const RegisterFirstPage = () => {
                             values.isSubmitting = true;
                             register(values.userName, values.password)
                                 .then((response: any) => {
-                                    console.log('response',response);
-                                    handleSubmit(values.userName, values.firstName, values.lastName, response.user.accessToken);
+                                    console.log('response', response);
+                                    handleSubmit(
+                                        values.userName,
+                                        values.firstName,
+                                        values.lastName,
+                                        response.user.accessToken
+                                    );
                                 })
                                 .catch((error) => {
                                     console.log(error.message);
@@ -136,9 +141,9 @@ const RegisterFirstPage = () => {
                                             setError('User Name already registered');
                                             // checkUser(values.userName);
                                             // if(userExists) {
-                                                
+
                                             // } else {
-                                          
+
                                             // }
                                             break;
                                         }

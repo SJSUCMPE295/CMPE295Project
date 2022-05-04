@@ -9,8 +9,8 @@ import {
     Checkbox,
     Divider,
     FormControlLabel,
-    Grid
-} from "@material-ui/core";
+    Grid,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
@@ -25,12 +25,15 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData)
+        const data = Object.fromEntries(formData);
         const formProps = objectWithBoolean({
             ...profile,
             ...data,
         });
-        console.log('settings',data?.profileActive,{ ...formProps, profileActive: formProps?.profileActive !== 'off' });
+        console.log('settings', data?.profileActive, {
+            ...formProps,
+            profileActive: formProps?.profileActive !== 'off',
+        });
         profileUpdate({
             id,
             profile: { ...formProps, profileActive: formProps?.profileActive !== 'off' },
@@ -39,7 +42,6 @@ const SettingsProfileStatus = ({ profile, id, ...rest }) => {
                 rest?.updateUserProfile(data);
                 console.log(data);
                 setSuccessAlertWithTimer('Saved');
-
             })
             .catch((err) => {
                 console.log(err);

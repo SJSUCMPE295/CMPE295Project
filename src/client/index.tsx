@@ -31,7 +31,7 @@ hydrate(
                     <App />
                 </PersistGate>
             </HelmetProvider>
-        </BrowserRouter>  
+        </BrowserRouter>
     </Provider>,
     document.getElementById('app')
 );

@@ -3,8 +3,14 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { styled } from '@mui/material/styles';
 // import MuiAlert from '@mui/material/Alert';
-import { Alert, Snackbar}  from '@mui/material';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { Alert, Snackbar } from '@mui/material';
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+    deleteObject,
+} from 'firebase/storage';
 import {
     Avatar,
     Box,
@@ -69,12 +75,16 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         // const storage = getStorage();
         // const storageRef = ref(storage, `/${user.userName}/profilePic/userPic`);
         const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on('state_changed', (snapshot) => {
-            setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setFileUploadTitle(imageName);
-            downloadProfilePic();
-    }, (error) => {});
-    }
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setFileUploadTitle(imageName);
+                downloadProfilePic();
+            },
+            (error) => {}
+        );
+    };
 
     const deletePicture = () => {
         // Delete the file
@@ -85,7 +95,7 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                     phoneNumber: user?.profile?.phoneNumber,
                     profileActive: user?.profile?.profileActive,
                     profilePic: '',
-                }
+                };
                 // dispatch({
                 //     type: createUserProfile,
                 //     userMetaData: user?.userMetaData,
@@ -120,12 +130,12 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
 
     const updateProfilePic = () => {
         const profile = {
-                phoneNumber: user?.profile?.phoneNumber,
-                profileActive: user?.profile?.profileActive,
-                profilePic: user?.profile?.profilePic,
-        }
+            phoneNumber: user?.profile?.phoneNumber,
+            profileActive: user?.profile?.profileActive,
+            profilePic: user?.profile?.profilePic,
+        };
         updateProfilePicApiCall(profile);
-    }
+    };
 
     const updateProfilePicApiCall = (profile) => {
         const payload = {
@@ -135,36 +145,38 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         const token = localStorage.getItem('token');
         axios.defaults.withCredentials = true;
         // make a post request with the user data
-        axios.post(serverUrl + 'user/profilePicUpdate', payload, {
-            headers : {
-                authtoken: token
-            }
-            }).then(
-            (response) => {
-                console.log('axios call', response);
-                if (response.status === 200) {
-                    console.log('updated successfully');
-                    dispatch({
-                        type: createUserProfile,
-                        userMetaData: response?.data?.data?.userMetaData,
-                        profile: response?.data?.data?.profile,
-                        address: response?.data?.data?.address,
-                    });
-                    setSaveMsg('Yes');
-                }
-                if (response.status === 401) {
+        axios
+            .post(serverUrl + 'user/profilePicUpdate', payload, {
+                headers: {
+                    authtoken: token,
+                },
+            })
+            .then(
+                (response) => {
+                    console.log('axios call', response);
+                    if (response.status === 200) {
+                        console.log('updated successfully');
+                        dispatch({
+                            type: createUserProfile,
+                            userMetaData: response?.data?.data?.userMetaData,
+                            profile: response?.data?.data?.profile,
+                            address: response?.data?.data?.address,
+                        });
+                        setSaveMsg('Yes');
+                    }
+                    if (response.status === 401) {
+                        setSaveMsg('No');
+                    }
+                },
+                (error) => {
+                    console.log('register error');
                     setSaveMsg('No');
+                    //   this.setState({
+                    //     errorMessage: error.response.data,
+                    //     signupFailed: true,
+                    //   });
                 }
-            },
-            (error) => {
-                console.log('register error');
-                setSaveMsg('No');
-                //   this.setState({
-                //     errorMessage: error.response.data,
-                //     signupFailed: true,
-                //   });
-            }
-        );
+            );
     };
 
     // useEffect(() => {
@@ -181,16 +193,19 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                         flexDirection: 'column',
                     }}
                 >
-                    {progress>0 && progress<100&& <CircularProgress variant="determinate" value={progress} />}
-                    {progress==100 &&
-                    <Avatar
-                        src={avatar}
-                        // src="https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/test114%40gmail.com%2FprofilePic%2FuserPic?alt=media&token=eb7bdbea-70e3-4b32-be11-712b56d56985"
-                        sx={{
-                            height: 100,
-                            width: 100,
-                        }}
-                    /> }
+                    {progress > 0 && progress < 100 && (
+                        <CircularProgress variant="determinate" value={progress} />
+                    )}
+                    {progress == 100 && (
+                        <Avatar
+                            src={avatar}
+                            // src="https://firebasestorage.googleapis.com/v0/b/cmpe295-wecare.appspot.com/o/test114%40gmail.com%2FprofilePic%2FuserPic?alt=media&token=eb7bdbea-70e3-4b32-be11-712b56d56985"
+                            sx={{
+                                height: 100,
+                                width: 100,
+                            }}
+                        />
+                    )}
                     <Typography color="textPrimary" gutterBottom variant="h4">
                         {user?.firstName}
                     </Typography>
@@ -203,24 +218,37 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                 </Box>
             </CardContent>
             <Divider />
-        <CardActions
-            sx={{
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-            }}>
-        <label htmlFor="contained-button-file">
-            <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={uploadPicture}/>
-            <Button color="primary" fullWidth variant="text" component="span">
-                {findImage ? "Update picture" : "Upload picture"}
-                <input type="image" hidden onChange={uploadPicture} />
-            </Button>
-            </label>
-        </CardActions>
-            <Button color="secondary" fullWidth variant="text" component="span" onClick={deletePicture}
-            style={{
-                color: "#d11a2a"
-            }}>
+            <CardActions
+                sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <label htmlFor="contained-button-file">
+                    <Input
+                        accept="image/*"
+                        id="contained-button-file"
+                        multiple
+                        type="file"
+                        onChange={uploadPicture}
+                    />
+                    <Button color="primary" fullWidth variant="text" component="span">
+                        {findImage ? 'Update picture' : 'Upload picture'}
+                        <input type="image" hidden onChange={uploadPicture} />
+                    </Button>
+                </label>
+            </CardActions>
+            <Button
+                color="secondary"
+                fullWidth
+                variant="text"
+                component="span"
+                onClick={deletePicture}
+                style={{
+                    color: '#d11a2a',
+                }}
+            >
                 Delete Picture
             </Button>
             {/* {showErrorMsg? (

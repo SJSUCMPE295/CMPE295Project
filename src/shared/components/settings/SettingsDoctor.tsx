@@ -10,8 +10,8 @@ import {
     Divider,
     FormControlLabel,
     Grid,
-    Typography
-} from "@material-ui/core";
+    Typography,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import { profileUpdate, updateUserProfile } from 'store/actions';
 import { objectWithBoolean } from 'utils/json';
@@ -37,7 +37,6 @@ const SettingsDoctor = ({ profile, userMetaData, id, ...rest }) => {
             .then((data) => {
                 rest?.updateUserProfile(data);
                 setSuccessAlertWithTimer('Saved');
-
             })
             .catch((err) => {
                 console.log(err);
