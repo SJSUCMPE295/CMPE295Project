@@ -187,7 +187,7 @@
   { "name": "Ukraine", "dial_code": "+380", "code": "UA" },
   { "name": "United Arab Emirates", "dial_code": "+971", "code": "AE" },
   { "name": "United Kingdom", "dial_code": "+44", "code": "GB" },
-  { "name": "United States", "dial_code": "+1", "code": "US" },
+  { "name": "United States of America", "dial_code": "+1", "code": "US" },
   { "name": "Uruguay", "dial_code": "+598", "code": "UY" },
   { "name": "Uzbekistan", "dial_code": "+998", "code": "UZ" },
   { "name": "Vanuatu", "dial_code": "+678", "code": "VU" },
