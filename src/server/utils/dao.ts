@@ -57,7 +57,8 @@ export const getUserById = async (id) => {
     if (userId) {
         const user = await Users.findOne({ _id: userIdObject });
         if (user && user.toJSON()) {
-            const doctor = await doctorModel.findOne({ userId });
+            const doctorData = await doctorModel.findOne({ userId });
+            const doctor = user?.userMetaData?.isDoctor ? doctorData : null;
             const appointmentsData =
                 (await doctorAppointmentModel.find(doctor ? { doctorId: userId } : { userId })) ||
                 [];
