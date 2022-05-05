@@ -3,6 +3,22 @@ import doctorModel from 'models/doctor';
 import Users from 'models/user';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
 import userModel from 'models/user';
+export const equalDates = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return Number(date1) === Number(date2);
+};
+export const greaterThanDate = (d1, d2) => {
+    if (!d1 || !d2) {
+        return;
+    }
+    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
+    return date1 <= date2;
+};
 export const getAllUsers = async (userIds, query = {}) => {
     const userIdsObjects = (userIds || []).map((id) => {
         if (typeof id === 'string') {
@@ -47,13 +63,16 @@ export const getUserById = async (id) => {
             );
             const appointments =
                 appointmentsData?.map &&
-                appointmentsData?.map((appointment) => {
-                    const obj = appointment?.toJSON ? appointment.toJSON() : appointment;
-                    return {
-                        ...obj,
-                        id: appointment?._id || obj?._id || obj?.id,
-                    };
-                });
+                appointmentsData
+                    ?.map((appointment) => {
+                        const obj = appointment?.toJSON ? appointment.toJSON() : appointment;
+                        return {
+                            ...obj,
+                            id: appointment?._id || obj?._id || obj?.id,
+                        };
+                    })
+                    .filter((x) => x?.id)
+                    .filter((x) => greaterThanDate(new Date(), x?.time));
             return { ...user.toJSON(), doctor, appointments };
         }
     }

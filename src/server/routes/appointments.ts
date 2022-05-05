@@ -1,8 +1,14 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import { doctorModel } from 'models/doctor';
 import { doctorAppointmentModel } from 'models/doctorAppointment';
-import { getUserByIdWithAppointments, getAllUsers, getUserById } from 'utils/dao';
-import mongoose from 'mongoose';
+import {
+    getUserByIdWithAppointments,
+    getAllUsers,
+    getUserById,
+    greaterThanDate,
+    equalDates,
+} from 'utils/dao';
 const router = Router();
 export const createAppointmentHandler = async ({ body }, res) => {
     const newAppointment = new doctorAppointmentModel(body);
@@ -26,22 +32,6 @@ export const getAllDoctorsAppointmentHandler = async (req, res) => {
     } catch (err) {
         res.json({ message: err });
     }
-};
-export const equalDates = (d1, d2) => {
-    if (!d1 || !d2) {
-        return;
-    }
-    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
-    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
-    return Number(date1) === Number(date2);
-};
-export const greaterThanDate = (d1, d2) => {
-    if (!d1 || !d2) {
-        return;
-    }
-    const date1 = typeof d1 === 'string' && d1 ? new Date(d1) : d1;
-    const date2 = typeof d2 === 'string' && d2 ? new Date(d2) : d2;
-    return date1 <= date2;
 };
 export const getAllAvailableDoctorsHandler = async (req, res) => {
     const { userName, firstName, lastName, availability = '', ...doctorModelQuery } = req?.query;
