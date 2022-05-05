@@ -20,11 +20,11 @@ router.get('/', async (_req, res) => {
         userappointments: [{}],
     };
     try {
-        let user = _req.query.user;
-        // console.log(_req.query);
+        let user =_req.query.user;
+       // console.log(_req.query);
         if (user != '') {
             //console.log(user);
-            const usertransactions = Transactions.aggregate(
+            const usertransactions =  Transactions.aggregate(
                 [
                     {
                         $match: { UserId: user },
@@ -42,66 +42,109 @@ router.get('/', async (_req, res) => {
                     } else {
                         //console.log(data_ut);
                         response.usertransactions = data_ut;
-                        const userappointment = DoctorAppointment.aggregate(
-                            [
-                                {
-                                    $match: { userId: user, status: true },
+                        const userappointment = DoctorAppointment.aggregate( [
+                            {
+                                $match: { userId: user,time: { $gte:new Date() } }
+                            
+                            },
+                            {
+                                $project: {
+                                    doctorObjId: { $toObjectId: '$doctorId' },
+                                    userId: 1,
+                                    AppointmentDetails: 1,time:1,
+                                    Status: 1,
+                                    _id:1
                                 },
-                                {
-                                    $project: {
-                                        doctorObjId: { $toObjectId: '$doctorId' },
-                                        userId: 1,
-                                        AppointmentDetails: 1,
-                                        time: 1,
-                                        Status: 1,
-                                        _id: 1,
-                                    },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'User',
+                                    localField: 'doctorObjId',
+                                    foreignField: '_id',
+                                    as: 'doctor_appointments',
                                 },
-                                {
-                                    $lookup: {
-                                        from: 'User',
-                                        localField: 'doctorObjId',
-                                        foreignField: '_id',
-                                        as: 'doctor_appointments',
-                                    },
-                                },
-                                {
-                                    $unwind: {
-                                        path: '$doctor_appointments',
-                                        preserveNullAndEmptyArrays: true,
-                                    },
-                                },
-                                {
-                                    $project: {
-                                        userId: 1,
-                                        _id: 1,
-                                        doctor_name: {
-                                            $concat: [
-                                                '$doctor_appointments.firstName',
-                                                ' ',
-                                                '$doctor_appointments.lastName',
-                                            ],
-                                        },
-                                        AppointmentDetails: 1,
-                                        time: 1,
-                                        Status: 1,
-                                    },
-                                },
-                            ],
-                            (error_dp, data_dp) => {
-                                if (error_dp) {
-                                    res.status(400).send(error_dp);
-                                } else {
-                                    response.userappointments = data_dp;
+                            },
+                            {
+                                $unwind: {
+                                    path: '$doctor_appointments',
+                                    preserveNullAndEmptyArrays: true
                                 }
-                            }
-                        );
+                            },
+                            {
+                                $project: {
+                                    userId: 1,
+                                    _id:1,
+                                    doctor_name: {$concat: [
+                                        '$doctor_appointments.firstName',
+                                        ' ',
+                                        '$doctor_appointments.lastName',
+                                    ]},
+                                    AppointmentDetails: 1,time:1,
+                                    Status: 1,
+                                },
+                            },
+                        ],(error_dp, data_dp) => {
+                            if (error_dp) {
+                                res.status(400).send(error_dp);
+                            } else {
+                        response.userappointments = data_dp;
+                        const doctorappointment = DoctorAppointment.aggregate( [
+                            {
+                                $match: { doctorId: user,time: { $gte:new Date() } }
+                            
+                            },
+                            {
+                                $project: {
+                                    userObjectId: { $toObjectId: '$userId' },
+                                    doctorId: 1,
+                                    AppointmentDetails: 1,time:1,
+                                    Status: 1,
+                                    _id:1
+                                },
+                            },
+                            {
+                                $lookup: {
+                                    from: 'User',
+                                    localField: 'userObjectId',
+                                    foreignField: '_id',
+                                    as: 'doctor_appointments',
+                                },
+                            },
+                            {
+                                $unwind: {
+                                    path: '$doctor_appointments',
+                                    preserveNullAndEmptyArrays: true
+                                }
+                            },
+                            {
+                                $project: {
+                                    userId: 1,
+                                    _id:1,
+                                    doctor_name: {$concat: [
+                                        '$doctor_appointments.firstName',
+                                        ' ',
+                                        '$doctor_appointments.lastName',
+                                    ]},
+                                    AppointmentDetails: 1,time:1,
+                                    Status: 1,
+                                },
+                            },
+                        ],(error_dp, data_app) => {
+                            if (error_dp) {
+                                res.status(400).send(error_dp);
+                            } else {
+                                //response.userappointments = data_dp;
+                                if(Object.keys(data_app).length != 0){response.userappointments=response.userappointments.concat(data_app)}
+                            }})
+                    }}
+                        )
                     }
                 }
             );
-        }
-        const resources = Resources.aggregate(
-            [
+
+            }
+        const resources =  Resources.aggregate(
+            [  
                 {
                     $group: {
                         _id: { $toLower: '$Resource_Name' },
@@ -111,27 +154,22 @@ router.get('/', async (_req, res) => {
                 {
                     $sort: { resource_SKU: -1 },
                 },
-            ],
-            (error, data) => {
+
+            ],(error, data) => {
                 if (error) {
                     //console.log('error', error);
                     res.status(400).send(error);
                 } else {
                     //console.log(data);
-                    response.resources = data.filter(function (resource) {
-                        return resource.resource_SKU > 0;
-                    });
-                    const service_user = Services.find(
-                        { $query: { Availability: 'true' }, $orderby: { availableDate: 1 } },
+                    response.resources = data.filter(function(resource){return resource.resource_SKU > 0;});
+                    const service_user = Services.find({ $query: {Availability: "true"} , $orderby: { availableDate : 1 } } ,
 
                         function (error, result_service) {
                             if (error) {
                                 console.log(error);
                                 res.status(400).send(error);
                             } else {
-                                response.services = result_service.filter(function (resource) {
-                                    return resource.availableDate > Date.now();
-                                });
+                                response.services = result_service.filter(function(resource){return resource.availableDate > Date.now();})
                                 //console.log(result_service);
                                 const users = Users.count({}, (error2, usercount) => {
                                     if (error2) {
