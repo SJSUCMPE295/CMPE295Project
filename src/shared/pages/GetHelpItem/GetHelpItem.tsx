@@ -216,7 +216,7 @@ React.useEffect(() => {
             let qua_date=resource.type=="resource"?"Quantity":"Available Date";
             let email_subject=resource.type=="resource"?"Resource reservation details":"Service reservation details";
             let to_user_email=userProfileReducer.userName; //change later state.to_email;
-            let url ="http://localhost:8500"+"/app/gethelp/:"+resource._id+"/:"+resource.type+"/:email"+resource_email_quantity;console.log(url);
+            let url ="https://arcane-crag-92966.herokuapp.com"+"/app/gethelp/:"+resource._id+"/:"+resource.type+"/:email"+resource_email_quantity;console.log(url);
             //serverUrl+'app/gethelp/:'+resource._id+'/:resource';console.log(url);console.log(location.pathname);
             const templateId = 'template_v9fkqmy';
           
