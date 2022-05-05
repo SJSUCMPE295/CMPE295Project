@@ -198,7 +198,7 @@ const GetHelpItem: FunctionComponent<any> = ({ userProfileReducer, props }) => {
     };
 
     const handleItemQuantityChange = (event) => {
-        if (1 < event.target.value && event.target.value > data[0].SKU) {
+        if ((event.target.value<=0) || (event.target.value > data[0].SKU)) {
             setErrorText('Quantity should be between 1 and ' + data[0].SKU);
         } else {
             setErrorText('');
@@ -211,7 +211,7 @@ const GetHelpItem: FunctionComponent<any> = ({ userProfileReducer, props }) => {
     let state = {
         feedback: '',
         name: 'Name',
-        to_email: 'snehathomasdiv@gmail.com',
+        to_email: '',
         subject: 'Subject',
     };
     const sendEmail = (templateId, variables) => {
