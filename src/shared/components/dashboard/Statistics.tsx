@@ -1,5 +1,5 @@
 import React, { Component, useRef, useEffect, useState, FunctionComponent } from 'react';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Avatar,
@@ -20,7 +20,8 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    Tooltip,TablePagination
+    Tooltip,
+    TablePagination,
 } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
@@ -40,24 +41,28 @@ import HealthNews from '../../components/dashboard/HealthNews';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import WarningIcon from '@material-ui/icons/Warning';
 import axios from 'axios';
-import {formatDate, prettyDate } from "utils/json";
-const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
-    const UserId =userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
+import { formatDate, prettyDate } from 'utils/json';
+const Statistics: FunctionComponent<any> = ({ userProfileReducer, props }) => {
+    const UserId = userProfileReducer.id; //'6225e61bf81d2541a4000bc9'//userProfileReducer.id;
     console.log(UserId);
     //const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     useEffect(() => {
-       // if (typeof myVar !== 'undefined'
-       const token = localStorage.getItem('token');
-           // set the with credentials to true
-           axios.defaults.withCredentials = true;
+        // if (typeof myVar !== 'undefined'
+        const token = localStorage.getItem('token');
+        // set the with credentials to true
+        axios.defaults.withCredentials = true;
         axios
-            .get('/api/home', {params:{ user: UserId}},{
-                headers : {
-                    authtoken: token
+            .get(
+                '/api/home',
+                { params: { user: UserId } },
+                {
+                    headers: {
+                        authtoken: token,
+                    },
                 }
-                } ) 
+            )
             .then(
                 (response) => {
                     console.log(response.data);
@@ -77,9 +82,9 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
     let transactiontype = [];
     let transactioncount = [];
     let totalusertrans = 0;
-    let totalresources=0;
-    let usertransactions={};
-    let userappointments={};
+    let totalresources = 0;
+    let usertransactions = {};
+    let userappointments = {};
     const theme = useTheme();
     if (data != null) {
         const resources = data.resources;
@@ -88,9 +93,9 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
             resourcename.push(element._id);
             resourcesku.push(element.resource_SKU);
         });
-         totalresources = resourcesku.reduce((result, number) => result + number);
+        totalresources = resourcesku.reduce((result, number) => result + number);
 
-         usertransactions = data.usertransactions;
+        usertransactions = data.usertransactions;
         if (usertransactions.length > 0) {
             usertransactions.forEach((element) => {
                 transactiontype.push(element._id);
@@ -159,35 +164,32 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
         maintainAspectRatio: false,
         responsive: true,
         scales: {
-            xAxes: 
-                {
-                    ticks: {
-                        Color: theme.palette.text.secondary,
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false,
-                    },
+            xAxes: {
+                ticks: {
+                    Color: theme.palette.text.secondary,
                 },
-            
-            yAxes: 
-                {
-                    ticks: {
-                        fontColor: theme.palette.text.secondary,
-                        beginAtZero: true,
-                        min: 0,
-                    },
-                    gridLines: {
-                        borderDash: [2],
-                        borderDashOffset: [2],
-                        color: theme.palette.divider,
-                        drawBorder: false,
-                        zeroLineBorderDash: [2],
-                        zeroLineBorderDashOffset: [2],
-                        zeroLineColor: theme.palette.divider,
-                    },
+                gridLines: {
+                    display: false,
+                    drawBorder: false,
                 },
-            
+            },
+
+            yAxes: {
+                ticks: {
+                    fontColor: theme.palette.text.secondary,
+                    beginAtZero: true,
+                    min: 0,
+                },
+                gridLines: {
+                    borderDash: [2],
+                    borderDashOffset: [2],
+                    color: theme.palette.divider,
+                    drawBorder: false,
+                    zeroLineBorderDash: [2],
+                    zeroLineBorderDashOffset: [2],
+                    zeroLineColor: theme.palette.divider,
+                },
+            },
         },
         tooltips: {
             backgroundColor: theme.palette.background.paper,
@@ -204,16 +206,16 @@ const Statistics: FunctionComponent<any> = ({userProfileReducer,props}) => {
 
     const [page, setPage] = React.useState(0);
 
-const [rowsPerPage, setRowsPerPage] = React.useState(8);
+    const [rowsPerPage, setRowsPerPage] = React.useState(8);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-      };
-    
-      const handleChangeRowsPerPage = (event) => {
+    };
+
+    const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-      };
+    };
 
     return (
         <Grid container spacing={3}>
@@ -273,7 +275,7 @@ const [rowsPerPage, setRowsPerPage] = React.useState(8);
                                 </Typography>
                                 {data != null ? (
                                     <Typography color="textPrimary" variant="h3">
-                                      {totalresources}
+                                        {totalresources}
                                     </Typography>
                                 ) : null}
                             </Grid>
@@ -398,8 +400,6 @@ const [rowsPerPage, setRowsPerPage] = React.useState(8);
                                 }}
                             >
                                 <Button
-                                    
-                                  
                                     href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
@@ -437,33 +437,39 @@ const [rowsPerPage, setRowsPerPage] = React.useState(8);
                                         </TableHead>
                                         {data != null ? (
                                             <TableBody>
-                                                {data.services.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((service) => (
-                                                    <TableRow hover key={service._id}>
-                                                        <TableCell>
-                                                            {service.Service_Name}
-                                                        </TableCell>
-                                                        <TableCell>{service.Category}</TableCell>
-                                                        <TableCell>
-                                                            {moment(service.availableDate).format(
-                                                                'MM/DD/YYYY'
-                                                            )}
-                                                        </TableCell>
-                                                        <TableCell>{service.Zipcode}</TableCell>
-                                                    </TableRow>
-                                                ))}
+                                                {data.services
+                                                    .slice(
+                                                        page * rowsPerPage,
+                                                        page * rowsPerPage + rowsPerPage
+                                                    )
+                                                    .map((service) => (
+                                                        <TableRow hover key={service._id}>
+                                                            <TableCell>
+                                                                {service.Service_Name}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {service.Category}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {moment(
+                                                                    service.availableDate
+                                                                ).format('MM/DD/YYYY')}
+                                                            </TableCell>
+                                                            <TableCell>{service.Zipcode}</TableCell>
+                                                        </TableRow>
+                                                    ))}
                                             </TableBody>
                                         ) : null}
-                                    </Table><TablePagination
-                                    rowsPerPageOptions={[8, 16, 24]}
-          component="div"
-          count={data?.services.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-                                    
+                                    </Table>
+                                    <TablePagination
+                                        rowsPerPageOptions={[8, 16, 24]}
+                                        component="div"
+                                        count={data?.services.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                    />
                                 </Box>
                             </PerfectScrollbar>
                             <Box
@@ -474,7 +480,6 @@ const [rowsPerPage, setRowsPerPage] = React.useState(8);
                                 }}
                             >
                                 <Button
-                                    
                                     href="/app/gethelp"
                                     color="primary"
                                     endIcon={<ArrowRightIcon />}
@@ -500,41 +505,48 @@ const [rowsPerPage, setRowsPerPage] = React.useState(8);
                                     </Typography>
                                     {data && usertransactions.length > 0 ? (
                                         <Link to={'/app/mytransactions'}>
-                                        <Box
-                                            sx={{
-                                                height: 300,
-                                                position: 'relative',
-                                            }} 
-                                        >
-                                            <Doughnut data={data_donut} options={options_donut} />
-                                        </Box></Link>
+                                            <Box
+                                                sx={{
+                                                    height: 300,
+                                                    position: 'relative',
+                                                }}
+                                            >
+                                                <Doughnut
+                                                    data={data_donut}
+                                                    options={options_donut}
+                                                />
+                                            </Box>
+                                        </Link>
                                     ) : null}
                                     <Divider />
                                     <Box
                                         sx={{
                                             //height: 300,
                                             position: 'relative',
-                                        }} 
+                                        }}
                                     >
                                         <Typography variant="h6">Upcoming Appointments</Typography>
-                                       
+
                                         {data != null ? (
                                             userappointments.length > 0 ? (
                                                 userappointments.map(
                                                     ({
                                                         doctor_name: doctor_name,
                                                         AppointmentDetails: AppointmentDetails,
-                                                        time:time,
-                                                        _id:_id
+                                                        time: time,
+                                                        _id: _id,
                                                     }) => (
                                                         <p>
-                                                        <Typography
-                                                            color="textPrimary"
-                                                            variant="text" key={_id}
-                                                        >
-                                                            You have an appointment with{' '}
-                                                            <b>{doctor_name}</b> at <b>{prettyDate(time)}.</b>
-                                                        </Typography></p>
+                                                            <Typography
+                                                                color="textPrimary"
+                                                                variant="text"
+                                                                key={_id}
+                                                            >
+                                                                You have an appointment with{' '}
+                                                                <b>{doctor_name}</b> at{' '}
+                                                                <b>{prettyDate(time)}.</b>
+                                                            </Typography>
+                                                        </p>
                                                     )
                                                 )
                                             ) : (

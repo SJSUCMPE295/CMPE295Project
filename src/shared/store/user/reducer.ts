@@ -22,9 +22,7 @@ export default (state: any = initialState, action: Action | any): any => {
         case ActionTypes.saveUserName: {
             return {
                 ...state,
-                firstName: action?.firstName,
-                lastName: action?.lastName,
-                userName: action?.userName,
+                ...action,
             };
         }
         case ActionTypes.createUserProfile: {

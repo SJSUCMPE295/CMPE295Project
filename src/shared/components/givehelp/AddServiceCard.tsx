@@ -74,7 +74,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
     const [countryError, setCountryError] = useState('');
 
     let validateForm = () => {
-        console.log(state, country)
+        console.log(state, country);
         if (serviceName === '' || serviceName === null) {
             setServiceNameError('Please enter service name');
             setIfServiceError(true);
