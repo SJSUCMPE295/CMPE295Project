@@ -279,7 +279,7 @@ const AddServiceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...pr
             setCity('');
             setCountry('United States of America');
             setZipcode('');
-            setState('');
+            setState('California');
             setPhoneNum('');
         }
     };

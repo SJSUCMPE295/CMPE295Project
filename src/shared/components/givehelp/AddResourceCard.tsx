@@ -216,7 +216,7 @@ const AddResourceCard: FunctionComponent<any> = ({ userProfileReducer = {}, ...p
             setCity('');
             setCountry('United States of America');
             setZipcode('');
-            setState('');
+            setState('California');
             setPhoneNum('');
         }
     };
