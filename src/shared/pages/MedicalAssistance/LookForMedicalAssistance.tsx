@@ -218,7 +218,7 @@ export const LookForMedicalAssistance = (props) => {
                 return (
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader
-                            avatar={<Avatar src="" aria-label="" />}
+                            avatar={<Avatar src={selectedDoctor?.profile?.profilePic} aria-label="" />}
                             title={selectedDoctor?.firstName}
                             subheader={prettyDate(selectedTime)}
                         />
