@@ -6,6 +6,7 @@ export const initialState = Object.freeze<any>({
 });
 
 export default (state: any = initialState, action: Action | any): any => {
+    const payload = action?.payload || action || {};
     switch (action?.type) {
         case 'persist/REHYDRATE': {
             return { ...state, ...action?.payload?.user, ...action?.payload?.userProfileReducer };
@@ -28,11 +29,8 @@ export default (state: any = initialState, action: Action | any): any => {
         case ActionTypes.createUserProfile: {
             return {
                 ...state,
-                ...action?.payload,
-                id: action?.id,
-                userMetaData: action?.userMetaData,
-                profile: action?.profile,
-                address: action?.address,
+                ...action,
+                ...payload,
             };
         }
         case ActionTypes.loginAction:
