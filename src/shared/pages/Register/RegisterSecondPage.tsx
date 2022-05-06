@@ -99,15 +99,11 @@ const RegisterSecondPage = () => {
                         console.log('updated successfully');
                         dispatch({
                             type: saveUserName,
-                            firstName: response.data.data.firstName,
-                            lastName: response.data.data.lastName,
-                            userName: response.data.data.userName,
+                            ...response.data.data
                         });
                         dispatch({
                             type: createUserProfile,
-                            userMetaData: response.data.data.userMetaData,
-                            profile: response.data.data.profile,
-                            address: response.data.data.address,
+                            ...response.data.data
                         });
 
                         history.push('app/dashboard', { replace: true });

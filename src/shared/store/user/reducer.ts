@@ -27,11 +27,12 @@ export default (state: any = initialState, action: Action | any): any => {
             };
         }
         case ActionTypes.createUserProfile: {
-            return {
+            const newState = {
                 ...state,
                 ...action,
                 ...payload,
             };
+            return { id: newState._id || newState.id, ...newState };
         }
         case ActionTypes.loginAction:
             return {
