@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 // import MuiAlert from '@mui/material/Alert';
 import { Alert, Snackbar } from '@mui/material';
@@ -22,10 +22,9 @@ import {
     Typography,
 } from '@material-ui/core';
 import axios from 'axios';
-import serverUrl from '../../utils/config';
-import { useDispatch } from 'react-redux';
-import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 import CircularProgress from '@mui/material/CircularProgress';
+import serverUrl from '../../utils/config';
+import { createUserProfile, saveUserName } from '../../store/constants/action-types';
 
 const metadata = {
     contentType: 'image/jpg',
@@ -68,9 +67,11 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
     //     setOpen(false);
     //   };
     const uploadPicture = (event) => {
-        if (image == null) return;
+        if (image == null) {
+            return;
+        }
         const imageName = event.target.files[0].name;
-        var file = event.target.files[0];
+        const file = event.target.files[0];
         console.log(event.target.files[0]);
         // const storage = getStorage();
         // const storageRef = ref(storage, `/${user.userName}/profilePic/userPic`);
@@ -91,7 +92,7 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
         deleteObject(storageRef)
             .then(() => {
                 setAvatar('');
-                var profile = {
+                const profile = {
                     phoneNumber: user?.profile?.phoneNumber,
                     profileActive: user?.profile?.profileActive,
                     profilePic: '',
@@ -161,6 +162,7 @@ const AccountProfile = ({ userProfileReducer, ...props }) => {
                             userMetaData: response?.data?.data?.userMetaData,
                             profile: response?.data?.data?.profile,
                             address: response?.data?.data?.address,
+                            ...response?.data?.data,
                         });
                         setSaveMsg('Yes');
                     }
