@@ -73,7 +73,8 @@ export const getUserById = async (id) => {
                         };
                     })
                     .filter((x) => x?.id)
-                    .filter((x) => greaterThanDate(new Date(), x?.time));
+                    .filter((x) => greaterThanDate(new Date(), x?.time))
+                    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
             return { ...user.toJSON(), doctor, appointments };
         }
     }

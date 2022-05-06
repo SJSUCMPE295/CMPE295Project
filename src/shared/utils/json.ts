@@ -48,7 +48,7 @@ export const formatDate = (dateString, utcTime = false) => {
 
 export const prettyDate = (selectedTime) => {
     const d = new Date(selectedTime);
-    const date = d.toLocaleDateString();
-    const day = d.toLocaleTimeString();
+    const date = d.toLocaleDateString('en-US', { timeZone: 'UTC' });
+    const day = d.toLocaleTimeString('en-US', { timeZone: 'UTC' });
     return d ? `${date}  ${day}` : '';
 };

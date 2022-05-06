@@ -151,6 +151,7 @@ router.get('/', async (_req, res) => {
                                                     response.userappointments =
                                                         response.userappointments.concat(data_app);
                                                 }
+                                                response.userappointments = (response.userappointments ||[]).sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
                                             }
                                         }
                                     );
