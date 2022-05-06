@@ -20,7 +20,7 @@ const SettingsView = (props) => (
         >
             <Container maxWidth="lg">
                 {null && <SettingsPassword />}
-                {props.isDoctor && <SettingsDoctor {...props} />}
+                {props.isDoctor && null && <SettingsDoctor {...props} />}
                 <SettingsProfileStatus />
             </Container>
         </Box>
