@@ -1,208 +1,74 @@
-├── @babel/cli@7.17.10
-├── @babel/core@7.17.10
-├── @babel/plugin-proposal-class-properties@7.16.7
-├── @babel/plugin-proposal-object-rest-spread@7.17.3
-├── @babel/plugin-proposal-optional-chaining@7.16.7
-├── @babel/plugin-proposal-private-methods@7.16.11
-├── @babel/plugin-proposal-private-property-in-object@7.16.7
-├── @babel/plugin-syntax-dynamic-import@7.8.3
-├── @babel/plugin-transform-modules-commonjs@7.17.9
-├── @babel/plugin-transform-runtime@7.17.10
-├── @babel/preset-env@7.17.10
-├── @babel/preset-react@7.16.7
-├── @babel/preset-typescript@7.16.7
-├── @babel/register@7.17.7
-├── @emailjs/browser@3.6.2
-├── @emotion/react@11.9.0
-├── @emotion/styled@11.8.1
-├── @googlemaps/google-maps-services-js@3.3.13
-├── @material-ui/core@5.0.0-beta.5
-├── @material-ui/data-grid@4.0.0-alpha.37
-├── @material-ui/icons@5.0.0-beta.5
-├── @material-ui/styles@5.0.0-beta.5
-├── @mui/material@5.6.4
-├── @pmmmwh/react-refresh-webpack-plugin@0.5.5
-├── @react-google-maps/api@2.10.2
-├── @storybook/addon-a11y@6.4.22
-├── @storybook/addon-actions@6.4.22
-├── @storybook/addon-info@3.4.12
-├── @storybook/addon-knobs@6.4.0
-├── @storybook/preset-create-react-app@4.1.0
-├── @storybook/react@6.4.22
-├── @svgr/webpack@6.2.1
-├── @swc/cli@0.1.57
-├── @swc/core@1.2.177
-├── @testing-library/jest-dom@5.16.4
-├── @testing-library/react@12.1.5
-├── @testing-library/user-event@13.5.0
-├── @types/body-parser@1.19.2
-├── @types/case-sensitive-paths-webpack-plugin@2.1.6
-├── @types/classnames@2.3.1
-├── @types/copy-webpack-plugin@6.4.3
-├── @types/cors@2.8.12
-├── @types/decompress@4.2.4
-├── @types/dotenv@8.2.0
-├── @types/enzyme@3.10.12
-├── @types/express-serve-static-core@4.17.28
-├── @types/jest@27.5.0
-├── @types/mini-css-extract-plugin@0.9.1
-├── @types/mkdirp@1.0.2
-├── @types/node@16.11.33
-├── @types/nodemon@1.19.1
-├── @types/react-dev-utils@9.0.10
-├── @types/react-dom@16.9.15
-├── @types/react-helmet-async@1.0.3
-├── @types/react-i18next@8.1.0
-├── @types/react-redux@7.1.24
-├── @types/react-router-dom@5.3.3
-├── @types/react-router@5.1.18
-├── @types/react@17.0.44
-├── @types/rimraf@3.0.2
-├── @types/terser-webpack-plugin@3.0.0
-├── @types/testing-library__jest-dom@5.14.3
-├── @types/webpack-dev-middleware@3.7.5
-├── @types/webpack-env@1.16.4
-├── @types/webpack-hot-middleware@2.25.6
-├── @types/webpack-manifest-plugin@2.1.0
-├── @types/webpack-node-externals@1.7.1
-├── @types/webpack@4.41.32
-├── @types/yup@0.29.13
-├── @typescript-eslint/eslint-plugin@4.33.0
-├── @typescript-eslint/parser@4.33.0
-├── @werkzeugkiste/eslint-config@2.0.1
-├── @werkzeugkiste/prettier-config@2.0.0
-├── autoprefixer@9.8.8
-├── axios@0.24.0
-├── babel-eslint@10.1.0
-├── babel-jest@27.5.1
-├── babel-loader@8.2.5
-├── babel-plugin-import@1.13.5
-├── babel-plugin-macros@2.8.0
-├── babel-plugin-named-asset-import@0.3.8
-├── babel-plugin-transform-es2015-modules-commonjs@6.26.2
-├── body-parser@1.20.0
-├── bootstrap@5.1.3
-├── browserslist@4.20.3
-├── case-sensitive-paths-webpack-plugin@2.4.0
-├── chalk@4.1.2
-├── chart.js@3.7.1
-├── classnames@2.3.1
-├── concurrently@5.3.0
-├── confusing-browser-globals@1.0.9
-├── copy-webpack-plugin@6.4.1
-├── core-js@3.22.4
-├── cors@2.8.5
-├── country-list@2.2.0
-├── country-state-picker@1.1.5
-├── cross-env@7.0.3
-├── cross-spawn@7.0.3
-├── css-hot-loader@1.4.4
-├── css-loader@3.6.0
-├── decompress@4.2.1
-├── depcheck@0.9.2
-├── dependency-cruiser@9.26.1
-├── dotenv@10.0.0
-├── eslint-config-prettier@6.15.0
-├── eslint-import-resolver-typescript@2.3.0
-├── eslint-plugin-babel@5.3.1
-├── eslint-plugin-import@2.26.0
-├── eslint-plugin-prettier@3.4.1
-├── eslint-plugin-react-hooks@4.5.0
-├── eslint-plugin-react@7.29.4
-├── eslint-plugin-security@1.4.0
-├── eslint-plugin-unicorn@22.0.0
-├── eslint@7.32.0
-├── express-manifest-helpers@0.6.0
-├── express@4.18.1
-├── file-loader@6.2.0
-├── firebase-admin@10.1.0
-├── firebase@9.7.0
-├── formik@2.2.9
-├── fs-extra@10.1.0
-├── glob@7.2.0
-├── history@5.3.0
-├── html-webpack-plugin@4.5.2
-├── husky@4.3.8
-├── i18n-iso-countries@7.4.0
-├── i18next-parser@2.2.0
-├── i18next-scanner@2.11.0
-├── i18next-xhr-backend@3.2.2
-├── i18next@21.6.16
-├── immer@9.0.12
-├── install-deps-postmerge@1.0.5
-├── jest-image-snapshot@4.5.1
-├── jest@27.5.1
-├── jsonwebtoken@8.5.1
-├── lint-staged@10.5.4
-├── mini-css-extract-plugin@0.9.0
-├── mkdirp@1.0.4
-├── mongoose@6.3.2
-├── nodemon@2.0.16
-├── object-assign@4.1.1
-├── opn-cli@5.0.0
-├── passport-google-oauth2@0.2.0
-├── passport-google-oauth20@2.0.0
-├── passport@0.5.2
-├── plop@2.7.6
-├── postcss-assets@5.0.0
-├── postcss-custom-properties@9.2.0
-├── postcss-flexbugs-fixes@4.2.1
-├── postcss-import@12.0.1
-├── postcss-loader@3.0.0
-├── postcss-nested@4.2.3
-├── postcss-normalize@9.0.0
-├── prettier@2.4.1
-├── promise@8.1.0
-├── react-bootstrap@2.3.1
-├── react-calendar@3.7.0
-├── react-chartjs-2@3.3.0
-├── react-country-region-selector@3.4.0
-├── react-datepicker@4.7.0
-├── react-dev-utils@12.0.1
-├── react-dom@17.0.2
-├── react-feather@2.0.9
-├── react-helmet-async@1.3.0
-├── react-helmet@6.1.0
-├── react-i18next@11.16.7
-├── react-perfect-scrollbar@1.5.8
-├── react-phone-input-2@2.15.0
-├── react-redux@7.2.8
-├── react-refresh@0.13.0
-├── react-router-dom@5.3.1
-├── react-router@5.3.1
-├── react@17.0.2
-├── redux-mock-store@1.5.4
-├── redux-persist@6.0.0
-├── redux-thunk@2.4.1
-├── redux@4.2.0
-├── regenerator-runtime@0.13.9
-├── reselect@4.1.5
-├── rimraf@3.0.2
-├── serve-static@1.15.0
-├── stats-webpack-plugin@0.7.0
-├── storybook-addon-jsx@7.3.14
-├── style-loader@1.3.0
-├── stylelint-config-prettier@8.0.2
-├── stylelint-order@4.1.0
-├── stylelint-prettier@1.2.0
-├── stylelint@13.13.1
-├── swc-loader@0.1.16
-├── terser-webpack-plugin@3.1.0
-├── ts-jest@27.1.4
-├── ts-loader@8.2.0
-├── ts-node@8.10.2
-├── tsconfig-paths-webpack-plugin@3.5.2
-├── typed-css-modules-webpack-plugin@0.2.0
-├── typescript@4.6.4
-├── url-loader@4.1.1
-├── webpack-bundle-analyzer@4.5.0
-├── webpack-cli@3.3.12
-├── webpack-dev-middleware@3.7.3
-├── webpack-dev-server@4.8.1
-├── webpack-hot-middleware@2.25.1
-├── webpack-manifest-plugin@2.2.0
-├── webpack-node-externals@1.7.2
-├── webpack@4.46.0
-├── write-file-webpack-plugin@4.5.1
-├── yarn-or-npm@3.0.1
-└── yup@0.32.11
+# Wecare
+
+## Installation
+
+Once you've forked the repository here on Github, clone it, `cd` into the directory and run `yarn` (or `npm install`) on your command line to install all the dependencies. You're ready to go now!
+
+## Usage
+
+There are npm scripts for all the relevant things. The server will always be started on port 8500 unless otherwise specified in `process.env.PORT`. You can use a `.env` file to specify env vars. If you want to use them in your client side code, don't forget to add them in [config/env.js](config/env.js#L37).
+
+### Noteworthy scripts:
+
+#### `yarn start`
+
+Starts the app in development mode: creates a new client and server dev build using webpack, starts the Express server build (for both file serving and server side pre-rendering) and keeps webpack open in watchmode. Updates the app (if possible) on change using HMR.
+
+#### `yarn build`
+
+Creates a new build, optimized for production. Does **not** start a dev server or anything else.
+
+#### `yarn test`
+
+Run all tests using jest.
+
+#### `yarn test:update`
+
+Update all Jest snapshots (if there are any)
+
+#### `yarn lint:js`
+
+Run ESLint for all JavaScript and TypeScript files
+
+#### `yarn lint:css`
+
+Run Stylelint for all CSS files
+
+#### `yarn lint`
+
+Run lint:js and lint:css in parallel
+
+#### `yarn analyze`
+
+Starts `webpack-bundle-analyzer` to give you the opportunity to analyze your bundle(s)
+
+#### `yarn depgraph`
+
+Creates an image of your dependency graph. Requires [GraphVIZ](https://www.graphviz.org/) to be in your system's `PATH`
+
+#### `yarn plop`
+
+Run plop to create new React components or Redux reducers via CLI
+
+## Environment Variables
+
+There are a few environment variables you can set to adjust the setup to your needs
+
+| Variable         | Default            | Description                                                                                                                                                                                                                                                                                      |
+| ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PORT`           | `8500`             | Port number your application will be served on.                                                                                                                                                                                                                                                  |
+| `HOST`           | `http://localhost` | Host (including protocol!) your application will be served on. This is usually neglectable as most of the time your application will be served via remote proxy (e.g. Nginx) on localhost. **Note:** this is only for convenience. The server itself will not be bound exclusively to that host. |
+| `DEVSERVER_HOST` | `http://localhost` | Optional. Different host for the Webpack Dev Server to be served on.                                                                                                                                                                                                                             |
+
+## Tricks
+
+### Client side version (opt-in)
+
+Beginning with v1.3.0, a **static** `index.html` is also generated and written to your `clientBuild` directory. You are now able to deploy the `build/client` directory to a static webhost (such as Netlify or AWS S3) and serve your application from there!
+
+For the generation of the `index.html` the server side build gets started right after building, a headless Chrome then visits the site and writes the content of the server side response to your client directory. So you still need the `src/server` directory and the server side build but you're now flexible and can decide on your own whether you want to have the full server side experience or only deploy your completely static app somewhere.
+
+
+## License
+
+MIT.
