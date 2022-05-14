@@ -213,7 +213,7 @@ const getData = async (
         let geocodedaddress = await client.geocode({
             params: {
                 address: [destinations[j]],
-                key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+                key: 'API key',
             },
             timeout: 1000, // milliseconds
         });
@@ -223,7 +223,7 @@ const getData = async (
         params: {
             destinations: await destinations, // ["San Francisco, CA, USA","Victoria, BC, Canada"],
             origins: [user_location], //["San Jose, CA"],let origin=[{lat:user_location["lat"],lng:user_location["lng"]}];
-            key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+            key: 'API key',
         },
         timeout: 1000, // milliseconds
     });
@@ -233,7 +233,7 @@ const getData = async (
             params: {
                 destinations: await destinations, // ["San Francisco, CA, USA","Victoria, BC, Canada"],
                 origins: [city], //["San Jose, CA"],
-                key: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+                key: 'API key',
             },
             timeout: 1000, // milliseconds
         });
