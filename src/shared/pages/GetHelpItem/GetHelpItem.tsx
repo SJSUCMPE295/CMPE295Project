@@ -111,7 +111,7 @@ const GetHelpItem: FunctionComponent<any> = ({ userProfileReducer, props }) => {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: 'AIzaSyCW3O6PQctDxoSoSNYWVa44nXc1ze4V-Nw',
+        googleMapsApiKey: 'API key',
     });
 
     const [map, setMap] = React.useState(null);
