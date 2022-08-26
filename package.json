@@ -72,7 +72,7 @@
     "jest-image-snapshot": "^4.5.1",
     "jsonwebtoken": "^8.5.1",
     "mkdirp": "^1.0.4",
-    "mongoose": "^6.0.12",
+    "mongoose": "^6.4.6",
     "passport": "^0.5.2",
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
